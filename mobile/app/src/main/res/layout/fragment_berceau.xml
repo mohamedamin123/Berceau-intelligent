@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.berceau.BerceauFragment">
+
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/style_tv_title_post"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/berceau"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_margin="20dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+
+            android:background="@drawable/incline"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:text="@string/temperature" />
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_marginVertical="10dp"
+                android:src="@drawable/temperature"
+                android:contentDescription="@string/temperature">
+            </ImageView>
+
+            <EditText
+                android:id="@+id/humidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:background="@android:color/transparent"
+                android:inputType="none"
+                android:text="@string/_0_00"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_margin="20dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/incline"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:text="@string/humidity" />
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/humidite"
+                android:layout_gravity="center"
+                android:layout_marginVertical="10dp"
+                android:contentDescription="@string/temperature">
+            </ImageView>
+
+            <EditText
+                android:id="@+id/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:textSize="25sp"
+                android:textColor="@color/black"
+                android:inputType="none"
+                android:layout_gravity="center"
+                android:text="@string/_0_00"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:background="@android:color/transparent" />                />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_margin="20dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+
+            android:background="@drawable/incline"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:layout_gravity="center"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:text="@string/climatiseur" />
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_marginVertical="10dp"
+                android:src="@drawable/climatiseur"
+                android:contentDescription="@string/temperature">
+            </ImageView>
+
+            <Button
+                android:id="@+id/climatiseur"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:text="@string/ouvrir" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="10dp"
+            android:layout_margin="20dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/incline"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:text="@string/lumiere" />
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:src="@drawable/lumiere"
+                android:layout_gravity="center"
+                android:layout_marginVertical="10dp"
+                android:contentDescription="@string/temperature">
+            </ImageView>
+
+
+
+            <Button
+                android:id="@+id/lumiere"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:textSize="25sp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:text="@string/ouvrir" />             />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+
+
+
+</LinearLayout>

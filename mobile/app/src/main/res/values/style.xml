@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!--Titre -->
+    <style name="style_tv_title_post">
+        <item name="marginHorizontal">@dimen/text_size_normal</item>
+        <item name="android:textSize">@dimen/text_size_titre</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold|italic</item>
+        <item name="android:layout_marginBottom">@dimen/text_size_normal</item>
+    </style>
+
+    <style name="style_tv_sous_title_post">
+        <item name="marginHorizontal">@dimen/text_size_medium</item>
+        <item name="android:textSize">@dimen/text_size_sous_titre</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold|italic</item>
+    </style>
+
+
+    <!-- Style pour les boutons -->
+
+</resources>

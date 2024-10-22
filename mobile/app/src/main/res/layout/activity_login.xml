@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+<!--    &lt;!&ndash; Background Gradient &ndash;&gt;-->
+<!--    <LinearLayout-->
+<!--        android:id="@+id/background_gradient"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:orientation="vertical"-->
+<!--        android:background="@drawable/gradient_background"-->
+<!--        android:gravity="center">-->
+
+<!--        &lt;!&ndash; App Name and Icon &ndash;&gt;-->
+<!--        <ImageView-->
+<!--            android:id="@+id/app_icon"-->
+<!--            android:layout_width="60dp"-->
+<!--            android:layout_height="60dp"-->
+<!--            android:layout_marginTop="60dp"-->
+<!--            android:src="@drawable/ic_messenger_logo"-->
+<!--            android:layout_gravity="center"/>-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/app_name"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Messenger UI"-->
+<!--            android:textSize="24sp"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:layout_gravity="center"/>-->
+
+<!--        &lt;!&ndash; Social Media Login Options &ndash;&gt;-->
+<!--        <LinearLayout-->
+<!--            android:id="@+id/social_login_layout"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="40dp"-->
+<!--            android:gravity="center"-->
+<!--            android:orientation="horizontal">-->
+
+<!--            &lt;!&ndash; Example Social Media Buttons &ndash;&gt;-->
+<!--            <ImageView-->
+<!--                android:id="@+id/google_login"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:src="@drawable/ic_google"-->
+<!--                android:layout_margin="8dp"-->
+<!--                android:contentDescription="Google"/>-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/facebook_login"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:src="@drawable/ic_facebook"-->
+<!--                android:layout_margin="8dp"-->
+<!--                android:contentDescription="Facebook"/>-->
+
+<!--            <ImageView-->
+<!--                android:id="@+id/apple_login"-->
+<!--                android:layout_width="40dp"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:src="@drawable/ic_apple"-->
+<!--                android:layout_margin="8dp"-->
+<!--                android:contentDescription="Apple"/>-->
+<!--        </LinearLayout>-->
+
+<!--        &lt;!&ndash; Sign Up Button &ndash;&gt;-->
+<!--        <Button-->
+<!--            android:id="@+id/signup_button"-->
+<!--            android:layout_width="200dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginTop="40dp"-->
+<!--            android:background="@drawable/button_gradient"-->
+<!--            android:text="Sign up"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            android:textSize="18sp"-->
+<!--            android:layout_gravity="center"/>-->
+
+<!--        &lt;!&ndash; Terms and Conditions &ndash;&gt;-->
+<!--        <TextView-->
+<!--            android:id="@+id/terms_conditions"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Read User License Agreement"-->
+<!--            android:textSize="12sp"-->
+<!--            android:textColor="#FFFFFF"-->
+<!--            android:layout_marginTop="20dp"-->
+<!--            android:layout_gravity="center"/>-->
+<!--    </LinearLayout>-->
+</RelativeLayout>
