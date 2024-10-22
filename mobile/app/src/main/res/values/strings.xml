@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">appMobile</string>
+    <string name="connecter">Se connecter</string>
+    <string name="email">Email</string>
+    <string name="password">Mot de passe\n</string>
+    <string name="construire_account">Construire un nouveau compte</string>
+    <string name="continue_avec_google">Continuer avec Google</string>
+    <string name="remember_moi">Se souvenir de moi</string>
+    <string name="oublier_password">Mot de passe oublié</string>
+    <string name="saisir_email">Saisissez votre email s\\\'il vous plaît !</string>
+    <string name="saisir_email_existant">Saisissez un email d\\\'un compte existent, s\\\'il vous plaît!</string>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome !"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="accueil">Accueil</string>
+    <string name="berceau">Berceau</string>
+    <string name="camera">Camera</string>
+    <string name="bebe">Bebe</string>
+    <string name="client">Client</string>
+    <string name="title_activity_homme">HommeActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="temperature">Temperature</string>
+    <string name="humidity">Humidite</string>
+    <string name="_0_00">0.00</string>
+    <string name="climatiseur">Climatiseur</string>
+    <string name="ouvrir">Ouvrir</string>
+    <string name="lumiere">Lumiere</string>
+</resources>

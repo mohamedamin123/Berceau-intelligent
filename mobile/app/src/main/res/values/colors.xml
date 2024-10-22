@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="yellow">#FFFFEB3B</color> <!-- Yellow -->
+    <color name="blue">#00AEEF</color> <!-- Blue -->
+    <color name="red">#FFF44336</color> <!-- Red -->
+    <color name="green">#FF4CAF50</color> <!-- Green -->
+    <color name="orange">#FFFF9800</color> <!-- Orange -->
+    <color name="purple">#FF9C27B0</color> <!-- Purple -->
+    <color name="pink">#FFE91E63</color> <!-- Pink -->
+    <color name="cyan">#FF00BCD4</color> <!-- Cyan -->
+    <color name="brown">#FF795548</color> <!-- Brown -->
+    <color name="gray">#FF9E9E9E</color> <!-- Gray -->
+
+    <!-- Primary Colors : Represent the main brand colors of the app -->
+    <color name="primary">#FF00BCD4</color>
+    <color name="primary_dark">#FF00BCD4</color>
+    <color name="primary_light">#FF00BCD4</color>
+
+    <!-- Secondary Colors : Support the primary colors and are used for accents -->
+    <color name="secondary">#03DAC5</color>
+    <color name="secondary_dark">#018786</color>
+    <color name="secondary_light">#66FFF9</color>
+
+    <!-- Accent Colors : Additional colors to highlight specific parts of the UI -->
+    <color name="accent_red">#D32F2F</color>
+    <color name="accent_green">#4CAF50</color>
+    <color name="accent_blue">#2196F3</color>
+
+    <!-- Neutral Colors :  Shades of gray used for backgrounds or text -->
+    <color name="gray_neutral">#FF808080</color>
+    <color name="light_gray">#fbfafa</color>
+    <color name="dark_gray">#FF505050</color>
+
+    <!-- Background Colors : Light and dark variations for background and text elements-->
+    <color name="background_light">#FFF5F5F5</color>
+    <color name="background_dark">#FF212121</color>
+
+    <!-- Text Colors : Light and dark variations for background and text elements-->
+    <color name="text_primary">#FF000000</color>
+    <color name="text_secondary">#FF757575</color>
+    <color name="text_disabled">#FFBDBDBD</color>
+</resources>
