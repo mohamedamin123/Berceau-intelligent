@@ -10,7 +10,7 @@ void initCapteurDHT() {
     dht.begin(); // Initialisation du capteur
 }
 
-void afficherTemperature() {
+float afficherTemperature() {
     float temperature = dht.readTemperature(); // Lit la temperature
     if (isnan(temperature)) {
         Serial.println("Erreur de lecture de la temperature !");
@@ -18,10 +18,12 @@ void afficherTemperature() {
         Serial.print("Temperature: ");
         Serial.print(temperature);
         Serial.println(" °C");
+        return temperature;
     }
+    return -1;
 }
 
-void afficherHumidite() {
+float afficherHumidite() {
     float humidite = dht.readHumidity(); // Lit l'humidite
     if (isnan(humidite)) {
         Serial.println("Erreur de lecture de l'humidite !");
@@ -29,5 +31,7 @@ void afficherHumidite() {
         Serial.print("Humidite: ");
         Serial.print(humidite);
         Serial.println(" %");
+        return humidite;
     }
+        return -1;
 }

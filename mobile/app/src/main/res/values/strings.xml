@@ -33,4 +33,8 @@
     <string name="climatiseur">Climatiseur</string>
     <string name="ouvrir">Ouvrir</string>
     <string name="lumiere">Lumiere</string>
+    <string name="connexion">Connexion</string>
+    <string name="ssid">SSID</string>
+    <string name="retour">Retour</string>
+    <string name="ajouter">Ajouter</string>
 </resources>

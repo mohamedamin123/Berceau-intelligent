@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -56,4 +57,16 @@ dependencies {
     implementation(libs.camera.camera2)
     implementation(libs.camera.lifecycle)
     implementation(libs.camera.view)
+
+    // Firebase BOM
+    implementation(platform("com.google.firebase:firebase-bom:33.5.0"))
+
+// Firebase Realtime Database
+    implementation("com.google.firebase:firebase-database-ktx")
+
+// Firebase Authentication
+    implementation("com.google.firebase:firebase-auth-ktx")
+
+    implementation ("com.google.firebase:firebase-analytics")
+
 }
