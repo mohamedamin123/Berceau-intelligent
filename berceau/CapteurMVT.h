@@ -1,0 +1,2 @@
+void initCapteurMVT();
+int detecterMVT();

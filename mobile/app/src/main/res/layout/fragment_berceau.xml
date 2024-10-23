@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:animateLayoutChanges="true"
     tools:context=".ui.berceau.BerceauFragment">
 
 
@@ -28,6 +29,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/tmp"
             android:orientation="vertical"
             android:padding="10dp"
             android:layout_margin="20dp"
@@ -55,7 +57,7 @@
             </ImageView>
 
             <EditText
-                android:id="@+id/humidity"
+                android:id="@+id/tmp_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/style_tv_sous_title_post"
@@ -72,6 +74,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/hmd"
             android:orientation="vertical"
             android:padding="10dp"
             android:layout_margin="20dp"
@@ -98,7 +101,7 @@
             </ImageView>
 
             <EditText
-                android:id="@+id/temperature"
+                android:id="@+id/hmd_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/style_tv_sous_title_post"
@@ -123,6 +126,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/clm"
             android:orientation="vertical"
             android:padding="10dp"
             android:layout_margin="20dp"
@@ -150,19 +154,22 @@
             </ImageView>
 
             <Button
-                android:id="@+id/climatiseur"
+                android:id="@+id/clm_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/style_tv_sous_title_post"
                 android:textSize="25sp"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
+                android:background="@null"
+                android:backgroundTint="#CB68DD"
                 android:text="@string/ouvrir" />
 
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/lmp"
             android:orientation="vertical"
             android:padding="10dp"
             android:layout_margin="20dp"
@@ -191,14 +198,17 @@
 
 
             <Button
-                android:id="@+id/lumiere"
+                android:id="@+id/lmp_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/style_tv_sous_title_post"
                 android:textSize="25sp"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:text="@string/ouvrir" />             />
+                android:text="@string/ouvrir"
+                android:background="@null"
+                android:backgroundTint="#CB68DD"
+                />
 
         </LinearLayout>
 

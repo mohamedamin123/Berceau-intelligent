@@ -15,9 +15,9 @@
     <color name="gray">#FF9E9E9E</color> <!-- Gray -->
 
     <!-- Primary Colors : Represent the main brand colors of the app -->
-    <color name="primary">#FF00BCD4</color>
-    <color name="primary_dark">#FF00BCD4</color>
-    <color name="primary_light">#FF00BCD4</color>
+    <color name="primary">#FF9C27B0</color>
+    <color name="primary_dark">#FF9C27B0</color>
+    <color name="primary_light">#FF9C27B0</color>
 
     <!-- Secondary Colors : Support the primary colors and are used for accents -->
     <color name="secondary">#03DAC5</color>
