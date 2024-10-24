@@ -23,6 +23,11 @@ public class Reseau {
     }
 
 
+    public Reseau(Context context) {
+        this.firebaseManager = new FirebaseManager();
+        // Retrieve SSID only if permission is granted
+        ssid = WifiHelper.getCurrentSsid(context);
+    }
 
     public void seConnecterReseau(UpdateValueCallback callback) {
         // Get reference to the database

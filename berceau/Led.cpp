@@ -6,7 +6,7 @@ void initLed() {
     pinMode(LED_PIN, OUTPUT);  // Set the motion sensor pin as input
 }
 
-void changeLed(int value){
+void changeLed(uint8_t value){
     digitalWrite(LED_PIN,value);  
 }
 

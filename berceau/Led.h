@@ -1,4 +1,4 @@
 void initLed() ;
 void allumerLed();
 void atteindreLed() ;
-void changeLed(int value);
+void changeLed(uint8_t value);
