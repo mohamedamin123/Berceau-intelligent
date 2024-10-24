@@ -1,9 +1,16 @@
 package com.example.appmobile.alert;
 
+import android.Manifest;
+import android.bluetooth.BluetoothDevice;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
@@ -11,27 +18,31 @@ import androidx.annotation.Nullable;
 import com.example.appmobile.databinding.FragmentAjouterWifiBinding;
 import com.example.appmobile.firebase.Reseau;
 import com.example.appmobile.firebase.UpdateValueCallback;
+import com.example.appmobile.reseau.BluetoothHelper;
 
 public class AjouterWifiFragment extends DialogFragment {
 
     private static final String ARG_Wifi_ID = "Wifi_id";
     private FragmentAjouterWifiBinding binding;
-    private Integer WifiId;
+    private String WifiId;
+    private static final int BLUETOOTH_PERMISSION_REQUEST_CODE = 3;
+    private BluetoothDevice device;
+    private BluetoothHelper bluetooth;
 
     public AjouterWifiFragment() {
         // Required empty public constructor
     }
 
     // Parameterized constructor
-    public AjouterWifiFragment(Integer idWifi) {
-        this.WifiId = idWifi != null ? idWifi : 0;
+    public AjouterWifiFragment(String idWifi) {
+        this.WifiId = idWifi != null ? idWifi : "";
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            WifiId = getArguments().getInt(ARG_Wifi_ID, 0); // Default to 0 if not found
+            WifiId = getArguments().getString(ARG_Wifi_ID); // Default to 0 if not found
         }
     }
 
@@ -44,12 +55,14 @@ public class AjouterWifiFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        binding.ssidEdt.setText(WifiId);
 
-        binding.ssidEdt.setText(Reseau.ssid);
+        String deviceName = "ESP32_Bluetooth"; // Replace with your device name
+        bluetooth = new BluetoothHelper(getContext());
 
-        binding.btnAnnuler.setOnClickListener(e->{
-            dismiss();
-        });
+        device = bluetooth.getPairedDevice(deviceName);
+
+        binding.btnAnnuler.setOnClickListener(e -> dismiss());
 
         // Configure button click listener
         binding.btnAjouter.setOnClickListener(v -> {
@@ -71,19 +84,27 @@ public class AjouterWifiFragment extends DialogFragment {
     }
 
     private void saveWifiToFirebase(String ssid, String password) {
-        Reseau reseau = new Reseau(getContext(), password); // Assurez-vous que le constructeur correspond
-        reseau.seConnecterReseau(new UpdateValueCallback() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(requireContext(), "Wi-Fi ajouté avec succès", Toast.LENGTH_SHORT).show();
-                dismiss(); // Ferme le dialog
-            }
+        Reseau reseau = new Reseau(getContext(), password); // Ensure constructor matches your use case
 
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(requireContext(), "Échec de l'ajout du Wi-Fi", Toast.LENGTH_SHORT).show();
+        checkBluetoothPermissions();
+
+        if (!bluetooth.isBluetoothEnabled()) {
+            bluetooth.enableBluetooth();
+        } else {
+            if (device != null) {
+                bluetooth.connectToDevice(device);
+                if (bluetooth.isConnected()) {
+                    dismiss();
+                    new Thread(() -> {
+                        bluetooth.sendTwoMessagesAndRead(reseau.getSsid(), password);
+                    }).start();
+                } else {
+                    Toast.makeText(getContext(), "Pas connecté à un appareil Bluetooth", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "Appareil non trouvé ou non couplé", Toast.LENGTH_SHORT).show();
             }
-        });
+        }
     }
 
     @Override
@@ -99,5 +120,17 @@ public class AjouterWifiFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void checkBluetoothPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12 or later
+            if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.BLUETOOTH_CONNECT)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.BLUETOOTH_CONNECT},
+                        BLUETOOTH_PERMISSION_REQUEST_CODE);
+            }
+        }
     }
 }
