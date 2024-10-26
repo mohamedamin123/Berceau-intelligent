@@ -30,28 +30,22 @@ void sendMessageParBluetooth(){
     SerialBT.println("Salut du ESP32!");
   }
 
-void lireDeuxMessagesEtRepondre() {
-    // Vérifier si des données sont disponibles
+bool lireSsidEtPassword(String &ssid, String &password) {
     if (SerialBT.available()) {
-        // Lire le premier message (SSID)
-        String ssid = SerialBT.readStringUntil('\n'); // Lire jusqu'à un saut de ligne
+        ssid = SerialBT.readStringUntil('\n');  // Lire le SSID
         Serial.print("Premier message (SSID) reçu: ");
         Serial.println(ssid);
-
-        // Envoyer une réponse pour confirmer la réception du SSID
         SerialBT.println("SSID reçu: " + ssid);
-
-        // Attendre un moment avant de lire le deuxième message
-        delay(500); // Délai pour éviter des lectures simultanées
-
-        // Vérifier de nouveau si des données sont disponibles pour lire le mot de passe
+        
+        delay(500);  // Petit délai avant de lire le mot de passe
+        
         if (SerialBT.available()) {
-            String password = SerialBT.readStringUntil('\n'); // Lire jusqu'à un saut de ligne
+            password = SerialBT.readStringUntil('\n');  // Lire le mot de passe
             Serial.print("Deuxième message (Mot de passe) reçu: ");
             Serial.println(password);
-
-            // Envoyer une réponse pour confirmer la réception du mot de passe
             SerialBT.println("Mot de passe reçu: " + password);
+            return true;  // Retourner vrai si les deux sont reçus
         }
     }
+    return false;  // Retourner faux si la lecture a échoué
 }

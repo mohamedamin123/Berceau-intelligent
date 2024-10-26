@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.appmobile.databinding.FragmentBerceauBinding;
+import com.example.appmobile.firebase.DHT11Manager;
 import com.example.appmobile.firebase.FirebaseManager;
 import com.example.appmobile.firebase.LedManager;
 import com.example.appmobile.firebase.LedValueCallback;
@@ -21,6 +22,8 @@ import com.example.appmobile.firebase.UpdateValueCallback;
 
 public class BerceauFragment extends Fragment {
     private LedManager ledManager ;
+    private DHT11Manager dht11Manager ;
+
 
     private FragmentBerceauBinding binding;
 
@@ -29,7 +32,7 @@ public class BerceauFragment extends Fragment {
 
         binding = FragmentBerceauBinding.inflate(inflater, container, false);
          ledManager = new LedManager();
-
+        dht11Manager=new DHT11Manager();
         return binding.getRoot();
 
     }
@@ -44,6 +47,43 @@ public class BerceauFragment extends Fragment {
         binding.hmd.startAnimation(animation);
         binding.clm.startAnimation(animation);
         binding.lmp.startAnimation(animation);
+// Retrieve humidity value and set it in the UI
+        dht11Manager.getHmdValue(new LedValueCallback() {
+            @Override
+            public void onValueReceived(Integer value) {
+                // Not used for humidity in this case
+            }
+
+            @Override
+            public void onValueReceived(Float value) {
+                // Append "%" for humidity and set the text in the UI
+                binding.hmdEdt.setText(value != null ? value.toString() + " %" : "N/A"); // Set humidity value with "%" or "N/A" if null
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                binding.hmdEdt.setText("Error: " + e.getMessage()); // Display error message in the UI
+            }
+        });
+
+// Retrieve temperature value and set it in the UI
+        dht11Manager.getTmpValue(new LedValueCallback() {
+            @Override
+            public void onValueReceived(Integer value) {
+                // Not used for temperature in this case
+            }
+
+            @Override
+            public void onValueReceived(Float value) {
+                // Append "°C" for temperature and set the text in the UI
+                binding.tmpEdt.setText(value != null ? value.toString() + " °C" : "N/A"); // Set temperature value with "°C" or "N/A" if null
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                binding.tmpEdt.setText("Error: " + e.getMessage()); // Display error message in the UI
+            }
+        });
 
 
         ledManager.getLedValue(new LedValueCallback() {
@@ -53,6 +93,11 @@ public class BerceauFragment extends Fragment {
                     binding.lmpBtn.setText("Fermer");
                 else
                     binding.lmpBtn.setText("Ouvrir");
+
+            }
+
+            @Override
+            public void onValueReceived(Float value) {
 
             }
 

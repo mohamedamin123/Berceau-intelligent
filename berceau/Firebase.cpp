@@ -17,29 +17,38 @@ FirebaseConfig config;
 #define USER_EMAIL "amin@amin.com"
 #define USER_PASSWORD "amin123"
 
-void initFirebase() {
+bool initFirebase() {
+    // Définir les paramètres Firebase
     config.api_key = API_KEY;
+    config.database_url = DATABASE_URL;
+
+    // Définir les informations d'authentification
     auth.user.email = USER_EMAIL;
     auth.user.password = USER_PASSWORD;
-    config.database_url = DATABASE_URL;
-    config.token_status_callback = tokenStatusCallback; // see addons/TokenHelper.h
 
+    // Activer la reconnexion automatique du réseau
     Firebase.reconnectNetwork(true);
 
-    fbdo.setBSSLBufferSize(4096 /* Rx buffer size in ints from 512 - 16384 */, 1024 /* Tx buffer size in ints from 512 - 16384 */);
+    // Configurer les tailles des buffers pour les connexions SSL
+    fbdo.setBSSLBufferSize(4096, 1024);  // Taille du buffer Rx et Tx
 
+    // Initialiser Firebase avec la configuration et l'authentification
     Firebase.begin(&config, &auth);
+
+    // Callback pour vérifier l'état du jeton (optionnel)
+    config.token_status_callback = tokenStatusCallback;  // Voir addons/TokenHelper.h
+
+    // Vérifier si Firebase est connecté
+    if (Firebase.ready()) {
+        Serial.println("Firebase initialisé avec succès.");
+        return true;  // Retourner true si Firebase est prêt
+    } else {
+        Serial.println("Échec de l'initialisation de Firebase.");
+        return false;  // Retourner false si Firebase n'est pas prêt
+    }
 }
 
-uint8_t getLedFirebase() {
-    uint8_t ledControl;
-    Firebase.getInt(fbdo, F("/led1"), &ledControl);
-    return ledControl;
-}
 
-void setLedFirebase(uint8_t value) {
-    Firebase.setInt(fbdo, F("/led1"), value);
-}
 
 String readSsid() {
     String ssid;
@@ -73,4 +82,28 @@ String readPassword() {
         Serial.println(fbdo.errorReason());
     }
     return ""; // Return empty string if failed
+}
+
+int getLedFirebase() {
+    int ledControl = -1; // Default to -1 if no valid data is retrieved
+    if (Firebase.getInt(fbdo, F("/led1"), &ledControl)) {
+        Serial.println("Firebase LED value: " + String(ledControl));
+    } else {
+        Serial.println("Failed to get LED value. Error: " + fbdo.errorReason());
+    }
+    return ledControl;
+}
+
+
+void setLedFirebase(int value) {
+    Firebase.setInt(fbdo, F("/led1"), value);
+}
+
+
+void setTmpFirebase(float value) {
+    Firebase.setInt(fbdo, F("/tmp"), value);
+}
+
+void setHmdFirebase(float value) {
+    Firebase.setInt(fbdo, F("/hmd"), value);
 }
