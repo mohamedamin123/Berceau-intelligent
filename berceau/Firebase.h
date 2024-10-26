@@ -1,5 +1,7 @@
-uint8_t getLedFirebase();
-void setLedFirebase(uint8_t value);
-void initFirebase();
+int getLedFirebase();
+void setLedFirebase(int value);
+bool initFirebase();
 String readSsid();
 String readPassword();
+void setTmpFirebase(float value);
+void setHmdFirebase(float value);

@@ -2,4 +2,4 @@
     void initBluetooth();
     void sendMessageParBluetooth();
     bool isConnectedBluethooth();
-    void lireDeuxMessagesEtRepondre();
+bool lireSsidEtPassword(String &ssid, String &password);
