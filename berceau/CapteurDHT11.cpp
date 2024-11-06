@@ -2,7 +2,7 @@
 #include "CapteurDHT11.h"
 
 #define DHTTYPE DHT11     // Type de capteur
-#define DHTPIN 4          // Pin où le capteur est connecté
+#define DHTPIN 15          // Pin où le capteur est connecté
 
 DHT dht(DHTPIN, DHTTYPE); // Crée une instance du capteur DHT
 

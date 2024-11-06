@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation2"
+    app:startDestination="@+id/navigation_welcome1">
+
+    <fragment
+        android:id="@+id/navigation_welcome1"
+        android:name="com.example.appmobile.ui.welcome.ui.welcome1.Welcome1Fragment"
+        android:label="@string/title_home"
+        tools:layout="@layout/fragment_welcome1" />
+
+    <fragment
+        android:id="@+id/navigation_welcome2"
+        android:name="com.example.appmobile.ui.welcome.ui.welcome2.Welcome2Fragment"
+        android:label="@string/title_dashboard"
+        tools:layout="@layout/fragment_welcome2" />
+
+    <fragment
+        android:id="@+id/navigation_welcome3"
+        android:name="com.example.appmobile.ui.welcome.ui.welcome3.Welcome3Fragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_welcome3" />
+</navigation>

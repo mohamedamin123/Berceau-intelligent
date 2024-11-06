@@ -1,8 +1,7 @@
-package com.example.appmobile.ui.home;
+package com.example.appmobile.ui.accueil.home;
 
 
 import android.Manifest;
-import android.bluetooth.BluetoothDevice;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;

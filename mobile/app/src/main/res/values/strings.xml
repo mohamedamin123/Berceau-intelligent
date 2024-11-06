@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">appMobile</string>
+    <string name="app_name">BerceLuxe</string>
     <string name="connecter">Se connecter</string>
     <string name="email">Email</string>
     <string name="password">Mot de passe\n</string>
@@ -37,4 +37,13 @@
     <string name="ssid">SSID</string>
     <string name="retour">Retour</string>
     <string name="ajouter">Ajouter</string>
+    <string name="title_activity_welcome">WelcomeActivity</string>
+    <string name="suivant">Suivant</string>
+    <string name="bienvenue">Bienvenue !</string>
+    <string name="welcome1_paragrahpe">Notre application BerceLuxe vous permet de suivre votre enfant</string>
+    <string name="welcome2_paragrahpe">Vous pouvez surveiller votre enfant,sa température ,ses mouvements et bien d\'autres fonctionnalités</string>
+    <string name="welcome3_paragrahpe">Vous pouvez nous contacter pour de nouveaux ajouts ou corrections des erreurs</string>
+
+    <string name="objective">Objective</string>
+    <string name="finalement">Enfin</string>
 </resources>

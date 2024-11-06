@@ -44,26 +44,41 @@ void loop() {
 void gererFireBaseAndWifi() {
     String ssid, password;
 
+        if(lireSsidEtPassword(ssid,password)) {
+          // Essayer de se connecter au Wi-Fi avec le SSID et le mot de passe
+          connecter(ssid, password);
+          return;
+    }
+    
     // Read stored Wi-Fi credentials from Preferences
-    if (!readCredentialsFromPreferences(ssid, password)) {
-        Serial.println("No stored Wi-Fi credentials found.");
-        return; // Early return if no credentials found
+    if (readCredentialsFromPreferences(ssid, password)) {
+          connecter(ssid, password);
+          return;
+
     }
 
-    // Essayer de se connecter au Wi-Fi avec le SSID et le mot de passe
-    if (initWifi(ssid, password)) {  // Vérifie si la connexion Wi-Fi réussit
+        Serial.println("ssid : "+ssid);
+        Serial.println("pass : "+password);
+
+
+
+}
+
+void connecter(String ssid,String password){
+      if (initWifi(ssid, password)) {  // Vérifie si la connexion Wi-Fi réussit
         Serial.println("Wi-Fi connecté avec succès!");
         
         // Initialiser Firebase après une connexion Wi-Fi réussie
         if (initFirebase()) {
             Serial.println("Firebase initialisé avec succès!");
+            saveCredentialsToPreferences( ssid, password);
         } else {
             Serial.println("Erreur d'initialisation de Firebase.");
         }
     } else {
         Serial.println("Échec de la connexion Wi-Fi. Vérifiez le SSID et le mot de passe.");
     }
-}
+    }
 
 // Save Wi-Fi credentials to Preferences
 void saveCredentialsToPreferences(String ssid, String password) {
