@@ -34,15 +34,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppMobile"
         tools:targetApi="31">
+        <activity
+            android:name=".ui.welcome.WelcomeActivity"
+            android:exported="false"
+            android:label="@string/title_activity_welcome">
+
+        </activity>
+
         <service
             android:name=".service.BluetoothService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
-            android:name=".ui.HomeActivity"
+            android:name=".ui.accueil.HomeActivity"
             android:exported="true"
-            android:label="@string/title_activity_homme">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

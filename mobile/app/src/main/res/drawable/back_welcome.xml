@@ -1,0 +1,22 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="720dp"
+    android:height="1323dp"
+    android:viewportWidth="1114"
+    android:viewportHeight="2348">
+
+    <!-- Partie haute (violette) -->
+    <path
+        android:pathData="M0,0h1118v1024H0z"
+    android:fillColor="@color/purple" />  <!-- Couleur violette -->
+
+    <!-- Partie violette entre la partie haute et la partie blanche -->
+    <path
+        android:pathData="M0,1004h1115c60,0 60,40 50,70v3c0,50 -50,50 -100,50h-1014c-2,0 -50,-1 -160,-50v-3c0,-27 27,-50 50,-50z"
+        android:fillColor="@color/purple" />  <!-- Partie violette sous la section haute -->
+
+    <!-- Partie basse (blanche) avec border-radius sur les 4 coins -->
+    <path
+        android:pathData="M50,1077h1014c27,0 50,23 50,50v824c0,27 -23,50 -50,50h-1014c-27,0 -50,-23 -50,-50v-824c0,-27 23,-50 50,-50z"
+        android:fillColor="@color/white" />  <!-- Partie basse blanche avec coins arrondis -->
+
+</vector>

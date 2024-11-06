@@ -1,4 +1,4 @@
-package com.example.appmobile.ui.camera;
+package com.example.appmobile.ui.accueil.camera;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
