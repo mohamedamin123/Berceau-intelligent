@@ -1,6 +1,7 @@
 package com.example.appmobile.ui.connexion;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.example.appmobile.databinding.ActivityLoginBinding;
 import com.example.appmobile.firebase.FirebaseManager;
 import com.example.appmobile.ui.accueil.HomeActivity;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -31,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
         // Check if a user is already logged in
         firebaseManager = new FirebaseManager(getApplicationContext());
         FirebaseUser currentUser = firebaseManager.getCurrentUser();
+
+        Log.d("email", currentUser != null ? currentUser.getEmail() : "No user");
         if (currentUser != null) {
             // User is already logged in, navigate to HomeActivity
             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
@@ -70,9 +75,17 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(FirebaseUser user) {
                 Log.d("HomeActivity", "Connexion réussie");
+
+                // Sauvegarder le mot de passe dans SharedPreferences
+                SharedPreferences sharedPreferences = getSharedPreferences("AppPreferences", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("userEmail", email);
+                editor.putString("userPassword", password); // Sauvegarder le mot de passe
+                editor.apply();
+
                 Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                 startActivity(intent);
-                finish(); // Close LoginActivity to prevent going back
+                finish(); // Fermer LoginActivity pour empêcher l'utilisateur de revenir
             }
 
             @Override
@@ -82,4 +95,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
 }

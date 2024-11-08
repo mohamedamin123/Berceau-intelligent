@@ -96,7 +96,7 @@ public class FirebaseManager {
 
     // Sauvegarde des données de l'utilisateur dans Firebase Realtime Database
     private void saveUser(String userId, String firstName, String lastName, String email) {
-        User user = new User(firstName, lastName, email);
+        User user = new User(lastName, firstName, email,0,0,0);
         database.child("users").child(userId).setValue(user)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Données utilisateur sauvegardées avec succès"))
                 .addOnFailureListener(e -> Log.w(TAG, "Échec de la sauvegarde des données utilisateur", e));
@@ -187,5 +187,52 @@ public class FirebaseManager {
 
     public DatabaseReference getDatabase() {
         return database;
+    }
+
+
+    public interface UserDataCallback {
+        void onUserDataReceived(User user);
+        void onFailure(Exception e);
+    }
+
+    public void getUserData(String userId, UserDataCallback callback) {
+        database.child("users").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                User user = dataSnapshot.getValue(User.class);
+                if (user != null) {
+                    callback.onUserDataReceived(user);
+                } else {
+                    callback.onFailure(new Exception("User not found"));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                callback.onFailure(databaseError.toException());
+            }
+        });
+    }
+
+    public interface UserDataUpdateCallback {
+        void onSuccess();
+        void onFailure(Exception e);
+    }
+
+    public void updateUserData(String userId, String newNom, String newPrenom, UserDataUpdateCallback callback) {
+        database.child("users").child(userId).child("nom").setValue(newNom)
+                .addOnSuccessListener(aVoid -> database.child("users").child(userId).child("prenom").setValue(newPrenom)
+                        .addOnSuccessListener(aVoid1 -> {
+                            Log.d(TAG, "Nom et prénom mis à jour avec succès.");
+                            callback.onSuccess();
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.w(TAG, "Échec de la mise à jour du prénom", e);
+                            callback.onFailure(e);
+                        }))
+                .addOnFailureListener(e -> {
+                    Log.w(TAG, "Échec de la mise à jour du nom", e);
+                    callback.onFailure(e);
+                });
     }
 }

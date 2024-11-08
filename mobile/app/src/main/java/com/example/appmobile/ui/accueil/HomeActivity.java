@@ -8,9 +8,11 @@ import android.util.Log;
 import com.example.appmobile.R;
 import com.example.appmobile.databinding.ActivityHomeBinding;
 import com.example.appmobile.firebase.FirebaseManager;
+import com.example.appmobile.ui.connexion.LoginActivity;
 import com.example.appmobile.ui.welcome.WelcomeActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.internal.zzad;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -20,6 +22,8 @@ import androidx.navigation.ui.NavigationUI;
 public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
+    private FirebaseUser currentUser;
+    private FirebaseManager firebaseManager;
 
 
     @Override
@@ -46,6 +50,21 @@ public class HomeActivity extends AppCompatActivity {
         // Chargez le layout normal de HomeActivity si ce n'est pas la première ouverture
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        firebaseManager=new FirebaseManager(HomeActivity.this);
+        currentUser=firebaseManager.getCurrentUser();
+        if(currentUser==null)
+        {
+            Log.d("LoginActivity", "User not logged in");
+            // Redirection vers l'activité de connexion
+            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return; // Arrêtez l'exécution ici pour éviter de continuer dans HomeActivity
+        }
+
+
+
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
