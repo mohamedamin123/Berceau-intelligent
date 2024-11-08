@@ -77,7 +77,7 @@ public class ConfirmerEmailActivity extends AppCompatActivity {
                 public void onSuccess() {
                     Toast.makeText(ConfirmerEmailActivity.this, "Email de réinitialisation envoyé. Vérifiez votre boîte de réception.", Toast.LENGTH_SHORT).show();
                     // Vous pouvez rediriger l'utilisateur vers une autre page ou simplement lui indiquer que tout va bien
-                    Intent intent = new Intent(ConfirmerEmailActivity.this, HomeActivity.class);
+                    Intent intent = new Intent(ConfirmerEmailActivity.this, LoginActivity.class);
                     startActivity(intent);
                 }
 
@@ -90,11 +90,12 @@ public class ConfirmerEmailActivity extends AppCompatActivity {
     }
 
     private void enregistrer() {
-        Intent intent=new Intent(ConfirmerEmailActivity.this, HomeActivity.class);
+        Intent intent=new Intent(ConfirmerEmailActivity.this, LoginActivity.class);
         firebaseManager = new FirebaseManager(getApplicationContext());
         firebaseManager.signUp(email, password, nom, prenom, new FirebaseManager.SignInCallback() {
             @Override
             public void onSuccess(FirebaseUser user) {
+
                 // Handle successful sign-up, navigate to the next activity or show a success message
                 startActivity(intent);
             }

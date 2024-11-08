@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
+import com.example.appmobile.firebase.FirebaseManager;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,6 +27,7 @@ public class BluetoothHelper {
     private OutputStream outputStream;
     private InputStream inputStream;
     private Context context;
+    private FirebaseManager firebaseManager;
 
     private static final UUID SERIAL_PORT_SERVICE_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
@@ -121,22 +125,24 @@ public class BluetoothHelper {
     }
 
     // Envoyer deux messages à l'ESP32 et lire la réponse
-    public void sendTwoMessagesAndRead(String message1, String message2) {
+    public void sendTwoMessagesAndRead(String message1, String message2,String message3 , String message4,String message5) {
         try {
-            sendMessage(message1); // Envoyer le premier message
-            Thread.sleep(250); // Pause de 500 ms après l'envoi du premier message
 
-            sendMessage(message2); // Envoyer le deuxième message
-            Thread.sleep(250); // Pause de 500 ms après l'envoi du deuxième message
+            // Concaténer les deux messages avec un espace entre eux
+            String combinedMessage = message1 + " " + message2+" "+message3 + " " + message4+" "+ message5;
+            sendMessage(combinedMessage); // Envoyer le message combiné
 
+            // Pause de 250 ms après l'envoi
+            Thread.sleep(250);
 
-            // Lire la réponse de l'ESP32
+            // Lire la réponse de l'ESP32 ici, selon la méthode que vous utilisez
 
         } catch (InterruptedException e) {
             Log.e("BluetoothHelper", "Erreur lors du sommeil: " + e.getMessage());
             Thread.currentThread().interrupt(); // Réinitialiser le statut d'interruption
         }
     }
+
 
     public void sendMessage(String message) {
         try {

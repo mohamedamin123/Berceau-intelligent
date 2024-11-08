@@ -69,5 +69,11 @@
     <string name="makeAccString">Construire un nouveau compte</string>
     <string name="nouveau_password">Nouveau mot de passe\n</string>
     <string name="saisir_password">Saisir un nouveau mot de passe</string>
+    <string name="mise_a_jour">Mise a jour</string>
+    <string name="lait">Lait</string>
+    <string name="dormir">Dormir</string>
+    <string name="repas">Repas</string>
+    <string name="couche">Couche</string>
+    <string name="ajouter_wifi">Ajouter wifi dans votre berceau ici :</string>
 
 </resources>

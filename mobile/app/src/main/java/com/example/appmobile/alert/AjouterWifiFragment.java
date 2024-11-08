@@ -1,7 +1,10 @@
 package com.example.appmobile.alert;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.Manifest;
 import android.bluetooth.BluetoothDevice;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -16,9 +19,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.example.appmobile.databinding.FragmentAjouterWifiBinding;
+import com.example.appmobile.firebase.FirebaseManager;
 import com.example.appmobile.firebase.Reseau;
 import com.example.appmobile.firebase.UpdateValueCallback;
 import com.example.appmobile.reseau.BluetoothHelper;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Objects;
 
 public class AjouterWifiFragment extends DialogFragment {
 
@@ -96,7 +103,13 @@ public class AjouterWifiFragment extends DialogFragment {
                 if (bluetooth.isConnected()) {
                     dismiss();
                     new Thread(() -> {
-                        bluetooth.sendTwoMessagesAndRead(reseau.getSsid(), password);
+                        SharedPreferences sharedPreferences = requireActivity().getSharedPreferences("AppPreferences", MODE_PRIVATE);
+                        String savedEmail = sharedPreferences.getString("userEmail", null);  // Récupérer l'email
+                        String savedPassword = sharedPreferences.getString("userPassword", null);  // Récupérer le mot de passe
+
+                        FirebaseManager firebaseManager = new FirebaseManager(getContext());
+                        FirebaseUser currentUser = firebaseManager.getCurrentUser();
+                        bluetooth.sendTwoMessagesAndRead(reseau.getSsid(), password,currentUser.getEmail(),savedPassword,currentUser.getUid());
                     }).start();
                 } else {
                     Toast.makeText(getContext(), "Pas connecté à un appareil Bluetooth", Toast.LENGTH_SHORT).show();

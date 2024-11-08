@@ -5,7 +5,7 @@ bool initWifi(String WIFI_SSID, String WIFI_PASSWORD) {
     Serial.print("Connecting to Wi-Fi");
 
     unsigned long startAttemptTime = millis();  // Record the start time
-    const unsigned long timeout = 10000;        // Timeout period of 30 seconds (30,000 milliseconds)
+    const unsigned long timeout = 3000;        // Timeout period of 30 seconds (30,000 milliseconds)
 
     // Loop until connected or timeout
     while (WiFi.status() != WL_CONNECTED)

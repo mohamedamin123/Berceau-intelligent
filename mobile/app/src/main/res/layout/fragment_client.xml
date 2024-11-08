@@ -1,22 +1,140 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/back_welcome"
     tools:context=".ui.accueil.home.HomeFragment">
 
+    <!-- Title Text -->
     <TextView
-        android:id="@+id/text_client"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:singleLine="true"
+        android:gravity="center"
+        android:text="@string/client"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <!-- Logo or Image -->
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"
+        android:src="@drawable/client" />
+
+    <!-- Form Fields -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_marginTop="40dp"
+        android:padding="16dp"
+        android:orientation="vertical">
+
+        <!-- Row for First Name and Last Name -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="10dp">
+
+            <!-- First Name Field -->
+            <EditText
+                android:id="@+id/prenom_edt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/prenom"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:background="@drawable/back_input" />
+
+            <!-- Space between fields -->
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="wrap_content" />
+
+            <!-- Last Name Field -->
+            <EditText
+                android:id="@+id/nom_edt"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="@string/nom"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:background="@drawable/back_input" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/error_nom_prenom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/red"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
+
+        <!-- Email Field -->
+        <EditText
+            android:id="@+id/email_edt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:focusable="false"
+            android:background="@drawable/back_input" />
+
+        <!-- Error Text for Email -->
+        <TextView
+            android:id="@+id/errorEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/red"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
+
+        <!-- Password Field -->
+
+
+        <!-- Error Text for Password -->
+        <TextView
+            android:id="@+id/errorPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/red"
+            android:textSize="14sp"
+            android:visibility="gone"
+            />
+
+    </LinearLayout>
+
+    <!-- Continue Button -->
+    <Button
+        android:id="@+id/btn_mise"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:singleLine="true"
+        android:text="@string/mise_a_jour"
+        android:backgroundTint="@color/design_default_color_secondary"
+        android:textAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:backgroundTint="@null" />
+</LinearLayout>
