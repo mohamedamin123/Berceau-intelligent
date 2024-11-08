@@ -35,11 +35,25 @@
         android:theme="@style/Theme.AppMobile"
         tools:targetApi="31">
         <activity
+            android:name=".ui.connexion.NewPasswordActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppMobile" />
+        <activity
+            android:name=".ui.connexion.CompteExisteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.connexion.ConfirmerEmailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.connexion.OublieActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.connexion.RegisterActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.welcome.WelcomeActivity"
             android:exported="false"
-            android:label="@string/title_activity_welcome">
-
-        </activity>
+            android:label="@string/app_name" />
 
         <service
             android:name=".service.BluetoothService"
@@ -48,17 +62,17 @@
 
         <activity
             android:name=".ui.accueil.HomeActivity"
-            android:exported="true"
-            android:label="@string/app_name">
+            android:exported="false"
+            android:label="@string/app_name" />
+        <activity
+            android:name=".ui.connexion.LoginActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.connexion.LoginActivity"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />

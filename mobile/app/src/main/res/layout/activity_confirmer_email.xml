@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:background="@drawable/background"
+    android:layout_height="match_parent"
+    tools:context=".ui.connexion.ConfirmerEmailActivity">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:singleLine="true"
+        android:gravity="center"
+        android:text="@string/confirmemailString"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"
+        android:src="@drawable/security" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_gravity="center"
+        android:text="@string/confirmemailmessageString"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+
+    <com.chaos.view.PinView
+
+        android:id="@+id/confirmcodeET"
+        style="@style/PinWidget.PinView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:cursorVisible="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:itemBackground="#FFFFF7"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:inputType="number"
+        app:viewType="rectangle"
+        app:lineWidth="2dp"
+        app:lineColor="@color/black"
+        app:itemWidth="45dp"
+        app:itemRadius="4dp"
+        app:itemHeight="45dp"
+        app:itemCount="6"
+        app:hideLineWhenFilled="true"
+        app:cursorWidth="2dp"
+        app:cursorColor="@color/black" />
+
+    <TextView
+        android:id="@+id/confirmagainTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:text="@string/sendcodeString"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/loginBtn"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="15dp"
+        android:singleLine="true"
+        android:text="@string/continuee"
+        android:backgroundTint="@color/design_default_color_secondary"
+        android:textAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:backgroundTint="@null" />
+
+</LinearLayout>
