@@ -33,10 +33,11 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -52,6 +53,7 @@ dependencies {
 
     // CircleImageView dependency
     implementation(libs.circleimageview)
+
     // CameraX dependencies
     implementation(libs.camera.core)
     implementation(libs.camera.camera2)
@@ -61,12 +63,18 @@ dependencies {
     // Firebase BOM
     implementation(platform("com.google.firebase:firebase-bom:33.5.0"))
 
-// Firebase Realtime Database
+    // Firebase Realtime Database
     implementation("com.google.firebase:firebase-database-ktx")
 
-// Firebase Authentication
+    // Firebase Authentication
     implementation("com.google.firebase:firebase-auth-ktx")
 
     implementation ("com.google.firebase:firebase-analytics")
 
+    // Pin 6 numbers
+    implementation ("io.github.chaosleung:pinview:1.4.4")
+
+    // Email dependencies
+    implementation ("com.sun.mail:android-mail:1.6.2")
+    implementation ("com.sun.mail:android-activation:1.6.2")
 }

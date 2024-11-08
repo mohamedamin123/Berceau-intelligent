@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">BerceLuxe</string>
+
     <string name="connecter">Se connecter</string>
     <string name="email">Email</string>
     <string name="password">Mot de passe\n</string>
@@ -7,11 +8,13 @@
     <string name="continue_avec_google">Continuer avec Google</string>
     <string name="remember_moi">Se souvenir de moi</string>
     <string name="oublier_password">Mot de passe oublié</string>
-    <string name="saisir_email">Saisissez votre email s\\\'il vous plaît !</string>
-    <string name="saisir_email_existant">Saisissez un email d\\\'un compte existent, s\\\'il vous plaît!</string>
+    <string name="saisir_email">Saisissez votre email s\'il vous plaît !</string>
+    <string name="saisir_email_existant">Saisissez un email d\'un compte existent, s\'il vous plaît!</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
+    <string name="incorect">Votre email ou mot de passe incorrect!</string>
+
+
+
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
@@ -46,4 +49,25 @@
 
     <string name="objective">Objective</string>
     <string name="finalement">Enfin</string>
+    <string name="crer_un_compte">creér un compte!?</string>
+    <string name="confirmemailString">Comfirmer Votre Email</string>
+    <string name="confirmemailmessageString">"Saisissez votre code reçu par l\'email "</string>
+    <string name="sendcodeString">Je n\'ai pas reçu de code. Reenvoyer</string>
+    <string name="continuee">Continue</string>
+    <string name="creation_un_compte">Créer un compte</string>
+    <string name="prenom">Prenom</string>
+    <string name="nom">Nom</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="userNameString">Nom d\'utilisateur</string>
+    <string name="userEmailString">email@email.com</string>
+    <string name="accountexistsString">Compte existant</string>
+    <string name="alreadyexists">Vous avez déjà un compte !</string>
+    <string name="makeAccString">Construire un nouveau compte</string>
+    <string name="nouveau_password">Nouveau mot de passe\n</string>
+    <string name="saisir_password">Saisir un nouveau mot de passe</string>
+
 </resources>

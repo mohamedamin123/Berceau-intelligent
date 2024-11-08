@@ -20,7 +20,7 @@ import androidx.navigation.ui.NavigationUI;
 public class HomeActivity extends AppCompatActivity {
 
     private ActivityHomeBinding binding;
-    private FirebaseManager firebaseManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,20 +52,5 @@ public class HomeActivity extends AppCompatActivity {
         // Configurez NavController avec BottomNavigationView
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_homme);
         NavigationUI.setupWithNavController(navView, navController);
-
-        // Initialisez FirebaseManager et connectez-vous à Firebase
-        firebaseManager = new FirebaseManager();
-        firebaseManager.signIn("amin@amin.com", "amin123", new FirebaseManager.SignInCallback() {
-            @Override
-            public void onSuccess(FirebaseUser user) {
-                Log.d("HomeActivity", "Connexion réussie");
-                // Vous pouvez maintenant interagir avec la base de données
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Log.w("HomeActivity", "Échec de la connexion", e);
-            }
-        });
     }
 }
