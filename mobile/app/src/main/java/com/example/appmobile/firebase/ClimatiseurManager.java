@@ -1,26 +1,22 @@
 package com.example.appmobile.firebase;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.example.appmobile.reseau.WifiHelper;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-public class LedManager {
+public class ClimatiseurManager {
 
     private FirebaseManager firebaseManager;
     private FirebaseUser currentUser;
 
-    public LedManager(FirebaseUser currentUser) {
+    public ClimatiseurManager(FirebaseUser currentUser) {
         this.firebaseManager = new FirebaseManager();
         this.currentUser=currentUser;
     }
 
-    public void getLedValue(LedValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("led1").addListenerForSingleValueEvent(new ValueEventListener() {
+    public void getClimValue(CLimValueCallback callback) {
+        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("clim").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Boolean ledControl = dataSnapshot.getValue(Boolean.class);
@@ -35,15 +31,15 @@ public class LedManager {
     }
 
     // Mettre à jour la valeur du LED
-    public void setLedValue(Boolean value, UpdateValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("led1").setValue(value)
+    public void setClimValue(Boolean value, UpdateValueCallback callback) {
+        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("clim").setValue(value)
                 .addOnSuccessListener(aVoid -> {
                     callback.onSuccess();
                 })
                 .addOnFailureListener(callback::onFailure);
     }
 
-    public interface LedValueCallback {
+    public interface CLimValueCallback {
         void onValueReceived(Boolean value);
         void onFailure(Exception e);
     }

@@ -3,6 +3,10 @@
 #include "Firebase.h"
 #include "CapteurDHT11.h"
 #include "Led.h"
+#include "Fan.h"
+
+#include "CapteurServoMoteur.h"
+
 #include <Preferences.h> // Library for Preferences handling
 
 Preferences preferences; // Create a Preferences object
@@ -20,6 +24,7 @@ void setup() {
     initCapteurDHT();         // Initialisation du capteur DHT11
     initBluetooth();
     initLed();
+    initServo();
     preferences.begin(WIFI_NAMESPACE, false); // Open the Preferences with the given namespace
 
     // Attempt to connect using saved credentials
@@ -33,9 +38,11 @@ void loop() {
         gererFireBaseAndWifi();
     } else {
         // If connected, perform your regular tasks
-        Serial.println(getLedFirebase());
         changeLed(getLedFirebase());
-
+        if(getServoFirebase()==1){
+            changePosition();
+        }
+        
         float tmp = afficherTemperature();
         float hmd = afficherHumidite();
         setHmdFirebase(hmd);

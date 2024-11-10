@@ -96,7 +96,7 @@ public class FirebaseManager {
 
     // Sauvegarde des données de l'utilisateur dans Firebase Realtime Database
     private void saveUser(String userId, String firstName, String lastName, String email) {
-        User user = new User(lastName, firstName, email,0,0,0);
+        User user = new User(lastName, firstName, email,0,0,false,false,false);
         database.child("users").child(userId).setValue(user)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Données utilisateur sauvegardées avec succès"))
                 .addOnFailureListener(e -> Log.w(TAG, "Échec de la sauvegarde des données utilisateur", e));

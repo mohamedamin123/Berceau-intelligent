@@ -75,5 +75,10 @@
     <string name="repas">Repas</string>
     <string name="couche">Couche</string>
     <string name="ajouter_wifi">Ajouter wifi dans votre berceau ici :</string>
+    <string name="deconexion">Déconnexion</string>
+    <string name="mouvement">Mouvement</string>
+    <string name="bouger">Bouger</string>
+    <string name="arreter">Arreter</string>
+
 
 </resources>

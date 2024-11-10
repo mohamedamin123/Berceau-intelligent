@@ -2,10 +2,14 @@ package com.example.appmobile.ui.accueil.home;
 
 import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -21,6 +25,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.appmobile.alert.AjouterWifiFragment;
 import com.example.appmobile.databinding.FragmentHomeBinding;
+import com.example.appmobile.firebase.FirebaseManager;
 import com.example.appmobile.firebase.Reseau;
 
 public class HomeFragment extends Fragment {
@@ -30,6 +35,8 @@ public class HomeFragment extends Fragment {
     private static final int ENABLE_BT_REQUEST_CODE = 3; // Code pour demander à activer Bluetooth
 
     private FragmentHomeBinding binding;
+    private BroadcastReceiver networkReceiver;
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,25 +47,60 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        updateConnectionStatus();
 
         // Vérification des permissions de localisation (nécessaires pour les scans Bluetooth sur Android)
-        verifierPermission();
+        setupNetworkReceiver();
+        
+
 
         // Gestion du bouton de connexion Bluetooth
         binding.btnAJouter.setOnClickListener(e -> {
-            // Vérifier si Bluetooth et localisation sont activés avant de procéder
-            if (!isBluetoothEnabled()) {
+            if (!isWifiEnabled()) {
+                Toast.makeText(requireContext(), "Veuillez activer le Wifi", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS)); // Guide the user to Wi-Fi settings
+            } else if (!isInternetConnected()) {
+                Toast.makeText(requireContext(), "Veuillez vérifier la connexion Internet", Toast.LENGTH_SHORT).show();
+            } else if (!isBluetoothEnabled()) {
                 Toast.makeText(requireContext(), "Veuillez activer le Bluetooth", Toast.LENGTH_SHORT).show();
-                startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), ENABLE_BT_REQUEST_CODE); // Demande d'activation du Bluetooth
+                startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), ENABLE_BT_REQUEST_CODE);
             } else if (!isLocationEnabled()) {
                 Toast.makeText(requireContext(), "Veuillez activer la localisation", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS); // Ouvre les paramètres de localisation
-                startActivity(intent);
+                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
             } else {
                 // Si tout est activé, procéder à l'action
                 setupNetworkConnection();
             }
         });
+
+    }
+
+    private void setupNetworkReceiver() {
+        networkReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                updateConnectionStatus();
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        requireContext().registerReceiver(networkReceiver, filter);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateConnectionStatus();
+
+
+    }
+
+    private void updateConnectionStatus() {
+        if (isInternetConnected()) {
+            binding.connexion.setVisibility(View.GONE);
+        } else {
+            binding.connexion.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -89,6 +131,21 @@ public class HomeFragment extends Fragment {
         LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
         return locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
+
+    private boolean isInternetConnected() {
+        ConnectivityManager cm = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm != null) {
+            NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+        }
+        return false;
+    }
+
+    private boolean isWifiEnabled() {
+        ConnectivityManager cm = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI).isConnectedOrConnecting();
+    }
+
 
     /**
      * Partie gestion des permissions

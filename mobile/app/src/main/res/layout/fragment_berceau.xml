@@ -8,217 +8,249 @@
     android:animateLayoutChanges="true"
     tools:context=".ui.accueil.berceau.BerceauFragment">
 
-
     <TextView
         android:id="@+id/title"
         style="@style/style_tv_title_post"
         android:textColor="@color/black"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/berceau"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:text="@string/berceau" />
 
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/tmp"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:layout_margin="20dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
 
-            android:background="@drawable/incline"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/style_tv_sous_title_post"
-                android:layout_gravity="center"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:text="@string/temperature" />
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:layout_marginVertical="10dp"
-                android:src="@drawable/temperature"
-                android:contentDescription="@string/temperature">
-            </ImageView>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-            <EditText
-                android:id="@+id/tmp_edt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/style_tv_sous_title_post"
-                android:textSize="25sp"
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:background="@android:color/transparent"
-                android:inputType="none"
-                android:text="@string/_0_00"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
-                />
+                <!-- Première section - Température -->
+                <LinearLayout
+                    android:id="@+id/tmp"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_margin="15dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/incline"
+                    android:layout_height="wrap_content">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/style_tv_sous_title_post"
+                        android:layout_gravity="center"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:text="@string/temperature" />
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center"
+                        android:layout_marginVertical="10dp"
+                        android:src="@drawable/temperature"
+                        android:contentDescription="@string/temperature" />
+
+                    <EditText
+                        android:id="@+id/tmp_edt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/style_tv_sous_title_post"
+                        android:textSize="25sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:background="@android:color/transparent"
+                        android:inputType="none"
+                        android:text="@string/_0_00"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false" />
+                </LinearLayout>
+
+                <!-- Section humidité -->
+                <LinearLayout
+                    android:id="@+id/hmd"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_margin="15dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/incline"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/style_tv_sous_title_post"
+                        android:textSize="20sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:text="@string/humidity" />
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/humidite"
+                        android:layout_gravity="center"
+                        android:layout_marginVertical="10dp"
+                        android:contentDescription="@string/humidity" />
+
+                    <EditText
+                        android:id="@+id/hmd_edt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/style_tv_sous_title_post"
+                        android:textSize="25sp"
+                        android:textColor="@color/black"
+                        android:inputType="none"
+                        android:layout_gravity="center"
+                        android:text="@string/_0_00"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:background="@android:color/transparent" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Section mouvement -->
+            <LinearLayout
+                android:id="@+id/mvt"
+                android:orientation="vertical"
+                android:padding="10dp"
+                android:layout_margin="10dp"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/incline"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/style_tv_sous_title_post"
+                    android:layout_gravity="center"
+                    android:textSize="20sp"
+                    android:textColor="@color/black"
+                    android:text="@string/mouvement" />
+
+                <ImageView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="10dp"
+                    android:src="@drawable/mouvement"
+                    android:contentDescription="@string/mouvement" />
+
+                <Button
+                    android:id="@+id/mvt_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/style_tv_sous_title_post"
+                    android:textSize="25sp"
+                    android:layout_gravity="center"
+                    android:textColor="@color/black"
+                    android:text="@string/bouger"
+                    android:background="@null"
+                    android:backgroundTint="#CB68DD" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <!-- Section climatiseur -->
+                <LinearLayout
+                    android:id="@+id/clm"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_margin="20dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/incline"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/style_tv_sous_title_post"
+                        android:layout_gravity="center"
+                        android:textSize="20sp"
+                        android:textColor="@color/black"
+                        android:text="@string/climatiseur" />
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center"
+                        android:layout_marginVertical="10dp"
+                        android:src="@drawable/climatiseur"
+                        android:contentDescription="@string/climatiseur" />
+
+                    <Button
+                        android:id="@+id/clm_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/style_tv_sous_title_post"
+                        android:textSize="25sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:text="@string/ouvrir"
+                        android:background="@null"
+                        android:layout_marginBottom="70dp"
+
+                        android:backgroundTint="#CB68DD" />
+                </LinearLayout>
+
+                <!-- Section lumière -->
+                <LinearLayout
+                    android:id="@+id/lmp"
+                    android:orientation="vertical"
+                    android:padding="10dp"
+                    android:layout_margin="20dp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/incline"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/style_tv_sous_title_post"
+                        android:textSize="20sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:text="@string/lumiere" />
+
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:src="@drawable/lumiere"
+                        android:layout_gravity="center"
+                        android:layout_marginVertical="10dp"
+                        android:contentDescription="@string/lumiere" />
+
+                    <Button
+                        android:id="@+id/lmp_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@style/style_tv_sous_title_post"
+                        android:textSize="25sp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/black"
+                        android:text="@string/ouvrir"
+                        android:background="@null"
+                        android:layout_marginBottom="70dp"
+                        android:backgroundTint="#CB68DD" />
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/hmd"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:layout_margin="20dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/incline"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/style_tv_sous_title_post"
-                android:textSize="20sp"
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:text="@string/humidity" />
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/humidite"
-                android:layout_gravity="center"
-                android:layout_marginVertical="10dp"
-                android:contentDescription="@string/temperature">
-            </ImageView>
-
-            <EditText
-                android:id="@+id/hmd_edt"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/style_tv_sous_title_post"
-                android:textSize="25sp"
-                android:textColor="@color/black"
-                android:inputType="none"
-                android:layout_gravity="center"
-                android:text="@string/_0_00"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:background="@android:color/transparent" />                />
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:id="@+id/clm"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:layout_margin="20dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-
-            android:background="@drawable/incline"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/style_tv_sous_title_post"
-                android:layout_gravity="center"
-                android:textSize="20sp"
-                android:textColor="@color/black"
-                android:text="@string/climatiseur" />
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:layout_gravity="center"
-                android:layout_marginVertical="10dp"
-                android:src="@drawable/climatiseur"
-                android:contentDescription="@string/temperature">
-            </ImageView>
-
-            <Button
-                android:id="@+id/clm_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/style_tv_sous_title_post"
-                android:textSize="25sp"
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:background="@null"
-                android:backgroundTint="#CB68DD"
-                android:text="@string/ouvrir" />
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/lmp"
-            android:orientation="vertical"
-            android:padding="10dp"
-            android:layout_margin="20dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:background="@drawable/incline"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/style_tv_sous_title_post"
-                android:textSize="20sp"
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:text="@string/lumiere" />
-            <ImageView
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:src="@drawable/lumiere"
-                android:layout_gravity="center"
-                android:layout_marginVertical="10dp"
-                android:contentDescription="@string/temperature">
-            </ImageView>
-
-
-
-            <Button
-                android:id="@+id/lmp_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                style="@style/style_tv_sous_title_post"
-                android:textSize="25sp"
-                android:layout_gravity="center"
-                android:textColor="@color/black"
-                android:text="@string/ouvrir"
-                android:background="@null"
-                android:backgroundTint="#CB68DD"
-                />
-
-        </LinearLayout>
-
-
-    </LinearLayout>
-
-
-
-
-
-
-
+    </ScrollView>
 </LinearLayout>

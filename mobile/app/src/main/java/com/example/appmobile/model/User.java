@@ -8,7 +8,9 @@ public class User {
     private String email;
     private float tmp;
     private float hmd;
-    private int led1;
+    private boolean led1;
+    private boolean servo;
+    private boolean clim;
 
     public User() {
     }
@@ -24,13 +26,31 @@ public class User {
         this.idUser = idUser;
     }
 
-    public User(String nom, String prenom, String email, float tmp, float hmd, int led1) {
+    public User(String nom, String prenom, String email, float tmp, float hmd, boolean led1,boolean servo,boolean clim) {
         this.nom = nom;
         this.prenom = prenom;
         this.email = email;
         this.tmp = tmp;
         this.hmd = hmd;
         this.led1 = led1;
+        this.servo=servo;
+        this.clim=clim;
+    }
+
+    public boolean isLed1() {
+        return led1;
+    }
+
+    public void setLed1(boolean led1) {
+        this.led1 = led1;
+    }
+
+    public boolean isServo() {
+        return servo;
+    }
+
+    public void setServo(boolean servo) {
+        this.servo = servo;
     }
 
     public float getTmp() {
@@ -49,13 +69,6 @@ public class User {
         this.hmd = hmd;
     }
 
-    public int isLed1() {
-        return led1;
-    }
-
-    public void setLed1(int led1) {
-        this.led1 = led1;
-    }
 
     public Integer getIdUser() {
         return idUser;
@@ -87,5 +100,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public boolean isClim() {
+        return clim;
+    }
+
+    public void setClim(boolean clim) {
+        this.clim = clim;
     }
 }
