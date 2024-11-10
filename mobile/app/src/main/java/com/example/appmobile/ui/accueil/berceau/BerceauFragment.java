@@ -11,17 +11,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.appmobile.R;
 import com.example.appmobile.databinding.FragmentBerceauBinding;
+import com.example.appmobile.firebase.ClimatiseurManager;
 import com.example.appmobile.firebase.DHT11Manager;
 import com.example.appmobile.firebase.FirebaseManager;
 import com.example.appmobile.firebase.LedManager;
 import com.example.appmobile.firebase.LedValueCallback;
+import com.example.appmobile.firebase.ServoMoteurManager;
 import com.example.appmobile.firebase.UpdateValueCallback;
 import com.google.firebase.auth.FirebaseUser;
 
 public class BerceauFragment extends Fragment {
     private LedManager ledManager ;
     private DHT11Manager dht11Manager ;
+    private ServoMoteurManager servoMoteur;
+    private ClimatiseurManager climatiseurManager;
 
 
     private FragmentBerceauBinding binding;
@@ -42,24 +47,66 @@ public class BerceauFragment extends Fragment {
         FirebaseUser currentUser = firebaseManager.getCurrentUser();
         dht11Manager=new DHT11Manager(currentUser);
         ledManager = new LedManager(currentUser);
+        servoMoteur=new ServoMoteurManager(currentUser);
+        climatiseurManager=new ClimatiseurManager(currentUser);
+
         TranslateAnimation animation = new TranslateAnimation(0, 0, 1000, 0);
         animation.setDuration(1000);
         binding.tmp.startAnimation(animation);
         binding.hmd.startAnimation(animation);
         binding.clm.startAnimation(animation);
         binding.lmp.startAnimation(animation);
-
+        binding.mvt.startAnimation(animation);
         // Continuous update for LED button
-        ledManager.getLedValue(new LedValueCallback() {
+
+        getLed();
+
+        getCLim();
+        getTMP();
+
+        getHMD();
+
+        getServo();
+
+
+        binding.clmBtn.setOnClickListener(e->{
+            changeClim();
+        });
+
+        binding.mvtBtn.setOnClickListener(e->{
+       changeServo();
+
+        });
+
+        // Set button click listener to toggle LED value
+        binding.lmpBtn.setOnClickListener(e -> {
+          changeLed();
+        });
+
+
+    }
+
+    private void getServo() {
+        servoMoteur.getServoValue(new ServoMoteurManager.ServoValueCallback() {
             @Override
-            public void onValueReceived(Integer value) {
+            public void onValueReceived(Boolean value) {
                 if(binding!=null)
-                    binding.lmpBtn.setText(value == 1 ? "Fermer" : "Ouvrir");
+                    binding.mvtBtn.setText(value ? getString(R.string.arreter) : getString(R.string.bouger) );
             }
 
             @Override
-            public void onValueReceived(Float value) {
+            public void onFailure(Exception e) {
 
+            }
+        });
+    }
+
+    private void getLed() {
+        ledManager.getLedValue(new LedManager.LedValueCallback() {
+            @Override
+            public void onValueReceived(Boolean value) {
+                if(binding!=null)
+                    binding.lmpBtn.setText(value ? "Fermer" : "Ouvrir");
             }
 
             @Override
@@ -67,25 +114,24 @@ public class BerceauFragment extends Fragment {
                 Log.e("BerceauFragment", "Erreur lors de la récupération de la valeur LED", e);
             }
         });
+    }
 
-        // Set button click listener to toggle LED value
-        binding.lmpBtn.setOnClickListener(e -> {
-            int newValue = binding.lmpBtn.getText().toString().equals("Ouvrir") ? 1 : 0;
-            ledManager.setLedValue(newValue, new UpdateValueCallback() {
-                @Override
-                public void onSuccess() {
-                    if(binding!=null)
-                        binding.lmpBtn.setText(newValue == 1 ? "Fermer" : "Ouvrir");
-                }
+    private void getCLim() {
+        climatiseurManager.getClimValue(new ClimatiseurManager.CLimValueCallback() {
+            @Override
+            public void onValueReceived(Boolean value) {
+                if(binding!=null)
+                    binding.clmBtn.setText(value ? "Fermer" : "Ouvrir");
+            }
 
-                @Override
-                public void onFailure(Exception e) {
-                    Log.e("BerceauFragment", "Erreur lors de la mise à jour de la valeur LED", e);
-                }
-            });
+            @Override
+            public void onFailure(Exception e) {
+
+            }
         });
+    }
 
-        // Set up continuous listeners for temperature and humidity
+    private void getTMP() {
         dht11Manager.listenToTmpValue(new LedValueCallback() {
             @Override
             public void onValueReceived(Integer value) {
@@ -104,7 +150,9 @@ public class BerceauFragment extends Fragment {
                     binding.tmpEdt.setText("Error: " + e.getMessage());
             }
         });
+    }
 
+    private void getHMD() {
         dht11Manager.listenToHmdValue(new LedValueCallback() {
             @Override
             public void onValueReceived(Integer value) {
@@ -124,6 +172,71 @@ public class BerceauFragment extends Fragment {
             }
         });
     }
+
+    private void changeServo() {
+        boolean newValue = binding.mvtBtn.getText().toString().equals(getString(R.string.arreter));
+
+
+        if(newValue) {
+            servoMoteur.setServoValue(false, new UpdateValueCallback() {
+                @Override
+                public void onSuccess() {
+                    binding.mvtBtn.setText(getString(R.string.bouger));
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
+        } else  {
+            servoMoteur.setServoValue(true, new UpdateValueCallback() {
+                @Override
+                public void onSuccess() {
+                    binding.mvtBtn.setText(getString(R.string.arreter));
+                }
+
+                @Override
+                public void onFailure(Exception e) {
+
+                }
+            });
+        }
+    }
+
+    private void changeClim() {
+        Boolean newValue = binding.clmBtn.getText().toString().equals("Ouvrir");
+        climatiseurManager.setClimValue(newValue, new UpdateValueCallback() {
+            @Override
+            public void onSuccess() {
+                if(binding!=null)
+                    binding.clmBtn.setText(newValue ? "Fermer" : "Ouvrir");
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("BerceauFragment", "Erreur lors de la mise à jour de la valeur LED", e);
+            }
+        });
+    }
+
+    private void changeLed() {
+        Boolean newValue = binding.lmpBtn.getText().toString().equals("Ouvrir");
+        ledManager.setLedValue(newValue, new UpdateValueCallback() {
+            @Override
+            public void onSuccess() {
+                if(binding!=null)
+                    binding.lmpBtn.setText(newValue ? "Fermer" : "Ouvrir");
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Log.e("BerceauFragment", "Erreur lors de la mise à jour de la valeur LED", e);
+            }
+        });
+    }
+
+
 
     @Override
     public void onDestroyView() {

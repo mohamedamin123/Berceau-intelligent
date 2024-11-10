@@ -1,5 +1,6 @@
 package com.example.appmobile.ui.accueil.client;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import com.example.appmobile.databinding.FragmentClientBinding;
 import com.example.appmobile.firebase.FirebaseManager;
 import com.example.appmobile.model.User;
+import com.example.appmobile.ui.connexion.LoginActivity;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ClientFragment extends Fragment {
@@ -37,6 +39,8 @@ public class ClientFragment extends Fragment {
         FirebaseUser currentUser = firebaseManager.getCurrentUser();
         getData(currentUser);
         binding.btnMise.setOnClickListener(v -> mettreAjour(currentUser));
+        binding.btnDeconnexion.setOnClickListener(v -> deconnexion());
+
 
 
     }
@@ -59,7 +63,6 @@ public class ClientFragment extends Fragment {
                         binding.nomEdt.setText(user.getNom());
                         binding.prenomEdt.setText(user.getPrenom());
                     }
-
                 }
 
                 @Override
@@ -94,5 +97,11 @@ public class ClientFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "User is not signed in.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void deconnexion() {
+        firebaseManager.signOut();
+        Intent intent=new Intent(getContext(), LoginActivity.class);
+        startActivity(intent);
     }
 }

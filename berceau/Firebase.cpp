@@ -79,12 +79,12 @@ String readPassword() {
     return "";
 }
 
-int getLedFirebase() {
-    int ledControl = -1;
+bool getLedFirebase() {
+    bool ledControl = false;
 
     String path = "/users/" + idUser+ "/led1";
     
-    if (Firebase.getInt(fbdo, path.c_str(), &ledControl)) {
+    if (Firebase.getBool(fbdo, path.c_str(), &ledControl)) {
         Serial.println("Firebase LED value: " + String(ledControl));
     } else {
         Serial.println("Failed to get LED value. Error: " + idUser);
@@ -92,7 +92,7 @@ int getLedFirebase() {
     return ledControl;
 }
 
-void setLedFirebase(int value) {
+void setLedFirebase(bool value) {
       String path = "/users/" + idUser + "/led1";
     Firebase.setInt(fbdo, path.c_str(), value);
 }
@@ -104,5 +104,29 @@ void setTmpFirebase(float value) {
 
 void setHmdFirebase(float value) {
     String path3 = "/users/" + idUser + "/hmd";
+    Firebase.setInt(fbdo, path3.c_str(), value);
+}
+
+void setServoFirebase(float value) {
+    String path3 = "/users/" + idUser + "/hmd";
+    Firebase.setInt(fbdo, path3.c_str(), value);
+}
+
+
+
+bool getServoFirebase() {
+    bool ledControl = false;
+
+    String path = "/users/" + idUser+ "/servo";
+    
+    if (Firebase.getBool(fbdo, path.c_str(), &ledControl)) {
+        Serial.println("Firebase LED value: " + String(ledControl));
+    } else {
+        Serial.println("Failed to get LED value. Error: " + idUser);
+    }
+    return ledControl;
+}
+void setServoFirebase(bool value) {
+    String path3 = "/users/" + idUser + "/servo";
     Firebase.setInt(fbdo, path3.c_str(), value);
 }

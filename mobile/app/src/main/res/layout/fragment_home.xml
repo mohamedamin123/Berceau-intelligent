@@ -53,4 +53,19 @@
         android:textSize="25sp"
         android:textStyle="bold"
         app:backgroundTint="@null" />
+
+    <TextView
+        android:id="@+id/connexion"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Vous avez ne pas connectée a berceau"
+        android:gravity="center"
+        android:textColor="@color/red"
+        android:textStyle="bold|italic"
+        android:textSize="25sp"
+        />
+
+
+
 </LinearLayout>

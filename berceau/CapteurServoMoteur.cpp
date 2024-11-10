@@ -1,38 +1,37 @@
 #include <ESP32Servo.h>
 #include "CapteurServoMoteur.h"
 
+// Déclaration du servomoteur et du pin de contrôle
 Servo myServo;       
-int servoPin = 9;     
+int servoPin = 13;     
 int minAngle = 60;   
 int maxAngle = 120;   
 int currentAngle = minAngle;  
 
-// Function to initialize the servo motor
+
 void initServo() {
-  myServo.attach(servoPin);  
+  myServo.attach(servoPin);  // Connecter le servomoteur au pin
 }
 
-
 void changePosition() {
-  // Move from minAngle to maxAngle
-  
+  // Déplacer de minAngle à maxAngle
   for (currentAngle = minAngle; currentAngle <= maxAngle; currentAngle += 1) {
-    myServo.write(currentAngle);   // Set the servo to the current angle
-    delay(30);                     // Adjust delay for slower movement
+    myServo.write(currentAngle);  // Déplacer le servomoteur à l'angle courant
+    delay(30);                    // Ajuster la vitesse du mouvement
   }
   
-  delay(1000);  // Pause at the max angle for 1 second
+  delay(1000);  // Pause d'une seconde à l'angle maximal
 
-  // Move back from maxAngle to minAngle
+  // Déplacer de maxAngle à minAngle
   for (currentAngle = maxAngle; currentAngle >= minAngle; currentAngle -= 1) {
-    myServo.write(currentAngle);   // Set the servo to the current angle
-    delay(30);                     // Adjust delay for slower movement
+    myServo.write(currentAngle);  // Déplacer le servomoteur à l'angle courant
+    delay(30);                    // Ajuster la vitesse du mouvement
   }
   
-  delay(1000);  // Pause at the min angle for 1 second
+  delay(1000);  // Pause d'une seconde à l'angle minimal
 }
 
 void initPosition() {
-  myServo.write(minAngle);   // Set the servo to the initial position
-  delay(500);                // Optional: Wait for 0.5 seconds for the servo to reach the position
+  myServo.write(minAngle);  // Position initiale du servomoteur
+  delay(500);                // Attendre que le servomoteur atteigne la position initiale
 }
