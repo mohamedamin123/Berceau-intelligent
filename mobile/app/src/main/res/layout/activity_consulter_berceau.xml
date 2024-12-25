@@ -2,25 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".view.accueil.notification.NotificationFragment">
-
+    tools:context=".view.accueil.berceau.ConsulterBerceauActivity">
 
 
     <TextView
         android:id="@+id/title"
         style="@style/style_tv_title_post"
         android:textColor="@color/black"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/bebe"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:text="@string/berceau" />
 
 
     <LinearLayout
@@ -28,14 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Première section - Température -->
         <LinearLayout
-            android:id="@+id/lait_ll"
+            android:id="@+id/tmp"
             android:orientation="vertical"
             android:padding="10dp"
-            android:layout_margin="20dp"
+            android:layout_margin="15dp"
             android:layout_width="0dp"
             android:layout_weight="1"
-
             android:background="@drawable/incline"
             android:layout_height="wrap_content">
 
@@ -46,18 +43,18 @@
                 android:layout_gravity="center"
                 android:textSize="20sp"
                 android:textColor="@color/black"
-                android:text="@string/lait" />
+                android:text="@string/temperature" />
+
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
                 android:layout_marginVertical="10dp"
-                android:src="@drawable/lait_bebe"
-                android:contentDescription="@string/temperature">
-            </ImageView>
+                android:src="@drawable/temperature"
+                android:contentDescription="@string/temperature" />
 
             <EditText
-                android:id="@+id/lait_edt"
+                android:id="@+id/tmp_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/style_tv_sous_title_post"
@@ -69,19 +66,19 @@
                 android:text="@string/_0_00"
                 android:focusable="false"
                 android:focusableInTouchMode="false" />
-
-
         </LinearLayout>
 
+        <!-- Section humidité -->
         <LinearLayout
-            android:id="@+id/dormir_ll"
+            android:id="@+id/hmd"
             android:orientation="vertical"
             android:padding="10dp"
-            android:layout_margin="20dp"
+            android:layout_margin="15dp"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@drawable/incline"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -90,18 +87,18 @@
                 android:textSize="20sp"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:text="@string/dormir" />
+                android:text="@string/humidity" />
+
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/bebe_dormit"
+                android:src="@drawable/humidite"
                 android:layout_gravity="center"
                 android:layout_marginVertical="10dp"
-                android:contentDescription="@string/temperature">
-            </ImageView>
+                android:contentDescription="@string/humidity" />
 
             <EditText
-                android:id="@+id/dormir_edt"
+                android:id="@+id/hmd_edt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/style_tv_sous_title_post"
@@ -112,11 +109,8 @@
                 android:text="@string/_0_00"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:background="@android:color/transparent" />                />
-
+                android:background="@android:color/transparent" />
         </LinearLayout>
-
-
     </LinearLayout>
 
 
@@ -125,16 +119,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <!-- Section mouvement -->
         <LinearLayout
-            android:id="@+id/repas_ll"
+            android:id="@+id/mvt"
             android:orientation="vertical"
             android:padding="10dp"
-            android:layout_margin="20dp"
+            android:layout_margin="15dp"
             android:layout_width="0dp"
             android:layout_weight="1"
-
             android:background="@drawable/incline"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -143,43 +138,41 @@
                 android:layout_gravity="center"
                 android:textSize="20sp"
                 android:textColor="@color/black"
-                android:text="@string/repas" />
+                android:text="@string/mouvement" />
+
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_gravity="center"
                 android:layout_marginVertical="10dp"
-                android:src="@drawable/repas_bebe"
-                android:contentDescription="@string/temperature">
-            </ImageView>
+                android:src="@drawable/mouvement"
+                android:contentDescription="@string/mouvement" />
 
-            <EditText
-                android:id="@+id/repas_edt"
+            <Button
+                android:id="@+id/mvt_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/style_tv_sous_title_post"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:background="@android:color/transparent"
-                android:inputType="none"
-                android:text="@string/_0_00"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
-
-
-
+                android:text="@string/consulter"
+                android:background="@null"
+                android:backgroundTint="#CB68DD" />
         </LinearLayout>
 
+
+        <!-- Section lumière -->
         <LinearLayout
-            android:id="@+id/couche_ll"
+            android:id="@+id/lmp"
             android:orientation="vertical"
             android:padding="10dp"
-            android:layout_margin="20dp"
+            android:layout_margin="15dp"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:background="@drawable/incline"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -188,39 +181,28 @@
                 android:textSize="20sp"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:text="@string/couche" />
+                android:text="@string/lumiere" />
+
             <ImageView
                 android:layout_width="120dp"
                 android:layout_height="120dp"
-                android:src="@drawable/couche_bebe"
+                android:src="@drawable/lumiere"
                 android:layout_gravity="center"
                 android:layout_marginVertical="10dp"
-                android:contentDescription="@string/temperature">
-            </ImageView>
+                android:contentDescription="@string/lumiere" />
 
-
-
-            <EditText
-                android:id="@+id/couche_edt"
+            <Button
+                android:id="@+id/lmp_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/style_tv_sous_title_post"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
-                android:background="@android:color/transparent"
-                android:inputType="none"
-                android:text="@string/_0_00"
-                android:focusable="false"
-                android:focusableInTouchMode="false" />
-
+                android:text="@string/consulter"
+                android:background="@null"
+                android:backgroundTint="#CB68DD" />
         </LinearLayout>
-
-
     </LinearLayout>
-
-
-
-
 
 </LinearLayout>

@@ -5,20 +5,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:animateLayoutChanges="true"
     tools:context=".view.accueil.notification.NotificationFragment">
 
     <TextView
         android:id="@+id/title"
         style="@style/style_tv_title_post"
-        android:textColor="@color/black"
-        android:layout_marginTop="10dp"
         android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title_notifications" />
+        android:text="@string/liste_notification"
+         />
 
+
+    <!-- RecyclerView pour afficher les données -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyler_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="75dp"
+        android:layout_weight="1" />
 
 
 </LinearLayout>
-

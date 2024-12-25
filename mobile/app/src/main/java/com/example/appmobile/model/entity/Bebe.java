@@ -1,8 +1,12 @@
 package com.example.appmobile.model.entity;
 
 
+import java.util.Date;
+
 public class Bebe {
     private Integer idBebe;
+    private String prenom;
+    private Date date;
     private int lait;
     private int dormir;
     private int repas;
@@ -18,6 +22,27 @@ public class Bebe {
         this.dormir = dormir;
         this.repas = repas;
         this.couche = couche;
+    }
+
+    public Bebe(String prenom,Date date ,int lait, int dormir, int repas, int couche, Parent parent) {
+        this.prenom = prenom;
+        this.date = date;
+        this.lait = lait;
+        this.dormir = dormir;
+        this.repas = repas;
+        this.couche = couche;
+        this.parent = parent;
+    }
+
+    public Bebe(Integer idBebe, String prenom, Date date, int lait, int dormir, int repas, int couche) {
+        this.idBebe = idBebe;
+        this.prenom = prenom;
+        this.date = date;
+        this.lait = lait;
+        this.dormir = dormir;
+        this.repas = repas;
+        this.couche = couche;
+
     }
 
     public void resetLait() {
@@ -81,6 +106,33 @@ public class Bebe {
         this.parent = parent;
     }
 
+    public String getPrenom() {
+        return prenom;
+    }
 
+    public void setPrenom(String nom) {
+        this.prenom = nom;
+    }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    @Override
+    public String toString() {
+        return "Bebe{" +
+                "idBebe=" + idBebe +
+                ", prenom='" + prenom + '\'' +
+                ", date=" + date +
+                ", lait=" + lait +
+                ", dormir=" + dormir +
+                ", repas=" + repas +
+                ", couche=" + couche +
+                ", parent=" + parent +
+                '}';
+    }
 }

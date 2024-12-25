@@ -1,5 +1,6 @@
 package com.example.appmobile.model.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import lombok.AllArgsConstructor;
@@ -23,12 +24,18 @@ public class Notification {
     private Berceau berceau;
     private Parent parent;
 
+    private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+
+
     public Notification(String type, String message) {
         this.type = type;
         this.message = message;
         this.dateEnvoi = new Date();  // Initialisation à la date et heure actuelles
     }
 
+    public String getFormattedDateEnvoi() {
+        return dateFormatter.format(dateEnvoi);
+    }
     public Integer getIdNotification() {
         return idNotification;
     }
@@ -81,4 +88,6 @@ public class Notification {
         // Code pour envoyer la notification (par exemple, par email ou autre)
         System.out.println("Notification envoyée au parent " + parent.getNom() + ": " + message);
     }
+
+
 }

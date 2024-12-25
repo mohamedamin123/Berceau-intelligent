@@ -138,6 +138,9 @@
     <string name="intensite">Intensite : </string>
     <string name="nbr_bebe">Nombre des bebes</string>
     <string name="ajouter_bebe">Ajouter un bebe</string>
+    <string name="liste_notification">Les notifications</string>
+    <string name="liste_berceau">Les Berceaux</string>
+    <string name="ajouter_berceau">Ajouter un berceau</string>
 
 
 </resources>

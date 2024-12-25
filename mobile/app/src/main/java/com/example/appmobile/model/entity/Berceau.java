@@ -13,6 +13,8 @@ public class Berceau {
     //relation avec dispositif
     private List<Dispositif> dispositifs; // Liste des dispositifs associés
 
+    private Bebe bebe;
+
     public Berceau(int id, String nom, boolean etat) {
         this.id = id;
         this.nom = nom;
@@ -52,6 +54,14 @@ public class Berceau {
         this.dispositifs = dispositifs;
     }
 
+    public Bebe getBebe() {
+        return bebe;
+    }
+
+    public void setBebe(Bebe bebe) {
+        this.bebe = bebe;
+    }
+
     public void ajouterDispositif(Dispositif dispositif) {
         this.dispositifs.add(dispositif);
     }
@@ -69,5 +79,19 @@ public class Berceau {
         for (Dispositif dispositif : dispositifs) {
             System.out.println("  -> " + dispositif.afficherInfo());
         }
+    }
+
+
+
+    @Override
+    public String toString() {
+        return "Berceau{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", etat=" + etat +
+                ", bebe=" + bebe.toString() +
+                ", dispositifs=" + dispositifs +
+
+                '}';
     }
 }

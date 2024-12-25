@@ -8,7 +8,6 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
-
     <uses-feature
         android:name="android.hardware.bluetooth_le"
         android:required="true" />
@@ -22,12 +21,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-
-
     <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
-
-
 
     <application
         android:name=".model.firebase.MyApp"
@@ -40,6 +35,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppMobile"
         tools:targetApi="31">
+        <activity
+            android:name=".view.accueil.berceau.AjouterBerceauActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.accueil.berceau.ConsulterBerceauActivity"
+            android:exported="false" />
         <activity
             android:name=".view.accueil.berceau.LumiereActivity"
             android:exported="false" />
@@ -85,7 +86,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

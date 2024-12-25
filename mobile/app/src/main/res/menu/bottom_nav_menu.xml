@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/title_home" />
-
-    <item
-        android:id="@+id/navigation_camera"
-        android:icon="@drawable/camera"
-        android:title="@string/camera" />
 
     <item
         android:id="@+id/navigation_berceau"
         android:icon="@drawable/berceau"
         android:title="@string/berceau" />
+    <item
+        android:id="@+id/navigation_camera"
+        android:icon="@drawable/camera"
+        android:title="@string/camera" />
 
     <item
         android:id="@+id/navigation_client"
@@ -25,9 +20,8 @@
         android:id="@+id/navigation_bebe"
         android:icon="@drawable/bebe"
         android:title="@string/bebe" />
-
-<!--    <item-->
-<!--        android:id="@+id/navigation_notification"-->
-<!--        android:icon="@drawable/ic_notifications_black_24dp"-->
-<!--        android:title="@string/title_notifications" />-->
+    <item
+        android:id="@+id/navigation_notification"
+        android:icon="@drawable/ic_notifications_black_24dp"
+        android:title="@string/title_notifications" />
 </menu>
