@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/back_welcome"
-    tools:context=".ui.accueil.home.HomeFragment">
+    tools:context=".view.accueil.home.HomeFragment">
 
     <TextView
         android:id="@+id/title"

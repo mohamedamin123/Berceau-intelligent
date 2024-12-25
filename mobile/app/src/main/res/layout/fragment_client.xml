@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/back_welcome"
-    tools:context=".ui.accueil.home.HomeFragment">
+    tools:context=".view.accueil.home.HomeFragment">
 
     <!-- Title Text -->
     <TextView
@@ -33,7 +33,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         android:padding="16dp"
         android:orientation="vertical">
 
@@ -94,6 +94,8 @@
             android:focusable="false"
             android:background="@drawable/back_input" />
 
+
+
         <!-- Error Text for Email -->
         <TextView
             android:id="@+id/errorEmail"
@@ -122,6 +124,16 @@
     </LinearLayout>
 
     <!-- Continue Button -->
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+
+
     <Button
         android:id="@+id/btn_mise"
         android:layout_width="match_parent"
@@ -134,9 +146,13 @@
         android:text="@string/mise_a_jour"
         android:backgroundTint="@color/design_default_color_secondary"
         android:textAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+
         android:textSize="25sp"
+
         android:textStyle="bold"
         app:backgroundTint="@null" />
+
+
 
     <Button
         android:id="@+id/btn_deconnexion"
@@ -146,8 +162,6 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="7dp"
         android:layout_marginRight="15dp"
-        android:layout_marginBottom="5dp"
-        android:singleLine="true"
         android:text="@string/deconexion"
         android:backgroundTint="@color/orange"
         android:textAppearance="@style/ShapeAppearance.Material3.Corner.Full"

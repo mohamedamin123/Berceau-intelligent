@@ -4,15 +4,161 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.accueil.camera.CameraFragment">
+    tools:context=".view.accueil.camera.CameraFragment">
 
+    <!-- Vue pour la caméra -->
+
+    <!-- Conteneur pour les boutons -->
     <androidx.camera.view.PreviewView
         android:id="@+id/preview_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button_container"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginBottom="75dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Première section - Température -->
+        <LinearLayout
+            android:id="@+id/tmp"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/incline"
+            android:layout_height="wrap_content"
+            >
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:layout_marginVertical="10dp"
+                android:src="@drawable/temperature"
+                android:contentDescription="@string/temperature" />
+
+            
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:layout_gravity="center"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:text="@string/temp" />
+
+
+            <EditText
+                android:id="@+id/tmp_edt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:background="@android:color/transparent"
+                android:inputType="none"
+                android:text="@string/_0_00"
+                android:focusable="false"
+                android:focusableInTouchMode="false" />
+        </LinearLayout>
+
+        <!-- Section humidité -->
+        <LinearLayout
+            android:id="@+id/climatiseur"
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:background="@drawable/incline"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/climatiseur"
+                android:layout_gravity="center"
+                android:layout_marginVertical="10dp"
+                android:contentDescription="@string/humidity" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:text="@string/clim" />
+            <Button
+                android:id="@+id/btn_clim"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:text="@string/consulter"
+                app:backgroundTint="@null"
+                android:textSize="11sp"
+                android:backgroundTint="@color/design_default_color_secondary"
+                />
+        </LinearLayout>
+
+        <!-- Section humidité -->
+        <LinearLayout
+            android:id="@+id/hmd"
+            android:orientation="horizontal"
+            android:layout_margin="5dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/incline"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/humidite"
+                android:layout_gravity="center"
+                android:layout_marginVertical="10dp"
+                android:contentDescription="@string/humidity" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:textSize="14sp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:text="@string/hum" />
+
+
+            <EditText
+                android:id="@+id/hmd_edt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/style_tv_sous_title_post"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:inputType="none"
+                android:layout_gravity="center"
+                android:text="@string/_0_00"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:background="@android:color/transparent" />
+        </LinearLayout>
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

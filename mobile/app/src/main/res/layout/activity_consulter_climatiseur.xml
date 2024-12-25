@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back_welcome"
+    android:orientation="vertical"
+    tools:context=".view.accueil.camera.ConsulterClimatiseurActivity">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:layout_width="wrap_content"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="10dp"
+                android:singleLine="true"
+                android:gravity="center"
+                android:text="@string/climatiseur"
+                android:textColor="@android:color/white"
+                android:textSize="28sp"
+
+                android:textStyle="bold|italic" />
+
+            <!-- Logo or Image -->
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="250dp"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:src="@drawable/climatiseur" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginVertical="20dp"
+                android:layout_marginHorizontal="10dp"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btn_ouvrir"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/custom_button"
+                    android:text="@string/ouvrir"
+                    android:drawableStart="@drawable/bebe"
+                    android:drawablePadding="8dp"
+                    android:tint="#9C27B0"
+                    android:backgroundTint="#1CD223"
+                    android:textStyle="bold"
+                    app:backgroundTint="@null"
+                    android:textSize="20sp"
+                    >
+                </Button>
+
+                <Button
+                    android:id="@+id/btn_fermer"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="15dp"
+                    android:background="@drawable/custom_button"
+                    android:backgroundTint="@color/red"
+                    android:textStyle="bold"
+                    app:backgroundTint="@null"
+                    android:textSize="20sp"
+                    android:text="@string/fermer">
+                </Button>
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/btn_mode"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/custom_button"
+                android:backgroundTint="@color/design_default_color_secondary"
+                app:backgroundTint="@null"
+                android:textSize="20sp"
+                android:text="@string/modeAuto">
+            </Button>
+
+            <!-- Sélection de la vitesse -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/vitesse"
+                    android:textColor="@android:color/black"
+                    android:textSize="23sp"
+
+                    android:layout_marginEnd="8dp" />
+
+                <Spinner
+                    android:id="@+id/spinner_vitesse"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:entries="@array/vitesse_array"
+                    android:spinnerMode="dropdown"
+                    android:background="@drawable/custom_spinner"
+                    android:padding="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/temperature_souhaitee"
+                    android:textColor="@android:color/black"
+                    android:textSize="20sp"
+                    android:layout_marginEnd="8dp" />
+
+                <EditText
+                    android:id="@+id/et_temperature"
+                    android:layout_width="100dp"
+                    android:layout_height="50dp"
+                    android:hint="@string/saisir_temperature"
+                    android:inputType="number"
+                    android:gravity="center"
+                    android:background="@drawable/custom_edittext"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+        <!-- Bouton Retour en bas -->
+
+
+
+            <Button
+                android:id="@+id/btn_retour"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/orange"
+                android:padding="16dp"
+                android:layout_margin="20dp"
+                android:text="@string/retour"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp" />
+
+
+
+
+    </LinearLayout>
+
+</ScrollView>
+

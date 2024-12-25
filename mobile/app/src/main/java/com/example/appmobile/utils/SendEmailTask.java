@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.example.appmobile.ui.connexion.RegisterActivity;
-
 import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Message;
