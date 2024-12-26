@@ -9,19 +9,15 @@ import lombok.ToString;
 
 public class Ventilateur extends Actionnaire{
 
-    public Ventilateur() {
-        this.setName("Ventilateur");
-        this.setEtat(true);
-
-    }
-
-    private int vitesse;
     private String mode;
     private int tmpSuhaite;
 
-    public void modifierVitesse(int vitesse) {
-        this.setVitesse(vitesse);
-        System.out.println("La vitesse du ventilateur est modifiée à "+vitesse+" dans le pin "+this.getPin());
+
+    public Ventilateur() {
+        this.setName("Ventilateur");
+        this.setEtat(true);
+        this.setMode("Manuelle");
+
     }
 
     public void changerMode() {
@@ -32,14 +28,6 @@ public class Ventilateur extends Actionnaire{
     public void reglerTemperatureSuhaite(int tmpSuhaite) {
         this.setTmpSuhaite(tmpSuhaite);
         System.out.println("La température de souhait du ventilateur est modifiée à "+tmpSuhaite+" dans le pin "+this.getPin());
-    }
-
-    public int getVitesse() {
-        return vitesse;
-    }
-
-    public void setVitesse(int vitesse) {
-        this.vitesse = vitesse;
     }
 
     public String getMode() {

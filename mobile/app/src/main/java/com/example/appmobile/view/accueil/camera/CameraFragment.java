@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.appmobile.databinding.FragmentCameraBinding;
+import com.example.appmobile.view.accueil.berceau.ConsulterClimatiseurActivity;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import java.util.concurrent.ExecutorService;

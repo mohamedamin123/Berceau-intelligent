@@ -2,11 +2,9 @@ package com.example.appmobile.view.accueil.berceau;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.TranslateAnimation;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -14,25 +12,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.appmobile.R;
 import com.example.appmobile.databinding.FragmentBerceauBinding;
-import com.example.appmobile.model.entity.Bebe;
 import com.example.appmobile.model.entity.Berceau;
-import com.example.appmobile.model.entity.Notification;
 import com.example.appmobile.model.firebase.BerceauManager;
-import com.example.appmobile.model.firebase.ClimatiseurManager;
-import com.example.appmobile.model.firebase.DHTManager;
 import com.example.appmobile.model.firebase.FirebaseManager;
-import com.example.appmobile.model.firebase.LedManager;
-import com.example.appmobile.model.firebase.interfaces.GetValueCallback;
-import com.example.appmobile.model.firebase.ServoMoteurManager;
-import com.example.appmobile.model.firebase.interfaces.UpdateValueCallback;
-import com.example.appmobile.view.accueil.notification.NotificationAdapteur;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class BerceauFragment extends Fragment implements BerceauAdapteur.OnManipule {

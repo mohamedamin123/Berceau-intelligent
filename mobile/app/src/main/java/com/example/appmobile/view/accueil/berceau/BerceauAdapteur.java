@@ -23,7 +23,10 @@ public class BerceauAdapteur extends RecyclerView.Adapter<BerceauAdapteur.MyView
     private List<Berceau> berceaus;
     private OnManipule listener;
 
-
+    public BerceauAdapteur(Context context, List<Berceau> berceaus) {
+        this.context = context;
+        this.berceaus = berceaus;
+    }
     public BerceauAdapteur(Context context, List<Berceau> berceaus,OnManipule listener) {
         this.context = context;
         this.berceaus = berceaus;

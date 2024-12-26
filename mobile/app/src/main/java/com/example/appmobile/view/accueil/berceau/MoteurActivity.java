@@ -1,5 +1,6 @@
 package com.example.appmobile.view.accueil.berceau;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ public class MoteurActivity extends AppCompatActivity {
     private ActivityMoteurBinding binding;
     private ServoMoteurManager moteurManager;
     private String id;
+    private String currentMode = ""; // Stocke le mode actuel
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,7 @@ public class MoteurActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onStart() {
         super.onStart();
@@ -32,27 +35,26 @@ public class MoteurActivity extends AppCompatActivity {
         moteurManager = new ServoMoteurManager(currentUser);
         id = getIntent().getStringExtra("id");
 
-        getMode();
-
+        // Récupérer le mode actuel au démarrage
+        fetchMode();
 
         // Bouton pour retourner à l'activité précédente
         binding.btnRetour.setOnClickListener(e -> finish());
 
         // Bouton pour fermer le moteur
         binding.btnFermer.setOnClickListener(e -> {
-            if(getMode().equals("Auto")) {
-                Toast.makeText(getApplicationContext(),"Change mode pour fermer",Toast.LENGTH_SHORT).show();
-            }else {
+            if ("Automatique".equals(currentMode)) {
+                Toast.makeText(getApplicationContext(), "Changez le mode pour fermer", Toast.LENGTH_SHORT).show();
+            } else {
                 moteurManager.setEtat(id, false, new UpdateValueCallback() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(getApplicationContext(),"fermer bouger",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Moteur fermé", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-                        Toast.makeText(getApplicationContext(),"erreur dans fermer bouger",Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(getApplicationContext(), "Erreur lors de la fermeture du moteur", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -60,19 +62,18 @@ public class MoteurActivity extends AppCompatActivity {
 
         // Bouton pour ouvrir le moteur
         binding.btnOuvrir.setOnClickListener(e -> {
-            if(getMode().equals("Auto")) {
-                Toast.makeText(getApplicationContext(),"Change mode pour fermer",Toast.LENGTH_SHORT).show();
-            }else {
+            if ("Automatique".equals(currentMode)) {
+                Toast.makeText(getApplicationContext(), "Changez le mode pour ouvrir", Toast.LENGTH_SHORT).show();
+            } else {
                 moteurManager.setEtat(id, true, new UpdateValueCallback() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(getApplicationContext(),"fermer bouger",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Moteur ouvert", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void onFailure(Exception e) {
-                        Toast.makeText(getApplicationContext(),"erreur dans fermer bouger",Toast.LENGTH_SHORT).show();
-
+                        Toast.makeText(getApplicationContext(), "Erreur lors de l'ouverture du moteur", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -80,37 +81,33 @@ public class MoteurActivity extends AppCompatActivity {
 
         // Bouton pour changer le mode du moteur
         binding.btnMode.setOnClickListener(e -> {
-            String mode;
-            if(getMode().equals("Auto")) {
-                mode="Manuelle";
-            }else {
-                mode="Auto";
-            }
-            moteurManager.changeMode(id, mode, new UpdateValueCallback() {
+            String newMode = "Automatique".equals(currentMode) ? "Manuelle" : "Automatique";
+            binding.btnMode.setText("Mode : " + newMode);
+
+            moteurManager.changeMode(id, newMode, new UpdateValueCallback() {
                 @Override
                 public void onSuccess() {
-                    Toast.makeText(getApplicationContext(),"le mode est change devient "+mode, Toast.LENGTH_SHORT).show();
+                    currentMode = newMode; // Mettez à jour le mode localement
+                    Toast.makeText(getApplicationContext(), "Le mode est changé en : " + newMode, Toast.LENGTH_SHORT).show();
+
                 }
 
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(getApplicationContext(),"erreur dans change de mode", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getApplicationContext(), "Erreur lors du changement de mode", Toast.LENGTH_SHORT).show();
                 }
             });
         });
     }
 
-    // Méthode pour récupérer l'état du moteur
-
     // Méthode pour récupérer le mode du moteur
-    private String getMode() {
-        final String[] mode = {""};
+    private void fetchMode() {
         moteurManager.getMode(id, new ServoMoteurManager.ServoValueCallback<String>() {
             @Override
             public void onValueReceived(String value) {
-                mode[0] = value;
-                Toast.makeText(getApplicationContext(), "Mode actuel : " + value, Toast.LENGTH_SHORT).show();
+                currentMode = value; // Mettez à jour le mode actuel
+                binding.btnMode.setText("Mode : " + currentMode);
+
             }
 
             @Override
@@ -118,6 +115,5 @@ public class MoteurActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Erreur lors de la récupération du mode.", Toast.LENGTH_SHORT).show();
             }
         });
-        return mode[0];
     }
 }
