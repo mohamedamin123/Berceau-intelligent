@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.appmobile.databinding.FragmentClientBinding;
 import com.example.appmobile.model.firebase.FirebaseManager;
-import com.example.appmobile.model.firebase.ParentRepository;
+import com.example.appmobile.model.firebase.ParentManager;
 import com.example.appmobile.model.firebase.interfaces.DataCallback;
 import com.example.appmobile.model.entity.Parent;
 import com.example.appmobile.view.connexion.LoginActivity;
@@ -24,7 +24,7 @@ public class ClientFragment extends Fragment {
 
     private FragmentClientBinding binding;
     private FirebaseManager firebaseManager;
-    private ParentRepository parentRepository;
+    private ParentManager parentManager;
     private Parent parent;
 
 
@@ -40,7 +40,7 @@ public class ClientFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         firebaseManager = new FirebaseManager(getContext());
-        parentRepository = new ParentRepository(getContext());
+        parentManager = new ParentManager(getContext());
 
         FirebaseUser currentUser = firebaseManager.getCurrentUser();
         getData(currentUser);
@@ -59,7 +59,7 @@ public class ClientFragment extends Fragment {
         if (currentUser != null) {
             String userId = currentUser.getUid();
 
-            parentRepository.getUser(userId, new DataCallback<Parent>() {
+            parentManager.getUser(userId, new DataCallback<Parent>() {
                 @Override
                 public void onSuccess(Parent parent) {
                     if (parent != null && binding != null) {
@@ -89,7 +89,7 @@ public class ClientFragment extends Fragment {
 
             Parent updatedParent = new Parent(newNom, newPrenom, currentUser.getEmail());
 
-            parentRepository.updateUser(userId, updatedParent);
+            parentManager.updateUser(userId, updatedParent);
             Toast.makeText(getContext(), "Données mises à jour avec succès.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(getContext(), "User is not signed in.", Toast.LENGTH_SHORT).show();
@@ -101,7 +101,7 @@ public class ClientFragment extends Fragment {
         String prenom = binding.prenomEdt.getText().toString();
         parent = new Parent(nom, prenom);
         parent.seDeconnecter();
-        parentRepository.signOut();
+        parentManager.signOut();
         Intent intent = new Intent(getContext(), LoginActivity.class);
         startActivity(intent);
         getActivity().finish(); // Close the current activity after logout

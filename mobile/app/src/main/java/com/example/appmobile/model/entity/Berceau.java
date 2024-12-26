@@ -1,27 +1,35 @@
 package com.example.appmobile.model.entity;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
-public class Berceau {
+public class Berceau implements Serializable {
 
     private int id;
     private String nom;
     private boolean etat;
 
-    //relation avec dispositif
-    private List<Dispositif> dispositifs; // Liste des dispositifs associés
+    // Use a Map to store devices by their class names
+    private Map<String, Dispositif> dispositifs;
 
     private Bebe bebe;
+
+    public Berceau() {
+        this.dispositifs = new HashMap<>();
+    }
 
     public Berceau(int id, String nom, boolean etat) {
         this.id = id;
         this.nom = nom;
         this.etat = etat;
-        this.dispositifs = new ArrayList<>();
+        this.dispositifs = new HashMap<>();
     }
 
+    // Getters and setters
     public int getId() {
         return id;
     }
@@ -46,11 +54,11 @@ public class Berceau {
         this.etat = etat;
     }
 
-    public List<Dispositif> getDispositifs() {
+    public Map<String, Dispositif> getDispositifs() {
         return dispositifs;
     }
 
-    public void setDispositifs(List<Dispositif> dispositifs) {
+    public void setDispositifs(Map<String, Dispositif> dispositifs) {
         this.dispositifs = dispositifs;
     }
 
@@ -62,26 +70,26 @@ public class Berceau {
         this.bebe = bebe;
     }
 
+    // Add a dispositif by its class name
     public void ajouterDispositif(Dispositif dispositif) {
-        this.dispositifs.add(dispositif);
+        this.dispositifs.put(dispositif.getClass().getSimpleName(), dispositif);
     }
 
-
+    // Update the state of all dispositifs
     public void mettreAJourEtat(boolean nouvelEtat) {
         this.etat = nouvelEtat;
-        for (Dispositif dispositif : dispositifs) {
+        for (Dispositif dispositif : dispositifs.values()) {
             dispositif.setEtat(nouvelEtat);
         }
     }
 
+    // Display information
     public void afficherInfos() {
         System.out.println("Berceau [id=" + id + ", nom=" + nom + ", etat=" + (etat ? "Actif" : "Inactif") + "]");
-        for (Dispositif dispositif : dispositifs) {
+        for (Dispositif dispositif : dispositifs.values()) {
             System.out.println("  -> " + dispositif.afficherInfo());
         }
     }
-
-
 
     @Override
     public String toString() {
@@ -91,7 +99,7 @@ public class Berceau {
                 ", etat=" + etat +
                 ", bebe=" + bebe.toString() +
                 ", dispositifs=" + dispositifs +
-
                 '}';
     }
 }
+

@@ -6,12 +6,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor // Génère un constructeur avec tous les champs
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+
 public class Ventilateur extends Actionnaire{
+
+    public Ventilateur() {
+        this.setName("Ventilateur");
+        this.setEtat(true);
+
+    }
 
     private int vitesse;
     private String mode;

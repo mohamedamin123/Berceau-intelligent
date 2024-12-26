@@ -6,17 +6,22 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor // Génère un constructeur avec tous les champs
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
-public class Led extends Actionnaire{
 
+public class Led extends Actionnaire{
 
     private String couleur;
     private int nbrLed;
     private int intensite;
+
+    public Led() {
+        this.setPin(4);
+        this.setName("Led");
+        this.setEtat(true);
+        this.setNbrLed(1);
+        this.setCouleur("Rouge");
+        this.setIntensite(0);
+    }
+
 
     public String getCouleur() {
         return couleur;

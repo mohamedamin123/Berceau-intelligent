@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appmobile.databinding.ActivityRegisterBinding;
 import com.example.appmobile.model.firebase.FirebaseManager;
-import com.example.appmobile.model.firebase.ParentRepository;
+import com.example.appmobile.model.firebase.ParentManager;
 import com.example.appmobile.model.firebase.interfaces.ValueExistCallback;
 import com.example.appmobile.utils.SendEmailTask;
 
@@ -16,7 +16,7 @@ import java.util.Random;
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding binding;
     private FirebaseManager firebaseManager;
-    private ParentRepository parentRepository;
+    private ParentManager parentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +43,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
     private void verify(String nom,String prenom,String email,String password) {
         firebaseManager = new FirebaseManager(getApplicationContext());
-        parentRepository =new ParentRepository(getApplicationContext());
-        parentRepository.isEmailExist(email, new ValueExistCallback() {
+        parentManager =new ParentManager(getApplicationContext());
+        parentManager.isEmailExist(email, new ValueExistCallback() {
             @Override
             public void onCheckComplete(boolean exists) {
                 if(exists) {

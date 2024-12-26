@@ -6,17 +6,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor // Génère un constructeur avec tous les champs
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+
 public class CapteurDHT extends Capteur{
 
 
     private String type;
     private float tmp;
     private float hmd;
+
+    public CapteurDHT() {
+        this.setName("CapteurDHT");
+        this.setEtat(true);
+
+    }
 
     public String getType() {
         return type;

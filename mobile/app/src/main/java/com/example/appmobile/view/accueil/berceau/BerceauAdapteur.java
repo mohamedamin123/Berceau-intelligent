@@ -48,7 +48,7 @@ public class BerceauAdapteur extends RecyclerView.Adapter<BerceauAdapteur.MyView
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onClick(berceau);
+                listener.onClick(berceau,position);
             }
         });
     }
@@ -68,6 +68,6 @@ public class BerceauAdapteur extends RecyclerView.Adapter<BerceauAdapteur.MyView
     }
 
     public interface OnManipule {
-        void onClick(Berceau berceau);
+        void onClick(Berceau berceau,int pos);
     }
 }

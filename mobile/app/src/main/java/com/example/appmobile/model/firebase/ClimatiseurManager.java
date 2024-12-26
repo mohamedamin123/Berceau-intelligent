@@ -17,7 +17,7 @@ public class ClimatiseurManager {
     }
 
     public void getClimValue(CLimValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("clim").addListenerForSingleValueEvent(new ValueEventListener() {
+        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Boolean ledControl = dataSnapshot.getValue(Boolean.class);

@@ -1,12 +1,13 @@
 package com.example.appmobile.model.entity;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-import java.util.Date;
-
-public class Bebe {
+public class Bebe implements Serializable {
     private Integer idBebe;
     private String prenom;
-    private Date date;
+    private String dateNaissance; // Store date as String
     private int lait;
     private int dormir;
     private int repas;
@@ -14,9 +15,18 @@ public class Bebe {
 
     private Parent parent;
 
+    // Default constructor
     public Bebe() {
     }
 
+    // Constructor with prenom and dateNaissance as LocalDate
+    public Bebe(String prenom, String dateNaissance) {
+        // Format the date to the desired format
+        this.prenom = prenom;
+        this.dateNaissance=dateNaissance;
+    }
+
+    // Constructor with other fields
     public Bebe(int lait, int dormir, int repas, int couche) {
         this.lait = lait;
         this.dormir = dormir;
@@ -24,9 +34,10 @@ public class Bebe {
         this.couche = couche;
     }
 
-    public Bebe(String prenom,Date date ,int lait, int dormir, int repas, int couche, Parent parent) {
+    // Constructor with all fields including date as String
+    public Bebe(String prenom, String dateNaissanceString, int lait, int dormir, int repas, int couche, Parent parent) {
         this.prenom = prenom;
-        this.date = date;
+        this.dateNaissance = dateNaissanceString;
         this.lait = lait;
         this.dormir = dormir;
         this.repas = repas;
@@ -34,26 +45,47 @@ public class Bebe {
         this.parent = parent;
     }
 
-    public Bebe(Integer idBebe, String prenom, Date date, int lait, int dormir, int repas, int couche) {
+    // Constructor with all fields including date as String
+    public Bebe(Integer idBebe, String prenom, String dateNaissanceString, int lait, int dormir, int repas, int couche) {
         this.idBebe = idBebe;
         this.prenom = prenom;
-        this.date = date;
+        this.dateNaissance = dateNaissanceString;
         this.lait = lait;
         this.dormir = dormir;
         this.repas = repas;
         this.couche = couche;
+    }
 
+    // Convert stored string date to LocalDate when needed
+
+    public String getPrenom() {
+        return prenom;
+    }
+
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
+
+    public Parent getParent() {
+        return parent;
+    }
+
+    public void setParent(Parent parent) {
+        this.parent = parent;
     }
 
     public void resetLait() {
         this.lait = 0;
     }
+
     public void resetDormir() {
         this.dormir = 0;
     }
+
     public void resetRepas() {
         this.repas = 0;
     }
+
     public void resetCouche() {
         this.couche = 0;
     }
@@ -64,6 +96,14 @@ public class Bebe {
 
     public void setIdBebe(Integer idBebe) {
         this.idBebe = idBebe;
+    }
+
+    public String getDateNaissance() {
+        return dateNaissance;
+    }
+
+    public void setDateNaissance(String dateNaissance) {
+        this.dateNaissance = dateNaissance;
     }
 
     public int getLait() {
@@ -98,36 +138,12 @@ public class Bebe {
         this.couche = couche;
     }
 
-    public Parent getParent() {
-        return parent;
-    }
-
-    public void setParent(Parent parent) {
-        this.parent = parent;
-    }
-
-    public String getPrenom() {
-        return prenom;
-    }
-
-    public void setPrenom(String nom) {
-        this.prenom = nom;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     @Override
     public String toString() {
         return "Bebe{" +
                 "idBebe=" + idBebe +
                 ", prenom='" + prenom + '\'' +
-                ", date=" + date +
+                ", date=" + dateNaissance +
                 ", lait=" + lait +
                 ", dormir=" + dormir +
                 ", repas=" + repas +

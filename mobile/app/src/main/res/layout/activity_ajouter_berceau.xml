@@ -1,10 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".view.accueil.berceau.AjouterBerceauActivity">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ajouter un Berceau"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/et_nom_berceau"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nom du berceau"
+        android:layout_marginBottom="12dp"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/et_nom_bebe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nom du bébé"
+        android:layout_marginBottom="12dp"
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/et_date_naissance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Date de naissance du bébé"
+        android:layout_marginBottom="12dp"
+        android:focusable="false"
+        android:clickable="true"
+        android:inputType="none" />
+
+
+    <CheckBox
+        android:id="@+id/cb_etat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Actif"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btn_ajouter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ajouter"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>

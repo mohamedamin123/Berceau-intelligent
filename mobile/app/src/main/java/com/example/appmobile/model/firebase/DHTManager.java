@@ -15,8 +15,8 @@ public class DHTManager {
         this.currentUser=currentUser;
     }
 
-    public void listenToTmpValue(GetValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("tmp").addValueEventListener(new ValueEventListener() {
+    public void listenToTmpValue(String chmp,GetValueCallback callback) {
+        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("dispositifs").child("CapteurDHT").child("tmp").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Float tmpValue = dataSnapshot.getValue(Float.class);
@@ -30,8 +30,8 @@ public class DHTManager {
         });
     }
 
-    public void listenToHmdValue(GetValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("hmd").addValueEventListener(new ValueEventListener() {
+    public void listenToHmdValue(String chmp,GetValueCallback callback) {
+        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("dispositifs").child("CapteurDHT").child("hmd").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Float hmdValue = dataSnapshot.getValue(Float.class);

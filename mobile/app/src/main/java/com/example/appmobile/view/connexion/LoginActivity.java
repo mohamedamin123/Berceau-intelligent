@@ -11,7 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appmobile.databinding.ActivityLoginBinding;
 import com.example.appmobile.model.firebase.FirebaseManager;
-import com.example.appmobile.model.firebase.ParentRepository;
+import com.example.appmobile.model.firebase.ParentManager;
 import com.example.appmobile.model.firebase.interfaces.SignInCallback;
 import com.example.appmobile.view.accueil.HomeActivity;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
     private FirebaseManager firebaseManager;
-    private ParentRepository parentRepository;
+    private ParentManager parentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,7 +34,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Check if a user is already logged in
         firebaseManager = new FirebaseManager(getApplicationContext());
-        parentRepository = new ParentRepository(getApplicationContext());
+        parentManager = new ParentManager(getApplicationContext());
 
         FirebaseUser currentUser = firebaseManager.getCurrentUser();
 
@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void connecter(String email, String password) {
-        parentRepository.signIn(email, password, new SignInCallback() {
+        parentManager.signIn(email, password, new SignInCallback() {
             @Override
             public void onSuccess(FirebaseUser user) {
                 Log.d("HomeActivity", "Connexion réussie");

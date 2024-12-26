@@ -16,8 +16,8 @@ public class LedManager {
         this.currentUser=currentUser;
     }
 
-    public void getLedValue(LedValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("led1").addListenerForSingleValueEvent(new ValueEventListener() {
+    public void getLedValue(String chmp,LedValueCallback callback) {
+        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("dispositifs").child("Led").child("intensite").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Boolean ledControl = dataSnapshot.getValue(Boolean.class);
@@ -32,14 +32,29 @@ public class LedManager {
     }
 
     // Mettre à jour la valeur du LED
-    public void setLedValue(Boolean value, UpdateValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("led1").setValue(value)
+    public void ouvrirLed(String chmp, UpdateValueCallback callback) {
+        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("dispositifs").child("Led").child("intensite").setValue(1023)
                 .addOnSuccessListener(aVoid -> {
                     callback.onSuccess();
                 })
                 .addOnFailureListener(callback::onFailure);
     }
 
+    public void fermerLed(String chmp, UpdateValueCallback callback) {
+        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("dispositifs").child("Led").child("intensite").setValue(0)
+                .addOnSuccessListener(aVoid -> {
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(callback::onFailure);
+    }
+
+    public void changeIntensite(String chmp,int value, UpdateValueCallback callback) {
+        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("dispositifs").child("Led").child("intensite").setValue(value)
+                .addOnSuccessListener(aVoid -> {
+                    callback.onSuccess();
+                })
+                .addOnFailureListener(callback::onFailure);
+    }
     public interface LedValueCallback {
         void onValueReceived(Boolean value);
         void onFailure(Exception e);

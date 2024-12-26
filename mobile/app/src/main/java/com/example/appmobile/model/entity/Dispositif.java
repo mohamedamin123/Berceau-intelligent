@@ -1,7 +1,9 @@
 package com.example.appmobile.model.entity;
 
 
-public abstract class  Dispositif {
+import java.io.Serializable;
+
+public  class  Dispositif implements Serializable {
 
     private int pin;
     private String name;

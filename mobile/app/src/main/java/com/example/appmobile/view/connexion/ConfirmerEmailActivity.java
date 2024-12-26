@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appmobile.databinding.ActivityConfirmerEmailBinding;
 import com.example.appmobile.model.firebase.FirebaseManager;
-import com.example.appmobile.model.firebase.ParentRepository;
+import com.example.appmobile.model.firebase.ParentManager;
 import com.example.appmobile.model.firebase.interfaces.SignInCallback;
 import com.example.appmobile.model.firebase.interfaces.UpdateValueCallback;
 import com.example.appmobile.utils.SendEmailTask;
@@ -18,7 +18,7 @@ public class ConfirmerEmailActivity extends AppCompatActivity {
     private ActivityConfirmerEmailBinding binding;
     String nom,prenom,email,password,verificationCode;
     private FirebaseManager firebaseManager;
-    private ParentRepository parentRepository;
+    private ParentManager parentManager;
 
 
     @Override
@@ -64,9 +64,9 @@ public class ConfirmerEmailActivity extends AppCompatActivity {
     private void oublier() {
         if (email != null && !email.isEmpty()) {
             firebaseManager = new FirebaseManager(getApplicationContext());
-            parentRepository =new ParentRepository(getApplicationContext());
+            parentManager =new ParentManager(getApplicationContext());
             // Envoi d'un email de réinitialisation du mot de passe
-            parentRepository.sendPasswordResetEmail(email, new UpdateValueCallback() {
+            parentManager.sendPasswordResetEmail(email, new UpdateValueCallback() {
                 @Override
                 public void onSuccess() {
                     Toast.makeText(ConfirmerEmailActivity.this, "Email de réinitialisation envoyé. Vérifiez votre boîte de réception.", Toast.LENGTH_SHORT).show();
@@ -86,8 +86,8 @@ public class ConfirmerEmailActivity extends AppCompatActivity {
     private void enregistrer() {
         Intent intent=new Intent(ConfirmerEmailActivity.this, LoginActivity.class);
         firebaseManager = new FirebaseManager(getApplicationContext());
-        parentRepository =new ParentRepository(getApplicationContext());
-        parentRepository.signUp(email, password, nom, prenom, new SignInCallback() {
+        parentManager =new ParentManager(getApplicationContext());
+        parentManager.signUp(email, password, nom, prenom, new SignInCallback() {
             @Override
             public void onSuccess(FirebaseUser user) {
 

@@ -15,13 +15,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
-public class ParentRepository {
+public class ParentManager {
 
     private static final String TAG = "ParentManager";
     private final FirebaseManager firebaseManager;
 
     // Constructeur
-    public ParentRepository(Context context) {
+    public ParentManager(Context context) {
         this.firebaseManager = new FirebaseManager(context);
     }
 

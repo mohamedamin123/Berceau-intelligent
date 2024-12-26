@@ -6,15 +6,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor // Génère un constructeur avec tous les champs
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
+
 public class ServoMoteur extends Actionnaire{
 
     private int position;
     private String mode;
+
+
+    public ServoMoteur() {
+        this.setName("ServoMoteur");
+        this.setEtat(true);
+        this.setMode("Manuelle");
+    }
 
     public void deplacer(int position) {
         this.setPosition(position);
