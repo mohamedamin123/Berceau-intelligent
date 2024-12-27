@@ -15,19 +15,18 @@ import com.example.appmobile.databinding.FragmentBebeBinding;
 import com.example.appmobile.model.entity.Bebe;
 import com.example.appmobile.model.entity.Berceau;
 import com.example.appmobile.model.firebase.BerceauManager;
-import com.example.appmobile.model.firebase.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.ArrayList;
 import java.util.List;
+
+import java.util.LinkedHashMap;
 
 public class BebeFragment extends Fragment {
 
     private FragmentBebeBinding binding;
-    private List<Bebe> bebes;
+    private LinkedHashMap<String, Bebe> bebeMap;
     private BerceauManager berceauManager;
-    String id;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -48,8 +47,8 @@ public class BebeFragment extends Fragment {
             return;
         }
 
-        // Initialiser la liste des bébés
-        bebes = new ArrayList<>();
+        // Initialiser la LinkedHashMap pour garantir l'ordre des bébés
+        bebeMap = new LinkedHashMap<>();
         fetchDataFromFirebase();
     }
 
@@ -57,9 +56,11 @@ public class BebeFragment extends Fragment {
         berceauManager.displayBerceau(new BerceauManager.BerceauCallback() {
             @Override
             public void onSuccess(List<Berceau> berceaus) {
+                int index = 1;
                 for (Berceau berceau : berceaus) {
                     if (berceau.getBebe() != null) {
-                        bebes.add(berceau.getBebe());
+                        String key = "berceau" + index++;
+                        bebeMap.put(key, berceau.getBebe());
                     }
                 }
                 setupViewPagerAndTabs();
@@ -73,8 +74,8 @@ public class BebeFragment extends Fragment {
     }
 
     private void setupViewPagerAndTabs() {
-        // Vérifier que la liste des bébés n'est pas vide
-        if (bebes.isEmpty()) {
+        // Vérifier que la LinkedHashMap des bébés n'est pas vide
+        if (bebeMap.isEmpty()) {
             Toast.makeText(getContext(), "Aucun bébé disponible", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -85,10 +86,12 @@ public class BebeFragment extends Fragment {
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
         );
 
-        // Ajouter un fragment pour chaque bébé
-        for (Bebe bebe : bebes) {
+        // Ajouter un fragment pour chaque entrée dans la LinkedHashMap
+        for (LinkedHashMap.Entry<String, Bebe> entry : bebeMap.entrySet()) {
+            String key = entry.getKey();
+            Bebe bebe = entry.getValue();
             String prenom = bebe.getPrenom() != null ? bebe.getPrenom() : "Inconnu";
-            adapter.addFragment(DataFragment.newInstance("Données pour " + prenom), prenom);
+            adapter.addFragment(DataFragment.newInstance( key), prenom);
         }
 
         // Configurer le ViewPager et le TabLayout

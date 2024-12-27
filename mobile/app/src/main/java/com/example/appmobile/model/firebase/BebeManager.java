@@ -1,51 +1,79 @@
 package com.example.appmobile.model.firebase;
 
+import com.example.appmobile.model.entity.Bebe;
+import com.example.appmobile.model.firebase.interfaces.GetValueCallback;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import com.example.appmobile.model.firebase.interfaces.GetValueCallback;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class BebeManager {
-    private FirebaseManager firebaseManager;
-    private FirebaseUser currentUser;
+    private final FirebaseManager firebaseManager;
+    private final FirebaseUser currentUser;
 
     public BebeManager(FirebaseUser currentUser) {
         this.firebaseManager = new FirebaseManager();
-        this.currentUser=currentUser;
+        this.currentUser = currentUser;
     }
 
-    public void getLait(String chmp,GetValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("bebe").child("lait").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Integer tmpValue = dataSnapshot.getValue(Integer.class);
-                callback.onValueReceived(tmpValue);
-            }
+    public void getValue(String chmp, String key, GetValueCallback callback) {
+        firebaseManager.getDatabase()
+                .child("users")
+                .child(currentUser.getUid())
+                .child("berceau")
+                .child(chmp)
+                .child("bebe")
+                .child(key)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        Integer value = dataSnapshot.getValue(Integer.class);
+                        callback.onValueReceived(value);
+                    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                callback.onFailure(databaseError.toException());
-            }
-        });
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        callback.onFailure(databaseError.toException());
+                    }
+                });
     }
 
-    public void initLait(String chmp, GetValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("bebe").child("lait")
+    public void initValue(String chmp, String key, GetValueCallback callback) {
+        firebaseManager.getDatabase()
+                .child("users")
+                .child(currentUser.getUid())
+                .child("berceau")
+                .child(chmp)
+                .child("bebe")
+                .child(key)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         if (!dataSnapshot.exists() || dataSnapshot.getValue() == null) {
-                            // Set a default value if "lait" does not exist or is null
-                            Integer defaultValue = 0; // Default value
-                            firebaseManager.getDatabase().child("users").child(currentUser.getUid())
-                                    .child("berceau").child(chmp).child("bebe").child("lait")
-                                    .setValue(defaultValue)
-                                    .addOnSuccessListener(aVoid -> callback.onValueReceived(defaultValue))
+                            firebaseManager.getDatabase()
+                                    .child("users")
+                                    .child(currentUser.getUid())
+                                    .child("berceau")
+                                    .child(chmp)
+                                    .child("bebe")
+                                    .child(key)
+                                    .setValue(0)
+                                    .addOnSuccessListener(aVoid -> callback.onValueReceived(0))
                                     .addOnFailureListener(callback::onFailure);
                         } else {
-                            Integer tmpValue = dataSnapshot.getValue(Integer.class);
-                            callback.onValueReceived(tmpValue);
+                            callback.onValueReceived(dataSnapshot.getValue(Integer.class));
                         }
                     }
 
@@ -56,129 +84,75 @@ public class BebeManager {
                 });
     }
 
+    public void setValue(String chmp, String key) {
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-    public void getDormir(String chmp,GetValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("bebe").child("dormir").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Integer tmpValue = dataSnapshot.getValue(Integer.class);
-                callback.onValueReceived(tmpValue);
-            }
+        scheduler.scheduleWithFixedDelay(() -> {
+            firebaseManager.getDatabase()
+                    .child("users")
+                    .child(currentUser.getUid())
+                    .child("berceau")
+                    .child(chmp)
+                    .child("bebe")
+                    .child(key)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Integer currentValue = dataSnapshot.getValue(Integer.class);
+                            if (currentValue == null) {
+                                currentValue = 0;
+                            }
+                            int newValue = currentValue + 1;
+                            firebaseManager.getDatabase()
+                                    .child("users")
+                                    .child(currentUser.getUid())
+                                    .child("berceau")
+                                    .child(chmp)
+                                    .child("bebe")
+                                    .child(key)
+                                    .setValue(newValue)
+                                    .addOnFailureListener(Throwable::printStackTrace);
+                        }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                callback.onFailure(databaseError.toException());
-            }
-        });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            databaseError.toException().printStackTrace();
+                        }
+                    });
+        }, 0, 1, TimeUnit.MINUTES); // Increment every minute
     }
 
-    public void initDormir(String chmp, GetValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("bebe").child("dormir")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+
+    public DatabaseReference getDatabaseReference() {
+        return FirebaseDatabase.getInstance().getReference();
+    }
+
+    public void getBebe(String chmp, GetValueCallback callback) {
+        getDatabaseReference()
+                .child("users")
+                .child(currentUser.getUid())
+                .child("berceau")
+                .child(chmp)
+                .child("bebe")
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (!dataSnapshot.exists() || dataSnapshot.getValue() == null) {
-                            // Set a default value if "lait" does not exist or is null
-                            Integer defaultValue = 0; // Default value
-                            firebaseManager.getDatabase().child("users").child(currentUser.getUid())
-                                    .child("berceau").child(chmp).child("bebe").child("dormir")
-                                    .setValue(defaultValue)
-                                    .addOnSuccessListener(aVoid -> callback.onValueReceived(defaultValue))
-                                    .addOnFailureListener(callback::onFailure);
+                        Bebe bebe = dataSnapshot.getValue(Bebe.class);
+                        if (bebe != null) {
+                            callback.onValueReceived(bebe);  // Return the Bebe object via callback
                         } else {
-                            Integer tmpValue = dataSnapshot.getValue(Integer.class);
-                            callback.onValueReceived(tmpValue);
+                            callback.onFailure(new Exception("Bebe not found"));  // Handle missing data
                         }
                     }
 
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        callback.onFailure(databaseError.toException());
+                        callback.onFailure(databaseError.toException());  // Handle errors
                     }
                 });
     }
 
 
-    public void getRepas(String chmp,GetValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("bebe").child("repas").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Integer tmpValue = dataSnapshot.getValue(Integer.class);
-                callback.onValueReceived(tmpValue);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                callback.onFailure(databaseError.toException());
-            }
-        });
-    }
-
-    public void initRepas(String chmp, GetValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("bebe").child("repas")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (!dataSnapshot.exists() || dataSnapshot.getValue() == null) {
-                            // Set a default value if "lait" does not exist or is null
-                            Integer defaultValue = 0; // Default value
-                            firebaseManager.getDatabase().child("users").child(currentUser.getUid())
-                                    .child("berceau").child(chmp).child("bebe").child("repas")
-                                    .setValue(defaultValue)
-                                    .addOnSuccessListener(aVoid -> callback.onValueReceived(defaultValue))
-                                    .addOnFailureListener(callback::onFailure);
-                        } else {
-                            Integer tmpValue = dataSnapshot.getValue(Integer.class);
-                            callback.onValueReceived(tmpValue);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        callback.onFailure(databaseError.toException());
-                    }
-                });
-    }
 
 
-    public void getCouche(String chmp,GetValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("bebe").child("couche").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Integer tmpValue = dataSnapshot.getValue(Integer.class);
-                callback.onValueReceived(tmpValue);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                callback.onFailure(databaseError.toException());
-            }
-        });
-    }
-
-    public void initCouche(String chmp, GetValueCallback callback) {
-        firebaseManager.getDatabase().child("users").child(currentUser.getUid()).child("berceau").child(chmp).child("bebe").child("couche")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (!dataSnapshot.exists() || dataSnapshot.getValue() == null) {
-                            // Set a default value if "lait" does not exist or is null
-                            Integer defaultValue = 0; // Default value
-                            firebaseManager.getDatabase().child("users").child(currentUser.getUid())
-                                    .child("berceau").child(chmp).child("bebe").child("couche")
-                                    .setValue(defaultValue)
-                                    .addOnSuccessListener(aVoid -> callback.onValueReceived(defaultValue))
-                                    .addOnFailureListener(callback::onFailure);
-                        } else {
-                            Integer tmpValue = dataSnapshot.getValue(Integer.class);
-                            callback.onValueReceived(tmpValue);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        callback.onFailure(databaseError.toException());
-                    }
-                });
-    }
 }
