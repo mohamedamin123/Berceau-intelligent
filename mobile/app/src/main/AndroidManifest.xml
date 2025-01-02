@@ -21,8 +21,13 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission-sdk-23 android:name="android.permission.BLUETOOTH" />
 
     <application
         android:name=".model.firebase.MyApp"
@@ -36,15 +41,10 @@
         android:theme="@style/Theme.AppMobile"
         tools:targetApi="31">
         <service
-            android:name=".view.accueil.bebe.AutoUpdateService"
+            android:name=".view.accueil.notification.NotificationService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="false"/>
 
-        <activity
-            android:name=".view.accueil.bebe.BebeActivity"
-            android:exported="false"
-            android:label="@string/title_activity_bebe"
-            android:theme="@style/Theme.AppMobile.NoActionBar" />
         <activity
             android:name=".view.accueil.berceau.AjouterBerceauActivity"
             android:exported="false" />
@@ -77,12 +77,6 @@
             android:name=".view.welcome.WelcomeActivity"
             android:exported="false"
             android:label="@string/app_name" />
-
-        <service
-            android:name=".controller.service.BluetoothService"
-            android:enabled="true"
-            android:exported="true" />
-
         <activity
             android:name=".view.accueil.HomeActivity"
             android:exported="false"

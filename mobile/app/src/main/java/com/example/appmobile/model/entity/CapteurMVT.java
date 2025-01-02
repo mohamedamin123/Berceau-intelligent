@@ -15,6 +15,7 @@ public class CapteurMVT extends Capteur{
     public CapteurMVT() {
         this.setName("CapteurMVT");
         this.setEtat(true);
+        this.setPin(18);
 
     }
 

@@ -2,7 +2,9 @@ package com.example.appmobile.view.accueil.berceau;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -18,6 +20,8 @@ import com.example.appmobile.model.entity.Bebe;
 import com.example.appmobile.model.entity.Berceau;
 import com.example.appmobile.model.firebase.BerceauManager;
 import com.example.appmobile.model.firebase.FirebaseManager;
+import com.example.appmobile.model.network.BluetoothHelper;
+import com.example.appmobile.model.network.WifiHelper;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.ParseException;
@@ -32,6 +36,10 @@ public class AjouterBerceauActivity extends AppCompatActivity {
 
     private ActivityAjouterBerceauBinding binding;
     private BerceauManager berceauManager;
+    private BluetoothHelper bluetoothHelper;
+    private FirebaseUser currentUser;
+    private SharedPreferences sharedPreferences;
+    int size;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,36 +52,56 @@ public class AjouterBerceauActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseManager firebaseManager = new FirebaseManager();
-        FirebaseUser currentUser = firebaseManager.getCurrentUser();
+         currentUser = firebaseManager.getCurrentUser();
         berceauManager=new BerceauManager(currentUser);
-
+        bluetoothHelper = new BluetoothHelper(this, new Handler());
+         sharedPreferences = this.getSharedPreferences("AppPreferences", MODE_PRIVATE);
+        initializeWifiSsid(); // Initialiser automatiquement le SSID
+        size=getIntent().getIntExtra("size",-1)+1;
         getAge();
         // Initialiser l'objet Berceau
         Berceau berceau = new Berceau();
 
+
         // Ajouter un listener sur le bouton
-            binding.btnAjouter.setOnClickListener(v -> {
+// Ajouter un listener sur le bouton
+        binding.btnAjouterBerceau.setOnClickListener(v -> {
+            String nomBerceau = binding.etNomBerceau.getText().toString();
+            String nomBebe = binding.etNomBebe.getText().toString();
+            String agebebe = binding.etDateNaissance.getText().toString();
 
-                String nomBerceau=binding.etNomBerceau.getText().toString();
-                String nomBebe=binding.etNomBebe.getText().toString();
-                String agebebe=binding.etDateNaissance.getText().toString();
+            // Vérifier les champs
+            if (nomBerceau.isEmpty() || nomBebe.isEmpty() || agebebe.isEmpty()) {
+                Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            connectToRaspberryPi();
 
-                // Vérifier les champs
-                if (nomBerceau.isEmpty() || nomBebe.isEmpty() || agebebe.isEmpty()) {
-                    Toast.makeText(this, "Veuillez remplir tous les champs", Toast.LENGTH_SHORT).show();
-                    return;
-                }
 
-                // Créer un nouveau berceau avec les informations saisies
-                berceau.setNom(binding.etNomBerceau.getText().toString());
-                berceau.setBebe(new Bebe(nomBebe,agebebe));
+            // Afficher une boîte de dialogue pour confirmer l'ajout
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                    .setTitle("Confirmation")
+                    .setMessage("Voulez-vous vraiment ajouter ce berceau ?")
+                    .setPositiveButton("Oui", (dialog, which) -> {
+                        // Action à réaliser si l'utilisateur confirme
+                        connectToRaspberryPi();
 
-                berceauManager.AjouterBerceau(berceau);
+                        // Créer un nouveau berceau avec les informations saisies
+                        berceau.setNom(binding.etNomBerceau.getText().toString());
+                        berceau.setBebe(new Bebe(nomBebe, agebebe));
 
-                // Retour à l'accueil
-                finish();
+                        berceauManager.AjouterBerceau(berceau);
 
-            });
+                        // Retour à l'accueil
+                        finish();
+                    })
+                    .setNegativeButton("Non", (dialog, which) -> {
+                        // Action à réaliser si l'utilisateur annule (facultatif)
+                        dialog.dismiss();
+                    })
+                    .show();
+        });
+
 
     }
 
@@ -98,5 +126,26 @@ public class AjouterBerceauActivity extends AppCompatActivity {
 
             datePickerDialog.show();
         });
+    }
+
+    private void connectToRaspberryPi() {
+        // Connexion à Raspberry Pi via Bluetooth
+        bluetoothHelper.connectToRaspberryPi();
+        String savedPassword = sharedPreferences.getString("userPassword", null);
+
+        // Envoi du message au Raspberry Pi
+        String message = binding.ssid.getText().toString()+" "+binding.motDePasse.getText().toString()+" "+currentUser.getEmail()+" "+savedPassword+" "+currentUser.getUid()+" "+"berceau"+size;
+
+        bluetoothHelper.sendMessage(message);
+
+    }
+
+    private void initializeWifiSsid() {
+        String ssid = WifiHelper.getCurrentSsid(this);
+        if (ssid != null) {
+            binding.ssid.setText(ssid); // Afficher le SSID dans le champ texte
+        } else {
+            Toast.makeText(this, "Wi-Fi désactivé ou SSID introuvable", Toast.LENGTH_SHORT).show();
+        }
     }
 }

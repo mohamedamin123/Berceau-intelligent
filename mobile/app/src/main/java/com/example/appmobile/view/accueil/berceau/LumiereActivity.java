@@ -81,7 +81,6 @@ public class LumiereActivity extends AppCompatActivity {
                 ledManager.changeIntensite(id,progress, new UpdateValueCallback() {
                     @Override
                     public void onSuccess() {
-                        Toast.makeText(getApplicationContext(),"fermer la lumiere ",Toast.LENGTH_SHORT).show();
 
                     }
 

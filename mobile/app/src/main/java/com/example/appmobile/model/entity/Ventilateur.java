@@ -17,6 +17,7 @@ public class Ventilateur extends Actionnaire{
         this.setName("Ventilateur");
         this.setEtat(true);
         this.setMode("Manuelle");
+        this.setPin(22);
 
     }
 

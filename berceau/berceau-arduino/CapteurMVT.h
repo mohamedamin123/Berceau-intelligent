@@ -1,2 +1,0 @@
-void initCapteurMVT();
-int detecterMVT();

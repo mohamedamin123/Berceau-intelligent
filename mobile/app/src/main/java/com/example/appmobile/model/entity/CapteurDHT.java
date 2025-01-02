@@ -17,6 +17,7 @@ public class CapteurDHT extends Capteur{
     public CapteurDHT() {
         this.setName("CapteurDHT");
         this.setEtat(true);
+        this.setPin(14);
 
     }
 

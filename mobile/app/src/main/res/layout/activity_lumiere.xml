@@ -111,7 +111,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:max="1023"
+                    android:max="100"
                     android:min="0"
                     android:progress="0"
                     android:background="@android:color/darker_gray"

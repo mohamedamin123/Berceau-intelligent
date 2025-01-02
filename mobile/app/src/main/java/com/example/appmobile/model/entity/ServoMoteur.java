@@ -17,6 +17,8 @@ public class ServoMoteur extends Actionnaire{
         this.setName("ServoMoteur");
         this.setEtat(true);
         this.setMode("Manuelle");
+        this.setPin(15);
+
     }
 
     public void deplacer(int position) {

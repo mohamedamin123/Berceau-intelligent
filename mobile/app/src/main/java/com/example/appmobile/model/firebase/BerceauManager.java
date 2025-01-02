@@ -69,6 +69,7 @@ public class BerceauManager {
 
 
     public void AjouterBerceau(Berceau berceau) {
+
         // Récupérer le nombre actuel de berceaux sous l'utilisateur
         DatabaseReference berceauRef = firebaseManager.getDatabase()
                 .child("users")
@@ -81,6 +82,9 @@ public class BerceauManager {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Calculer la prochaine clé (berceau1, berceau2, ...)
                 int nextIndex = (int) dataSnapshot.getChildrenCount() + 1;
+                berceau.setId(nextIndex);
+
+
                 String newBerceauKey = "berceau" + nextIndex; // Par exemple, "berceau1", "berceau2", ...
 
                 // Ajouter les dispositifs à ce berceau
@@ -132,6 +136,50 @@ public class BerceauManager {
                 return null;
         }
     }
+
+    public void miseAJour(String chemin) {
+        firebaseManager.getDatabase()
+                .child("users")
+                .child(currentUser.getUid())
+                .child("berceau")
+                .child(chemin)
+                .child("etat") // Chemin de l'attribut "etat" dans la base de données
+                .setValue(true) // Met à jour la valeur de l'attribut à true
+                .addOnSuccessListener(aVoid -> {
+                    System.out.println("Mise à jour réussie : 'etat' défini à true.");
+                })
+                .addOnFailureListener(e -> {
+                    System.err.println("Erreur lors de la mise à jour : " + e.getMessage());
+                });
+    }
+
+    public void setAllEtatToFalse() {
+        firebaseManager.getDatabase()
+                .child("users")
+                .child(currentUser.getUid())
+                .child("berceau")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            // Parcours chaque berceau et met à jour l'attribut 'etat'
+                            snapshot.getRef().child("etat").setValue(false)
+                                    .addOnSuccessListener(aVoid -> {
+                                        System.out.println("Mise à jour réussie : 'etat' défini à false pour " + snapshot.getKey());
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        System.err.println("Erreur lors de la mise à jour de " + snapshot.getKey() + " : " + e.getMessage());
+                                    });
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.err.println("Erreur lors de la récupération des données : " + databaseError.getMessage());
+                    }
+                });
+    }
+
 
     // Interface de rappel pour les opérations async
     public interface BerceauCallback {
