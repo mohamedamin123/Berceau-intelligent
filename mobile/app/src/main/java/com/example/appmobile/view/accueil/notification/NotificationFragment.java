@@ -58,7 +58,7 @@ public class NotificationFragment extends Fragment {
                 notifications.clear();
                 // Inverser directement la liste
                 Collections.reverse(Notificationx);
-                notifications.addAll(Notificationx); 
+                notifications.addAll(Notificationx);
                 adapter.notifyDataSetChanged();
             }
 

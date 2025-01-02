@@ -110,6 +110,7 @@ public class NotificationManager {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int nextIndex = (int) dataSnapshot.getChildrenCount() + 1;
+                notification.setIdNotification(nextIndex);
                 String newNotificationKey = "Notification" + nextIndex; // e.g., "Notification1"
                 DatabaseReference newNotificationRef = notificationRef.child(newNotificationKey);
                 newNotificationRef.setValue(notification)
