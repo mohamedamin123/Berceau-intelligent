@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.example.appmobile.model.entity.Notification;
 import com.example.appmobile.model.firebase.interfaces.GetValueCallback;
+import com.example.appmobile.utils.Convertit;
 import com.example.appmobile.view.accueil.berceau.BerceauFragment;
 import com.example.appmobile.view.accueil.berceau.ConsulterBerceauActivity;
 import com.example.appmobile.view.accueil.notification.NotificationHelper;
@@ -13,6 +14,10 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class MVTManager {
     private FirebaseManager firebaseManager;
     private FirebaseUser currentUser;
@@ -58,6 +63,7 @@ public class MVTManager {
 
                                                             String type="Mouvement détecté - " + nom;
                                                             String message="Un mouvement a été détecté dans le berceau : " + nom;
+                                                            int idBerceau= Convertit.convertirStringToInt(berceauKey);
 
 
                                                             Notification notification=new Notification(type, message);

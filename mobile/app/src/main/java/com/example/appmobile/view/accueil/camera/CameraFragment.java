@@ -47,10 +47,6 @@ public class CameraFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        binding.btnClim.setOnClickListener(e->{
-            Intent intent=new Intent(getActivity(), ConsulterClimatiseurActivity.class);
-            startActivity(intent);
-        });
 
         if (allPermissionsGranted()) {
             startCamera(); // Démarrer la caméra si les autorisations sont accordées

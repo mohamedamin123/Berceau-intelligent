@@ -8,7 +8,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.appmobile.model.entity.Berceau;
+import com.example.appmobile.model.entity.Notification;
 import com.example.appmobile.model.firebase.BerceauManager;
+import com.example.appmobile.model.firebase.NotificationManager;
 import com.example.appmobile.view.accueil.berceau.AjouterBerceauActivity;
 import com.example.appmobile.view.accueil.berceau.ConsulterBerceauActivity;
 
@@ -71,6 +73,28 @@ public class AlertCreation{
 
         // Show the dialog
         builder.create().show();
+    }
+
+
+
+    public static void creerAlertNotification(Notification notification,NotificationManager manager, Context context) {
+        new AlertDialog.Builder(context)
+                .setTitle("Confirmer suppression")
+                .setMessage("Voulez-vous vraiment supprimer cette article ?")
+                .setPositiveButton("Oui", (confirmDialog, confirmWhich) -> {
+                    // Logic to delete the item
+                    try {
+                        manager.supprimerNotification(notification.getIdNotification(), notification.getIdBerceau());
+                    } catch (Exception e) {
+
+                    }
+                    // Implement logic for deletion
+                })
+                .setNegativeButton("Non", (confirmDialog, confirmWhich) -> {
+                    // Logic for cancelling deletion
+                    confirmDialog.dismiss();
+                })
+                .show();
     }
 
 }

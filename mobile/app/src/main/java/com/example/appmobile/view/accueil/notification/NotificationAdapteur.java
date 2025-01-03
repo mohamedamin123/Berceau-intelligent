@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appmobile.R;
 import com.example.appmobile.databinding.CustomItemNotificationBinding;
+import com.example.appmobile.model.entity.Berceau;
 import com.example.appmobile.model.entity.Notification;
 
 import java.util.List;
@@ -18,10 +19,17 @@ public class NotificationAdapteur extends RecyclerView.Adapter<NotificationAdapt
 
     private Context context;
     private List<Notification> notifications;
+    private OnManipule listener;
 
     public NotificationAdapteur(Context context, List<Notification> notifications) {
         this.context = context;
         this.notifications = notifications;
+    }
+
+    public NotificationAdapteur(Context context, List<Notification> notifications,OnManipule listener) {
+        this.context = context;
+        this.notifications = notifications;
+        this.listener=listener;
     }
 
     @NonNull
@@ -40,6 +48,12 @@ public class NotificationAdapteur extends RecyclerView.Adapter<NotificationAdapt
         holder.binding.typeNotification.setText(notification.getType());
         holder.binding.dateEnvoi.setText(String.valueOf(notification.getFormattedDateEnvoi()));
         holder.binding.textNotification.setText(notification.getMessage());
+
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onClick(notification,position);
+            }
+        });
     }
 
     @Override
@@ -55,5 +69,9 @@ public class NotificationAdapteur extends RecyclerView.Adapter<NotificationAdapt
             super(itemView);
             binding = CustomItemNotificationBinding.bind(itemView);
         }
+    }
+
+    public interface OnManipule {
+        void onClick(Notification notification, int pos);
     }
 }

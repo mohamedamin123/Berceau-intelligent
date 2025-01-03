@@ -118,6 +118,25 @@ public class NotificationManager {
         });
     }
 
+    public void supprimerNotification(int idNotification,int berceauId) {
+        DatabaseReference berceauRef = firebaseManager.getDatabase()
+                .child("users")
+                .child(currentUser.getUid())
+                .child("berceau")
+                .child("berceau" + berceauId)
+                .child("notifications")
+                .child("Notification"+idNotification);
+
+        // Supprimer le berceau de la base de données
+        berceauRef.removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    System.out.println("Berceau supprimé avec succès pour l'ID : " + idNotification);
+                })
+                .addOnFailureListener(e -> {
+                    System.err.println("Erreur lors de la suppression du berceau : " + e.getMessage());
+                });
+    }
+
     // Interface callback for async operations
     public interface NotificationCallback {
         void onSuccess(List<Notification> notifications);
