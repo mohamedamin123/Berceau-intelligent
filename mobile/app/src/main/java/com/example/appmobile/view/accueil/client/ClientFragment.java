@@ -1,5 +1,6 @@
 package com.example.appmobile.view.accueil.client;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +18,7 @@ import com.example.appmobile.model.firebase.FirebaseManager;
 import com.example.appmobile.model.firebase.ParentManager;
 import com.example.appmobile.model.firebase.interfaces.DataCallback;
 import com.example.appmobile.model.entity.Parent;
+import com.example.appmobile.utils.UperName;
 import com.example.appmobile.view.connexion.LoginActivity;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -66,6 +68,7 @@ public class ClientFragment extends Fragment {
                         binding.emailEdt.setText(parent.getEmail());
                         binding.nomEdt.setText(parent.getNom());
                         binding.prenomEdt.setText(parent.getPrenom());
+                        binding.tvParent.setText(parent.getFullName());
                     }
                 }
 
@@ -84,8 +87,8 @@ public class ClientFragment extends Fragment {
     private void mettreAjour(FirebaseUser currentUser) {
         if (currentUser != null) {
             String userId = currentUser.getUid();
-            String newNom = binding.nomEdt.getText().toString();
-            String newPrenom = binding.prenomEdt.getText().toString();
+            String newNom = UperName.capitalizeFirstLetter(binding.nomEdt.getText().toString());
+            String newPrenom = UperName.capitalizeFirstLetter(binding.prenomEdt.getText().toString());
 
             Parent updatedParent = new Parent(newNom, newPrenom, currentUser.getEmail());
 
@@ -97,16 +100,14 @@ public class ClientFragment extends Fragment {
     }
 
     private void deconnexion() {
-        String nom = binding.nomEdt.getText().toString();
-        String prenom = binding.prenomEdt.getText().toString();
+        String nom = (binding.nomEdt.getText().toString());
+        String prenom = (binding.prenomEdt.getText().toString());
         parent = new Parent(nom, prenom);
         parent.seDeconnecter();
         parentManager.signOut();
         Intent intent = new Intent(getContext(), LoginActivity.class);
         startActivity(intent);
         getActivity().finish(); // Close the current activity after logout
-
-
-
     }
+
 }

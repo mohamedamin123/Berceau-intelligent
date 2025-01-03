@@ -1,7 +1,12 @@
 package com.example.appmobile.view.accueil.berceau;
 
+import android.Manifest;
+import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +15,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -32,6 +39,10 @@ public class BerceauFragment extends Fragment implements BerceauAdapteur.OnManip
     private List<Berceau> berceaus;
     private BerceauManager berceauManager;
     private int sizeBerceau;
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
+    private static final int BLUETOOTH_PERMISSION_REQUEST_CODE=3;
+    private static final int ENABLE_BT_REQUEST_CODE = 3; // Code pour demander à activer Bluetooth
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +74,16 @@ public class BerceauFragment extends Fragment implements BerceauAdapteur.OnManip
         binding.btnAjouter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!isBluetoothEnabled()) {
+                    Toast.makeText(getContext(), "Veuillez activer le Bluetooth", Toast.LENGTH_SHORT).show();
+                    startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), ENABLE_BT_REQUEST_CODE); // Demande d'activation du Bluetooth
+                    return;
+                } else if (!isLocationEnabled()) {
+                    Toast.makeText(getContext(), "Veuillez activer la localisation", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS); // Ouvre les paramètres de localisation
+                    startActivity(intent);
+                    return;
+                }
                 Intent intent = new Intent(getContext(), AjouterBerceauActivity.class);
                 intent.putExtra("size",sizeBerceau);
                 startActivity(intent);
@@ -134,6 +155,61 @@ public class BerceauFragment extends Fragment implements BerceauAdapteur.OnManip
                 Toast.makeText(getContext(), "Notification permission denied.", Toast.LENGTH_SHORT).show();
             }
         }
+        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getContext(), "Permissions de localisation accordées", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(), "Permission de localisation refusée", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        if (requestCode == BLUETOOTH_PERMISSION_REQUEST_CODE) {
+
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                Toast.makeText(getContext(), "Permission Bluetooth accordée", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(getContext(), "Permission Bluetooth refusée", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+
+
+
     }
+
+    private boolean isBluetoothEnabled () {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
+    }
+
+    private boolean isLocationEnabled () {
+        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+        return locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+    private void verifierPermission() {
+        // Vérification des permissions Bluetooth et de localisation
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                        LOCATION_PERMISSION_REQUEST_CODE);
+            }
+
+            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.BLUETOOTH)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(),
+
+                        new String[]{Manifest.permission.BLUETOOTH},
+
+                        BLUETOOTH_PERMISSION_REQUEST_CODE);
+
+            }
+
+        }
+    }
+
 
 }

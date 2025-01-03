@@ -10,6 +10,7 @@ import com.example.appmobile.model.firebase.FirebaseManager;
 import com.example.appmobile.model.firebase.ParentManager;
 import com.example.appmobile.model.firebase.interfaces.ValueExistCallback;
 import com.example.appmobile.utils.SendEmailTask;
+import com.example.appmobile.utils.UperName;
 
 import java.util.Random;
 
@@ -30,10 +31,10 @@ public class RegisterActivity extends AppCompatActivity {
         super.onStart();
 
         binding.loginBtn.setOnClickListener(e->{
-            String nom=binding.nomEdt.getText().toString().trim();
-            String prenom=binding.prenomEdt.getText().toString().trim();
-            String email=binding.emailEdt.getText().toString().trim();
-            String password=binding.passwordEdt.getText().toString().trim();
+            String nom= UperName.capitalizeFirstLetter(binding.nomEdt.getText().toString().trim());
+            String prenom=UperName.capitalizeFirstLetter(binding.prenomEdt.getText().toString().trim());
+            String email=UperName.capitalizeFirstLetter(binding.emailEdt.getText().toString().trim());
+            String password=UperName.capitalizeFirstLetter(binding.passwordEdt.getText().toString().trim());
 
             validerChamps(nom,prenom,email,password);
             verify(nom,prenom,email,password);

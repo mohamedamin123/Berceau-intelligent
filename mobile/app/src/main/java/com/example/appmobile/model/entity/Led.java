@@ -18,7 +18,7 @@ public class Led extends Actionnaire{
         this.setName("Led");
         this.setEtat(true);
         this.setNbrLed(1);
-        this.setCouleur("Rouge");
+        this.setCouleur("Jaune");
         this.setIntensite(0);
         this.setPin(2);
 

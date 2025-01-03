@@ -15,6 +15,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ParentManager {
 
     private static final String TAG = "ParentManager";
@@ -134,10 +137,19 @@ public class ParentManager {
 
     // Mise à jour des données utilisateur
     public void updateUser(String userId, Parent parent) {
-        firebaseManager.getDatabase().child("users").child(userId).setValue(parent)
+        // Create a map to hold only the fields you want to update
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("nom", parent.getNom());
+        updates.put("prenom", parent.getPrenom());
+        updates.put("email", parent.getEmail());
+        updates.put("fullName",parent.getFullName());
+
+        // Update only the specified fields in the database
+        firebaseManager.getDatabase().child("users").child(userId).updateChildren(updates)
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Données utilisateur mises à jour avec succès"))
                 .addOnFailureListener(e -> Log.w(TAG, "Échec de la mise à jour des données utilisateur", e));
     }
+
 
     // Suppression d'un utilisateur
     public void deleteUser(String userId) {
