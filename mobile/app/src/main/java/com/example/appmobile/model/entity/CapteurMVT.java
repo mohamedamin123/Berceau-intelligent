@@ -6,27 +6,20 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@AllArgsConstructor // Génère un constructeur avec tous les champs
-@Getter
-@Setter
-@ToString
+
 public class CapteurMVT extends Capteur{
+
+    private boolean mvtDect;
 
     public CapteurMVT() {
         this.setName("CapteurMVT");
         this.setEtat(true);
         this.setPin(18);
+        this.mvtDect=false;
 
     }
 
-    private boolean mvtDect;
-
-    public boolean lireMvt() {
-        return this.mvtDect;
-    }
-
-
-    public boolean isMvtDect() {
+    public boolean getMvtDect() {
         return mvtDect;
     }
 

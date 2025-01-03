@@ -10,6 +10,8 @@ import com.example.appmobile.model.entity.Led;
 import com.example.appmobile.model.entity.ServoMoteur;
 import com.example.appmobile.model.entity.Ventilateur;
 import com.example.appmobile.model.firebase.FirebaseManager;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,60 +35,51 @@ public class NotificationManager {
         firebaseManager.getDatabase()
                 .child("users")
                 .child(currentUser.getUid())
-                .child("berceau") // Accéder directement à "berceau"
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .child("berceau")
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists()) {
-                            List<Notification> allNotifications = new ArrayList<>();
-                            final int berceauCount = (int) snapshot.getChildrenCount();
-                            final int[] berceauProcessedCount = {0}; // To keep track of processed "berceau"
-
-                            // Parcourir chaque "berceau" pour récupérer les notifications
-                            for (DataSnapshot berceauSnapshot : snapshot.getChildren()) {
-                                String berceauKey = berceauSnapshot.getKey(); // Clé dynamique du berceau
-
-                                if (berceauKey != null) {
-                                    // Accéder aux notifications sous chaque "berceau"
-                                    firebaseManager.getDatabase()
-                                            .child("users")
-                                            .child(currentUser.getUid())
-                                            .child("berceau")
-                                            .child(berceauKey) // Accéder à un sous-nœud spécifique
-                                            .child("notifications") // Accéder aux notifications
-                                            .addListenerForSingleValueEvent(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(DataSnapshot dataSnapshot) {
-                                                    List<Notification> notifications = new ArrayList<>();
-
-                                                    for (DataSnapshot notificationSnapshot : dataSnapshot.getChildren()) {
-                                                        Notification notification = notificationSnapshot.getValue(Notification.class);
-                                                        if (notification != null) {
-                                                            notifications.add(notification);
-                                                        }
-                                                    }
-
-                                                    // Ajout des notifications de ce berceau à la liste globale
-                                                    allNotifications.addAll(notifications);
-
-                                                    // Incrémenter le compteur de berceaux traités
-                                                    berceauProcessedCount[0]++;
-
-                                                    // Vérifier si tous les berceaux ont été traités
-                                                    if (berceauProcessedCount[0] == berceauCount) {
-                                                        callback.onSuccess(allNotifications); // Appel du callback avec toutes les notifications
-                                                    }
-                                                }
-
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-                                                    callback.onError(databaseError.toException());
-                                                }
-                                            });
-                                }
-                            }
-                        } else {
+                        if (!snapshot.exists()) {
                             callback.onError(new Exception("Aucun 'berceau' trouvé pour l'utilisateur"));
+                            return;
+                        }
+
+                        List<Notification> allNotifications = new ArrayList<>();
+
+                        for (DataSnapshot berceauSnapshot : snapshot.getChildren()) {
+                            String berceauKey = berceauSnapshot.getKey();
+                            if (berceauKey != null) {
+                                firebaseManager.getDatabase()
+                                        .child("users")
+                                        .child(currentUser.getUid())
+                                        .child("berceau")
+                                        .child(berceauKey)
+                                        .child("notifications")
+                                        .addValueEventListener(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                                List<Notification> notifications = new ArrayList<>();
+
+                                                for (DataSnapshot notificationSnapshot : dataSnapshot.getChildren()) {
+                                                    Notification notification = notificationSnapshot.getValue(Notification.class);
+                                                    if (notification != null) {
+                                                        notifications.add(notification);
+                                                    }
+                                                }
+
+                                                synchronized (allNotifications) {
+                                                    allNotifications.clear();
+                                                    allNotifications.addAll(notifications);
+                                                    callback.onSuccess(allNotifications);
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                                callback.onError(databaseError.toException());
+                                            }
+                                        });
+                            }
                         }
                     }
 

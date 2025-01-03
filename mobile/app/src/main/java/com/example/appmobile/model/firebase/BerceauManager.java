@@ -1,10 +1,13 @@
 package com.example.appmobile.model.firebase;
 
+import androidx.annotation.NonNull;
+
 import com.example.appmobile.model.entity.Berceau;
 import com.example.appmobile.model.entity.CapteurDHT;
 import com.example.appmobile.model.entity.CapteurMVT;
 import com.example.appmobile.model.entity.Dispositif;
 import com.example.appmobile.model.entity.Led;
+import com.example.appmobile.model.entity.Notification;
 import com.example.appmobile.model.entity.ServoMoteur;
 import com.example.appmobile.model.entity.Ventilateur;
 import com.example.appmobile.model.firebase.FirebaseManager;
@@ -15,25 +18,29 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 public class BerceauManager {
 
     private FirebaseManager firebaseManager;
     private FirebaseUser currentUser;
-
+    private NotificationManager notificationManager;
     public BerceauManager(FirebaseUser currentUser) {
         this.firebaseManager = new FirebaseManager();
         this.currentUser = currentUser;
+        this.notificationManager=new NotificationManager(currentUser);
     }
 
-    public void displayBerceau(final BerceauCallback callback) {
+    public void displayBerceauRealtime(final BerceauCallback callback) {
         firebaseManager.getDatabase()
                 .child("users")
                 .child(currentUser.getUid())
                 .child("berceau")
-                .addListenerForSingleValueEvent(new ValueEventListener() {
+                .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         List<Berceau> berceaux = new ArrayList<>();
@@ -41,22 +48,22 @@ public class BerceauManager {
                             Berceau berceau = snapshot.getValue(Berceau.class);
 
                             if (berceau != null && berceau.getDispositifs() != null) {
-                                // Deserialize the dispositifs based on the 'type' field
                                 for (int i = 0; i < berceau.getDispositifs().size(); i++) {
-                                    if(berceau.getDispositifs().get(i)!=null) {
-                                        String name = Objects.requireNonNull(berceau.getDispositifs().get(i)).getName();  // Assuming 'type' is a field in Dispositif
+                                    if (berceau.getDispositifs().get(i) != null) {
+                                        String name = Objects.requireNonNull(berceau.getDispositifs().get(i)).getName();
 
-                                        // Deserialize the dispositif based on its type
+                                        // Désérialisation en fonction du type
                                         Dispositif actualDevice = createDeviceByName(name);
                                         if (actualDevice != null) {
-                                            berceau.getDispositifs().put(String.valueOf(i), actualDevice);  // Set the correct device
-                                    }
+                                            berceau.getDispositifs().put(String.valueOf(i), actualDevice);
+                                        }
                                     }
                                 }
                             }
 
                             berceaux.add(berceau);
                         }
+                        
                         callback.onSuccess(berceaux);
                     }
 
@@ -179,6 +186,94 @@ public class BerceauManager {
                     }
                 });
     }
+
+
+    public void updateBerceauById(Berceau updatedBerceau) {
+
+        DatabaseReference berceauRef0 = firebaseManager.getDatabase()
+                .child("users")
+                .child(currentUser.getUid())
+                .child("berceau").child("berceau"+updatedBerceau.getId()).child("notifications");
+        berceauRef0.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Notification> notificationList = new ArrayList<>();
+
+                for (DataSnapshot notificationSnapshot : snapshot.getChildren()) {
+                    Notification notification = notificationSnapshot.getValue(Notification.class);
+                    if (notification != null) {
+                        notificationList.add(notification);
+                    }
+                }
+
+                DatabaseReference berceauRef = firebaseManager.getDatabase()
+                        .child("users")
+                        .child(currentUser.getUid())
+                        .child("berceau");
+
+                // Search for the Berceau with the given ID
+                berceauRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        boolean found = false;
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            Berceau existingBerceau = snapshot.getValue(Berceau.class);
+                            if (existingBerceau != null && existingBerceau.getId() == updatedBerceau.getId()) {
+
+
+                                snapshot.getRef().setValue(updatedBerceau)
+                                        .addOnSuccessListener(aVoid -> {
+                                            System.out.println("Berceau mis à jour avec succès pour ID : " + updatedBerceau.getId());
+                                            for (Notification n:notificationList) {
+                                                notificationManager.AjouterNotification("berceau"+updatedBerceau.getId(),n);
+                                            }
+
+                                        })
+                                        .addOnFailureListener(e -> {
+                                            System.err.println("Erreur lors de la mise à jour du berceau : " + e.getMessage());
+                                        });
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            System.err.println("Aucun berceau trouvé avec l'ID : " + updatedBerceau.getId());
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        System.err.println("Erreur lors de la récupération des données : " + databaseError.getMessage());
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void supprimerBerceau(int berceauId) {
+        // Référence à la base de données pour accéder au berceau spécifique
+        DatabaseReference berceauRef = firebaseManager.getDatabase()
+                .child("users")
+                .child(currentUser.getUid())
+                .child("berceau")
+                .child("berceau" + berceauId);
+
+        // Supprimer le berceau de la base de données
+        berceauRef.removeValue()
+                .addOnSuccessListener(aVoid -> {
+                    System.out.println("Berceau supprimé avec succès pour l'ID : " + berceauId);
+                })
+                .addOnFailureListener(e -> {
+                    System.err.println("Erreur lors de la suppression du berceau : " + e.getMessage());
+                });
+    }
+
 
 
     // Interface de rappel pour les opérations async

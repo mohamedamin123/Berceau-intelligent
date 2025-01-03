@@ -24,6 +24,8 @@ import com.example.appmobile.databinding.FragmentBerceauBinding;
 import com.example.appmobile.model.entity.Berceau;
 import com.example.appmobile.model.firebase.BerceauManager;
 import com.example.appmobile.model.firebase.FirebaseManager;
+import com.example.appmobile.utils.AlertCreation;
+import com.example.appmobile.utils.CheckPermission;
 import com.example.appmobile.view.accueil.notification.NotificationHelper;
 import com.example.appmobile.view.accueil.notification.NotificationService;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,6 +58,7 @@ public class BerceauFragment extends Fragment implements BerceauAdapteur.OnManip
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        CheckPermission.verifierPermission(getActivity());
         NotificationHelper.createNotificationChannel(getContext()); // Initialize the channel
         FirebaseManager firebaseManager = new FirebaseManager();
         FirebaseUser currentUser = firebaseManager.getCurrentUser();
@@ -74,16 +77,12 @@ public class BerceauFragment extends Fragment implements BerceauAdapteur.OnManip
         binding.btnAjouter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isBluetoothEnabled()) {
-                    Toast.makeText(getContext(), "Veuillez activer le Bluetooth", Toast.LENGTH_SHORT).show();
-                    startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), ENABLE_BT_REQUEST_CODE); // Demande d'activation du Bluetooth
+                if(CheckPermission.ouvrirBluetooth(getContext(),getActivity()))
                     return;
-                } else if (!isLocationEnabled()) {
-                    Toast.makeText(getContext(), "Veuillez activer la localisation", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS); // Ouvre les paramètres de localisation
-                    startActivity(intent);
+
+                if (CheckPermission.ouvrirLocation(getContext()))
                     return;
-                }
+
                 Intent intent = new Intent(getContext(), AjouterBerceauActivity.class);
                 intent.putExtra("size",sizeBerceau);
                 startActivity(intent);
@@ -104,26 +103,21 @@ public class BerceauFragment extends Fragment implements BerceauAdapteur.OnManip
         berceauManager.setAllEtatToFalse();
 
     }
-
     public void getBerceaux() {
-
-        berceauManager.displayBerceau(new BerceauManager.BerceauCallback() {
+        berceauManager.displayBerceauRealtime(new BerceauManager.BerceauCallback() {
             @Override
             public void onSuccess(List<Berceau> b) {
                 berceaus.clear();
-                //ajouer berceau
                 berceaus.addAll(b);
-                sizeBerceau=b.size();
+                sizeBerceau = b.size();
                 adapter.notifyDataSetChanged();
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getContext(),"erreur dans affichage des berceau",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Erreur dans l'affichage des berceaux", Toast.LENGTH_SHORT).show();
             }
         });
-
-
     }
 
     @Override
@@ -134,12 +128,9 @@ public class BerceauFragment extends Fragment implements BerceauAdapteur.OnManip
 
     @Override
     public void onClick(Berceau berceau,int pos) {
-        //afficher toast
-        Intent intent = new Intent(getContext(),ConsulterBerceauActivity.class);
-        intent.putExtra("berceau", berceau);
-        intent.putExtra("id", "berceau"+(pos+1));
+
+        AlertCreation.creeAlertBerceau(berceau,berceauManager,getContext());
         berceauManager.miseAJour("berceau"+(pos+1));
-        startActivity(intent);
 
     }
 
@@ -179,37 +170,6 @@ public class BerceauFragment extends Fragment implements BerceauAdapteur.OnManip
 
     }
 
-    private boolean isBluetoothEnabled () {
-        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
-    }
-
-    private boolean isLocationEnabled () {
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        return locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
-    private void verifierPermission() {
-        // Vérification des permissions Bluetooth et de localisation
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                        LOCATION_PERMISSION_REQUEST_CODE);
-            }
-
-            if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.BLUETOOTH)
-                    != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(),
-
-                        new String[]{Manifest.permission.BLUETOOTH},
-
-                        BLUETOOTH_PERMISSION_REQUEST_CODE);
-
-            }
-
-        }
-    }
 
 
 }

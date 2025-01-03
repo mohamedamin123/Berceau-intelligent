@@ -29,10 +29,12 @@ import com.example.appmobile.databinding.ActivityAjouterBerceauBinding;
 import com.example.appmobile.databinding.ActivityConsulterBerceauBinding;
 import com.example.appmobile.model.entity.Bebe;
 import com.example.appmobile.model.entity.Berceau;
+import com.example.appmobile.model.entity.CapteurMVT;
 import com.example.appmobile.model.firebase.BerceauManager;
 import com.example.appmobile.model.firebase.FirebaseManager;
 import com.example.appmobile.model.network.BluetoothHelper;
 import com.example.appmobile.model.network.WifiHelper;
+import com.example.appmobile.utils.CheckPermission;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.text.ParseException;
@@ -55,6 +57,7 @@ public class AjouterBerceauActivity extends AppCompatActivity {
     private FirebaseUser currentUser;
     private SharedPreferences sharedPreferences;
     int size;
+    private Berceau berceau;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,7 @@ public class AjouterBerceauActivity extends AppCompatActivity {
                                         LOCATION_PERMISSION_REQUEST_CODE);
             }
         }
-        verifierPermission();
+        CheckPermission.verifierPermission(this);
         FirebaseManager firebaseManager = new FirebaseManager();
         currentUser = firebaseManager.getCurrentUser();
         berceauManager = new BerceauManager(currentUser);
@@ -83,9 +86,15 @@ public class AjouterBerceauActivity extends AppCompatActivity {
         initializeWifiSsid(); // Initialiser automatiquement le SSID
         size = getIntent().getIntExtra("size", -1) + 1;
         getAge();
-        // Initialiser l'objet Berceau
-        Berceau berceau = new Berceau();
 
+        int modifier=getIntent().getIntExtra("modifier",-1);
+        // Initialiser l'objet Berceau
+        if(modifier==-1)
+             berceau = new Berceau();
+        else
+             berceau = (Berceau) getIntent().getSerializableExtra("berceau");
+
+        getBerceauExist();
 
         // Ajouter un listener sur le bouton
 // Ajouter un listener sur le bouton
@@ -103,18 +112,11 @@ public class AjouterBerceauActivity extends AppCompatActivity {
             }
             connectToRaspberryPi();
 
+            if(CheckPermission.ouvrirBluetooth(getApplicationContext(),this))
+                return;
 
-
-            if (!isBluetoothEnabled()) {
-                        Toast.makeText(this, "Veuillez activer le Bluetooth", Toast.LENGTH_SHORT).show();
-                        startActivityForResult(new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE), ENABLE_BT_REQUEST_CODE); // Demande d'activation du Bluetooth
-                        return;
-            } else if (!isLocationEnabled()) {
-                        Toast.makeText(this, "Veuillez activer la localisation", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS); // Ouvre les paramètres de localisation
-                        startActivity(intent);
-                        return;
-            }
+            if (CheckPermission.ouvrirLocation(getApplicationContext()))
+                return;
             // Afficher une boîte de dialogue pour confirmer l'ajout
             new androidx.appcompat.app.AlertDialog.Builder(this)
                     .setTitle("Confirmation")
@@ -123,12 +125,15 @@ public class AjouterBerceauActivity extends AppCompatActivity {
                         // Action à réaliser si l'utilisateur confirme
                         connectToRaspberryPi();
 
-                        // Créer un nouveau berceau avec les informations saisies
                         berceau.setNom(binding.etNomBerceau.getText().toString());
                         berceau.setBebe(new Bebe(nomBebe, agebebe));
+                        if(berceau.getId()==0)
+                            berceauManager.AjouterBerceau(berceau);
+                        else {
+                            berceau.ajouterDispositif(new CapteurMVT());
+                            berceauManager.updateBerceauById(berceau);
 
-                        berceauManager.AjouterBerceau(berceau);
-
+                        }
                         // Retour à l'accueil
                         finish();
                     })
@@ -142,28 +147,6 @@ public class AjouterBerceauActivity extends AppCompatActivity {
 
     }
 
-    private void verifierPermission() {
-                // Vérification des permissions Bluetooth et de localisation
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
-                                        LOCATION_PERMISSION_REQUEST_CODE);
-            }
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH)
-                    != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(this,
-
-                                        new String[]{Manifest.permission.BLUETOOTH},
-
-                                        BLUETOOTH_PERMISSION_REQUEST_CODE);
-
-            }
-
-        }
-    }
 
     private void getAge() {
         binding.etDateNaissance.setOnClickListener(v -> {
@@ -209,6 +192,14 @@ public class AjouterBerceauActivity extends AppCompatActivity {
         }
     }
 
+    private void getBerceauExist() {
+        if(berceau.getId()!=0) {
+            binding.etNomBerceau.setText(berceau.getNom());
+            binding.etNomBebe.setText(berceau.getBebe().getPrenom());
+            binding.etDateNaissance.setText(berceau.getBebe().getDateNaissance());
+        }
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -234,16 +225,5 @@ public class AjouterBerceauActivity extends AppCompatActivity {
             }
 
         }
-    }
-
-
-    private boolean isBluetoothEnabled() {
-                BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        return bluetoothAdapter != null && bluetoothAdapter.isEnabled();
-    }
-
-    private boolean isLocationEnabled() {
-                LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-        return locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 }

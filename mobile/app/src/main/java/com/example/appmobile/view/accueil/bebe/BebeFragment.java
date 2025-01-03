@@ -53,7 +53,7 @@ public class BebeFragment extends Fragment {
     }
 
     private void fetchDataFromFirebase() {
-        berceauManager.displayBerceau(new BerceauManager.BerceauCallback() {
+        berceauManager.displayBerceauRealtime(new BerceauManager.BerceauCallback() {
             @Override
             public void onSuccess(List<Berceau> berceaus) {
                 int index = 1;
@@ -91,7 +91,7 @@ public class BebeFragment extends Fragment {
             String key = entry.getKey();
             Bebe bebe = entry.getValue();
             String prenom = bebe.getPrenom() != null ? bebe.getPrenom() : "Inconnu";
-            adapter.addFragment(DataFragment.newInstance( key), prenom);
+            adapter.addFragment(DataFragment.newInstance(key), prenom);
         }
 
         // Configurer le ViewPager et le TabLayout
