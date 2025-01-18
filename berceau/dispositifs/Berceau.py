@@ -1,7 +1,5 @@
 import gc
 from reseaux.Firebase import Firebase
-from dispositifs.actionnaires import Actionnaire
-from gpiozero import PWMLED  # Importation de PWMLED pour le contrôle analogique
 
 class Berceau:
     def __init__(self,id,nom,etat):

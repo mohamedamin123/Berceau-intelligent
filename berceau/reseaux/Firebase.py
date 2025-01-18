@@ -1,5 +1,4 @@
 import requests
-from functools import lru_cache
 
 
 class Firebase:

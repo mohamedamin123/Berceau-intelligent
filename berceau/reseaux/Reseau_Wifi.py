@@ -1,5 +1,4 @@
 import time
-import os
 import subprocess
 
 class Reseau_Wifi:
@@ -33,21 +32,6 @@ class Reseau_Wifi:
         subprocess.call(['sudo', 'wpa_cli', 'reconfigure'])
         time.sleep(2)
 
-        # Try to connect until successful or max retries are reached
-        retries = 0
-        while   True:
-            if self.is_connected():
-                print("Connecté au Wi-Fi")
-                ip_address = self.get_ip_address()
-                print(f"Adresse IP : {ip_address}")
-                return True
-            else:
-                retries += 1
-                print(f"Échec de la connexion Wi-Fi. Tentative {retries}.")
-                time.sleep(retry_delay)
-
-        print("Échec de la connexion Wi-Fi après plusieurs tentatives.")
-        return False
 
     def is_connected(self):
         """
@@ -69,3 +53,21 @@ class Reseau_Wifi:
             return ip_address
         except subprocess.CalledProcessError:
             return None
+
+
+        # Try to connect until successful or max retries are reached
+        retries = 0
+        while   True:
+            if self.is_connected():
+                print("Connecté au Wi-Fi")
+                ip_address = self.get_ip_address()
+                print(f"Adresse IP : {ip_address}")
+                return True
+            else:
+                retries += 1
+                print(f"Échec de la connexion Wi-Fi. Tentative {retries}.")
+                time.sleep(retry_delay)
+
+        print("Échec de la connexion Wi-Fi après plusieurs tentatives.")
+        return False
+

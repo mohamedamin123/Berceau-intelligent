@@ -17,6 +17,7 @@ public class CapteurMVT extends Capteur{
         this.setPin(18);
         this.mvtDect=false;
 
+
     }
 
     public boolean getMvtDect() {

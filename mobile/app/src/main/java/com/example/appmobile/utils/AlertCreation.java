@@ -76,25 +76,17 @@ public class AlertCreation{
     }
 
 
-
-    public static void creerAlertNotification(Notification notification,NotificationManager manager, Context context) {
-        new AlertDialog.Builder(context)
-                .setTitle("Confirmer suppression")
-                .setMessage("Voulez-vous vraiment supprimer cette article ?")
-                .setPositiveButton("Oui", (confirmDialog, confirmWhich) -> {
-                    // Logic to delete the item
-                    try {
-                        manager.supprimerNotification(notification.getIdNotification(), notification.getIdBerceau());
-                    } catch (Exception e) {
-
-                    }
-                    // Implement logic for deletion
-                })
-                .setNegativeButton("Non", (confirmDialog, confirmWhich) -> {
-                    // Logic for cancelling deletion
-                    confirmDialog.dismiss();
-                })
-                .show();
+public static boolean checkBluetoothAndLocalisation(Context context) {
+    if (!CheckPermission.isBluetoothEnabled()) {
+        Toast.makeText(context, "Veuillez activer le Bluetooth pour continuer", Toast.LENGTH_SHORT).show();
+        return false;
     }
+
+    if (!CheckPermission.isLocationEnabled(context)) {
+        Toast.makeText(context, "Veuillez activer la localisation pour continuer", Toast.LENGTH_SHORT).show();
+        return false;
+    }
+    return true;
+}
 
 }

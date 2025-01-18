@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.appmobile.adapter.BebeAdapter;
 import com.example.appmobile.databinding.FragmentBebeBinding;
 import com.example.appmobile.model.entity.Bebe;
 import com.example.appmobile.model.entity.Berceau;
@@ -63,7 +64,8 @@ public class BebeFragment extends Fragment {
                         bebeMap.put(key, berceau.getBebe());
                     }
                 }
-                setupViewPagerAndTabs();
+                if(getContext()!=null)
+                    setupViewPagerAndTabs();
             }
 
             @Override
@@ -81,7 +83,7 @@ public class BebeFragment extends Fragment {
         }
 
         // Initialiser l'adaptateur
-        DynamicPagerAdapter adapter = new DynamicPagerAdapter(
+        BebeAdapter adapter = new BebeAdapter(
                 getChildFragmentManager(),
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
         );

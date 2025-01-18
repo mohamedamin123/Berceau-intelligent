@@ -22,15 +22,16 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-
     <uses-permission android:name="com.sec.android.provider.badge.permission.WRITE" />
     <uses-permission android:name="com.sec.android.provider.badge.permission.READ" />
-
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+
     <uses-permission-sdk-23 android:name="android.permission.BLUETOOTH" />
 
     <application
         android:name=".model.firebase.MyApp"
+        android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -40,10 +41,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppMobile"
         tools:targetApi="31">
+        <activity
+            android:name=".view.accueil.berceau.CameraActivity"
+            android:exported="false" />
+
         <service
-            android:name=".view.accueil.notification.NotificationService"
+            android:name=".service.NotificationService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
             android:name=".view.accueil.berceau.AjouterBerceauActivity"
@@ -59,7 +64,7 @@
             android:exported="false"
             android:theme="@style/Theme.AppMobile" />
         <activity
-            android:name=".view.accueil.berceau.ConsulterClimatiseurActivity"
+            android:name=".view.accueil.berceau.ConsulterVentilateurActivity"
             android:exported="false" />
         <activity
             android:name=".view.connexion.CompteExisteActivity"

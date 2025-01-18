@@ -94,14 +94,16 @@ public class BluetoothHelper {
         }).start();
     }
 
-    public void sendMessage(String message) {
+    public boolean sendMessage(String message) {
         if (bluetoothSocket != null) {
             try {
                 bluetoothSocket.getOutputStream().write(message.getBytes());
+                return true;
             } catch (IOException e) {
                 Log.e("Bluetooth", "Erreur d'envoi de message : " + e.getMessage());
             }
         }
+        return false;
     }
 
     public void closeConnection() {
