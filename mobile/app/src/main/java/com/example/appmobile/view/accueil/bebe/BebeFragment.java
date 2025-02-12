@@ -64,7 +64,7 @@ public class BebeFragment extends Fragment {
                         bebeMap.put(key, berceau.getBebe());
                     }
                 }
-                if(getContext()!=null)
+                if (getContext() != null)
                     setupViewPagerAndTabs();
             }
 

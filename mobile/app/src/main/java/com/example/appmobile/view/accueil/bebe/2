@@ -1,0 +1,235 @@
+package com.example.appmobile.view.accueil.bebe;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import android.os.CountDownTimer;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.appmobile.databinding.FragmentDataBinding;
+import com.example.appmobile.model.entity.Bebe;
+import com.example.appmobile.model.firebase.BebeManager;
+import com.example.appmobile.model.firebase.interfaces.GetValueCallback;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+
+import java.util.concurrent.TimeUnit;
+public class DataFragment extends Fragment {
+
+    private static final String ARG_DATA = "arg_data";
+    private static final String TIMER_PREFS = "TimerPrefs"; // Préférences pour stocker l'état du timer
+
+    private FragmentDataBinding binding;
+    private BebeManager bebeManager;
+    private Bebe bebe;
+    private String chmp;
+    private DatabaseReference databaseReference;
+    private SharedPreferences sharedPreferences;
+    private FirebaseUser currentUser;
+    private CountDownTimer laitTimer, dormirTimer, repasTimer, coucheTimer;
+
+    // Variables distinctes pour chaque timer
+    private long laitElapsedTime = 0;
+    private long dormirElapsedTime = 0;
+    private long repasElapsedTime = 0;
+    private long coucheElapsedTime = 0;
+
+    public static DataFragment newInstance(String data) {
+        DataFragment fragment = new DataFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_DATA, data);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        binding = FragmentDataBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        init();
+        initfirebase();
+        annimer();
+        getBebe(chmp);
+        setClick();
+    }
+
+    private void setClick() {
+        binding.laitLl.setOnClickListener(v -> showResetDialog(binding.laitEdt, "lait", "'Lait'"));
+        binding.dormirLl.setOnClickListener(v -> showResetDialog(binding.dormirEdt, "dormir", "'Dormir'"));
+        binding.repasLl.setOnClickListener(v -> showResetDialog(binding.repasEdt, "repas", "'Repas'"));
+        binding.coucheLl.setOnClickListener(v -> showResetDialog(binding.coucheEdt, "couche", "'Couche'"));
+    }
+
+    private void annimer() {
+        // Ajouter des animations pour chaque section
+        TranslateAnimation animation = new TranslateAnimation(0, 0, 1000, 0);
+        animation.setDuration(1000);
+        binding.laitLl.startAnimation(animation);
+        binding.dormirLl.startAnimation(animation);
+        binding.repasLl.startAnimation(animation);
+        binding.coucheLl.startAnimation(animation);
+    }
+
+    private void initfirebase() {
+        if (currentUser != null) {
+            bebeManager = new BebeManager(currentUser);
+            assert chmp != null;
+            databaseReference = bebeManager.getDatabaseReference().child("users").child(currentUser.getUid())
+                    .child("berceau")
+                    .child(chmp)
+                    .child("bebe");
+        } else {
+            Toast.makeText(getContext(), "Utilisateur non connecté", Toast.LENGTH_SHORT).show();
+            getActivity().finish();
+        }
+    }
+
+    private void init() {
+        currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        chmp = getArguments() != null ? getArguments().getString(ARG_DATA) : "No key";
+    }
+
+    private void getBebe(String key) {
+        bebeManager.getBebe(key, new GetValueCallback() {
+            @Override
+            public void onValueReceived(Object o) {
+                bebe = (Bebe) o;
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                // Gérer l'échec de récupération
+            }
+        });
+    }
+
+    private void showResetDialog(EditText editText, String key, String nom) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Confirmation")
+                .setMessage("Voulez-vous réinitialiser le " + nom + " ?")
+                .setPositiveButton("Oui", (dialog, which) -> {
+                    resetBebeValue(key);
+                    startTimer(key, editText);
+                })
+                .setNegativeButton("Non", null)
+                .show();
+    }
+
+    private void resetBebeValue(String key) {
+        bebeManager.initValue(chmp, key, new GetValueCallback() {
+            @Override
+            public void onValueReceived(Object o) {
+                switch (key) {
+                    case "lait":
+                        bebe.resetLait();
+                        laitElapsedTime = 0; // Réinitialiser le temps écoulé pour le lait
+                        break;
+                    case "dormir":
+                        bebe.resetDormir();
+                        dormirElapsedTime = 0; // Réinitialiser le temps écoulé pour dormir
+                        break;
+                    case "repas":
+                        bebe.resetRepas();
+                        repasElapsedTime = 0; // Réinitialiser le temps écoulé pour le repas
+                        break;
+                    case "couche":
+                        bebe.resetCouche();
+                        coucheElapsedTime = 0; // Réinitialiser le temps écoulé pour la couche
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(getActivity(), "erreur", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null; // Libération de ViewBinding pour éviter les fuites de mémoire
+    }
+
+    private void startTimer(String key, EditText editText) {
+        switch (key) {
+            case "lait":
+                if (laitTimer != null) laitTimer.cancel(); // Arrêter le timer existant
+                laitTimer = createTimer(editText, key);
+                laitTimer.start();
+                break;
+            case "dormir":
+                if (dormirTimer != null) dormirTimer.cancel(); // Arrêter le timer existant
+                dormirTimer = createTimer(editText, key);
+                dormirTimer.start();
+                break;
+            case "repas":
+                if (repasTimer != null) repasTimer.cancel(); // Arrêter le timer existant
+                repasTimer = createTimer(editText, key);
+                repasTimer.start();
+                break;
+            case "couche":
+                if (coucheTimer != null) coucheTimer.cancel(); // Arrêter le timer existant
+                coucheTimer = createTimer(editText, key);
+                coucheTimer.start();
+                break;
+        }
+    }
+
+    private CountDownTimer createTimer(EditText editText, String key) {
+        return new CountDownTimer(Long.MAX_VALUE, 1000) { // Mise à jour chaque seconde
+            @Override
+            public void onTick(long millisUntilFinished) {
+                switch (key) {
+                    case "lait":
+                        laitElapsedTime += 1000; // Incrémenter le temps écoulé pour le lait
+                        updateEditText(editText, laitElapsedTime);
+                        break;
+                    case "dormir":
+                        dormirElapsedTime += 1000; // Incrémenter le temps écoulé pour dormir
+                        updateEditText(editText, dormirElapsedTime);
+                        break;
+                    case "repas":
+                        repasElapsedTime += 1000; // Incrémenter le temps écoulé pour le repas
+                        updateEditText(editText, repasElapsedTime);
+                        break;
+                    case "couche":
+                        coucheElapsedTime += 1000; // Incrémenter le temps écoulé pour la couche
+                        updateEditText(editText, coucheElapsedTime);
+                        break;
+                }
+            }
+
+            @Override
+            public void onFinish() {
+                // Ne rien faire ici, car le timer est infini
+            }
+        };
+    }
+
+    private void updateEditText(EditText editText, long elapsedTime) {
+        long seconds = TimeUnit.MILLISECONDS.toSeconds(elapsedTime) % 60;
+        long minutes = TimeUnit.MILLISECONDS.toMinutes(elapsedTime) % 60;
+        long hours = TimeUnit.MILLISECONDS.toHours(elapsedTime);
+
+        String timeFormatted = String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        editText.setText(timeFormatted);
+    }
+}

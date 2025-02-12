@@ -2,22 +2,13 @@ package com.example.appmobile.model.firebase;
 
 import com.example.appmobile.model.entity.Bebe;
 import com.example.appmobile.model.firebase.interfaces.GetValueCallback;
+import com.example.appmobile.model.firebase.interfaces.UpdateValueCallback;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-
-import com.example.appmobile.model.firebase.interfaces.GetValueCallback;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.ValueEventListener;
-
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class BebeManager {
     private final FirebaseManager firebaseManager;
@@ -84,43 +75,7 @@ public class BebeManager {
                 });
     }
 
-    public void setValue(String chmp, String key) {
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
-        scheduler.scheduleWithFixedDelay(() -> {
-            firebaseManager.getDatabase()
-                    .child("users")
-                    .child(currentUser.getUid())
-                    .child("berceau")
-                    .child(chmp)
-                    .child("bebe")
-                    .child(key)
-                    .addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Integer currentValue = dataSnapshot.getValue(Integer.class);
-                            if (currentValue == null) {
-                                currentValue = 0;
-                            }
-                            int newValue = currentValue + 1;
-                            firebaseManager.getDatabase()
-                                    .child("users")
-                                    .child(currentUser.getUid())
-                                    .child("berceau")
-                                    .child(chmp)
-                                    .child("bebe")
-                                    .child(key)
-                                    .setValue(newValue)
-                                    .addOnFailureListener(Throwable::printStackTrace);
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            databaseError.toException().printStackTrace();
-                        }
-                    });
-        }, 0, 1, TimeUnit.MINUTES); // Increment every minute
-    }
 
 
     public DatabaseReference getDatabaseReference() {
@@ -152,6 +107,24 @@ public class BebeManager {
                 });
     }
 
+
+
+    public void setValue(String chmp, String key, long valeur) {
+        firebaseManager.getDatabase()
+                .child("users")
+                .child(currentUser.getUid())
+                .child("berceau")
+                .child(chmp)
+                .child("bebe")
+                .child(key)
+                .setValue(valeur)
+                .addOnSuccessListener(aVoid -> {
+                    // Succès
+                })
+                .addOnFailureListener(e -> {
+                    // Gérer l'échec
+                });
+    }
 
 
 
