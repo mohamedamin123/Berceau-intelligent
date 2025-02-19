@@ -274,6 +274,30 @@ public class BerceauManager {
                 });
     }
 
+    public void findByIdBerceau(int berceauId, BerceauCallback2 callback) {
+        DatabaseReference berceauRef = firebaseManager.getDatabase()
+                .child("users")
+                .child(currentUser.getUid())
+                .child("berceau")
+                .child("berceau" + berceauId);
+
+        berceauRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Berceau berceau = snapshot.getValue(Berceau.class);
+                if (berceau != null) {
+                    callback.onSuccess(berceau);
+                } else {
+                    callback.onError(new Exception("Berceau non trouvé"));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onError(error.toException());
+            }
+        });
+    }
 
 
     // Interface de rappel pour les opérations async
@@ -281,4 +305,10 @@ public class BerceauManager {
         void onSuccess(List<Berceau> berceaux);
         void onError(Exception e);
     }
+    public interface BerceauCallback2 {
+        void onSuccess(Berceau berceau);
+        void onError(Exception e);
+    }
+
+
 }

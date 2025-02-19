@@ -19,7 +19,7 @@ public class BebeManager {
         this.currentUser = currentUser;
     }
 
-    public void getValue(String chmp, String key, GetValueCallback callback) {
+    public void getValue(String chmp, String key, GetValueCallback<String> callback) {
         firebaseManager.getDatabase()
                 .child("users")
                 .child(currentUser.getUid())
@@ -30,7 +30,7 @@ public class BebeManager {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Integer value = dataSnapshot.getValue(Integer.class);
+                        String value = dataSnapshot.getValue(String.class);
                         callback.onValueReceived(value);
                     }
 
@@ -41,7 +41,7 @@ public class BebeManager {
                 });
     }
 
-    public void initValue(String chmp, String key, GetValueCallback callback) {
+    public void initValue(String chmp, String key, GetValueCallback<Long> callback) {
         firebaseManager.getDatabase()
                 .child("users")
                 .child(currentUser.getUid())
@@ -61,10 +61,10 @@ public class BebeManager {
                                     .child("bebe")
                                     .child(key)
                                     .setValue(0)
-                                    .addOnSuccessListener(aVoid -> callback.onValueReceived(0))
+                                    .addOnSuccessListener(aVoid -> callback.onValueReceived(0L))
                                     .addOnFailureListener(callback::onFailure);
                         } else {
-                            callback.onValueReceived(dataSnapshot.getValue(Integer.class));
+                            callback.onValueReceived(dataSnapshot.getValue(Long.class));
                         }
                     }
 
@@ -108,8 +108,7 @@ public class BebeManager {
     }
 
 
-
-    public void setValue(String chmp, String key, long valeur) {
+    public void setValue(String chmp, String key, String valeur, UpdateValueCallback callback) {
         firebaseManager.getDatabase()
                 .child("users")
                 .child(currentUser.getUid())
@@ -118,14 +117,15 @@ public class BebeManager {
                 .child("bebe")
                 .child(key)
                 .setValue(valeur)
-                .addOnSuccessListener(aVoid -> {
-                    // Succès
-                })
-                .addOnFailureListener(e -> {
-                    // Gérer l'échec
-                });
+                .addOnSuccessListener(aVoid -> callback.onSuccess())
+                .addOnFailureListener(callback::onFailure);
     }
 
+
+    public interface UpdateValueCallback {
+        void onSuccess();
+        void onFailure(Exception e);
+    }
 
 
 }

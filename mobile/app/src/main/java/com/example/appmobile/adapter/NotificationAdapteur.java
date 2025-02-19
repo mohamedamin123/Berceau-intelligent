@@ -12,6 +12,7 @@ import com.example.appmobile.R;
 import com.example.appmobile.databinding.CustomItemNotificationBinding;
 import com.example.appmobile.model.entity.Notification;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationAdapteur extends RecyclerView.Adapter<NotificationAdapteur.MyViewHolder>{
@@ -58,6 +59,11 @@ public class NotificationAdapteur extends RecyclerView.Adapter<NotificationAdapt
     @Override
     public int getItemCount() {
         return notifications.size();
+    }
+
+    public void updateList(List<Notification> notificationList) {
+        this.notifications = new ArrayList<>(notificationList);
+        notifyDataSetChanged();
     }
 
 

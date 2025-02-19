@@ -3,15 +3,6 @@ package com.example.appmobile.model.firebase;
 import androidx.annotation.NonNull;
 
 import com.example.appmobile.model.entity.Notification;
-import com.example.appmobile.model.entity.CapteurDHT;
-import com.example.appmobile.model.entity.CapteurMVT;
-import com.example.appmobile.model.entity.Dispositif;
-import com.example.appmobile.model.entity.Led;
-import com.example.appmobile.model.entity.ServoMoteur;
-import com.example.appmobile.model.entity.Ventilateur;
-import com.example.appmobile.model.firebase.FirebaseManager;
-import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,7 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
+
 public class NotificationManager {
 
     private FirebaseManager firebaseManager;
@@ -30,7 +21,6 @@ public class NotificationManager {
         this.firebaseManager = new FirebaseManager();
         this.currentUser = currentUser;
     }
-
     public void displayNotification(final NotificationCallback callback) {
         firebaseManager.getDatabase()
                 .child("users")
@@ -58,19 +48,21 @@ public class NotificationManager {
                                         .addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                                List<Notification> notifications = new ArrayList<>();
+                                                List<Notification> newNotifications = new ArrayList<>();
 
                                                 for (DataSnapshot notificationSnapshot : dataSnapshot.getChildren()) {
                                                     Notification notification = notificationSnapshot.getValue(Notification.class);
                                                     if (notification != null) {
-                                                        notifications.add(notification);
+                                                        // Vérifier si la notification existe déjà pour éviter les doublons
+                                                        if (!allNotifications.contains(notification)) {
+                                                            newNotifications.add(notification);
+                                                        }
                                                     }
                                                 }
 
                                                 synchronized (allNotifications) {
-                                                    allNotifications.clear();
-                                                    allNotifications.addAll(notifications);
-                                                    callback.onSuccess(allNotifications);
+                                                    allNotifications.addAll(newNotifications);
+                                                    callback.onSuccess(new ArrayList<>(allNotifications));
                                                 }
                                             }
 
@@ -89,6 +81,8 @@ public class NotificationManager {
                     }
                 });
     }
+
+
     public void AjouterNotification(String chmp,Notification notification) {
         // Get the notifications reference for the current user
         DatabaseReference notificationRef = firebaseManager.getDatabase()
@@ -118,7 +112,7 @@ public class NotificationManager {
         });
     }
 
-    public void supprimerNotification(int idNotification,int berceauId) {
+    public void supprimerNotification(int idNotification, int berceauId) {
         DatabaseReference berceauRef = firebaseManager.getDatabase()
                 .child("users")
                 .child(currentUser.getUid())

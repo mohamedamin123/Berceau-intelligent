@@ -22,10 +22,11 @@ public class Notification {
     }
 
     // Constructors
-    public Notification(String type, String message) {
+    public Notification(String type, String message,int idBerceau) {
         this.type = type;
         this.message = message;
         this.dateEnvoi = new Date(); // Initialize to current date and time
+        this.idBerceau=idBerceau;
     }
 
     public Notification(String type, String message,int idParent,int idBerceau) {

@@ -7,22 +7,31 @@ import android.widget.Toast;
 import com.example.appmobile.model.entity.Notification;
 import com.example.appmobile.utils.Convertit;
 import com.example.appmobile.utils.NotificationHelper;
+import com.example.appmobile.view.connexion.LoginActivity;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.widget.Toast;
+
 
 public class MVTManager {
     private FirebaseManager firebaseManager;
     private FirebaseUser currentUser;
     private Context context;
     private NotificationManager notificationManager;
-    public MVTManager(FirebaseUser currentUser,Context context) {
+
+    public MVTManager(FirebaseUser currentUser, Context context) {
         this.firebaseManager = new FirebaseManager();
         this.currentUser = currentUser;
         this.context = context;
-        notificationManager=new NotificationManager(firebaseManager.getCurrentUser());
+        this.notificationManager = new NotificationManager(firebaseManager.getCurrentUser());
     }
+
+
     public void lireTousLesMVT() {
         firebaseManager.getDatabase()
                 .child("users")
@@ -53,24 +62,11 @@ public class MVTManager {
                                                     if (mvtSnapshot.exists()) {
                                                         Boolean isDetected = mvtSnapshot.getValue(Boolean.class);
                                                         if (isDetected != null && isDetected) {
-                                                            Toast.makeText(context, "Movement detected: " + nom, Toast.LENGTH_SHORT).show();
-
-                                                            String type="Mouvement détecté - " + nom;
-                                                            String message="Un mouvement a été détecté dans le berceau : " + nom;
-                                                            int idBerceau= Convertit.convertirStringToInt(berceauKey);
-
-
-                                                            Notification notification=new Notification(type, message);
-                                                            notificationManager.AjouterNotification(berceauKey,notification);
-
-
-                                                            NotificationHelper.showNotification(
-                                                                    context,
-                                                                    type,
-                                                                    message
-                                                            );
+                                                            // Call the method to send the notification
+                                                            String type = "Mouvement détecté - " + nom;
+                                                            String message = "Un mouvement a été détecté dans le berceau : " + nom;
+                                                            NotificationHelper.envoyerNotification(context,notificationManager,berceauKey,type,message);
                                                         }
-                                                        // Handle the data
                                                     }
                                                 }
 
@@ -92,5 +88,7 @@ public class MVTManager {
                     }
                 });
     }
+
+
 
 }

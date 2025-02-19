@@ -5,27 +5,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.accueil.notification.NotificationFragment">
+    tools:context=".view.accueil.notification.NotificationFragment"
+    >
 
+    <!-- Titre -->
     <TextView
         android:id="@+id/title"
+        android:layout_margin="10dp"
         style="@style/style_tv_title_post"
         android:layout_gravity="center"
         android:textColor="@color/black"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/liste_notification"
-         />
+        android:text="@string/liste_notification" />
 
+    <!-- Champ de recherche pour filtrer -->
+    <EditText
+        android:id="@+id/search_notifications"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Rechercher une notification..."
+        android:padding="15dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/button_rounded_search"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:layout_marginBottom="10dp" />
 
-    <!-- RecyclerView pour afficher les données -->
+    <!-- RecyclerView pour afficher les notifications -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyler_notifications"
+        android:layout_marginHorizontal="5dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="75dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:layout_marginBottom="75dp" />
 
 
 </LinearLayout>

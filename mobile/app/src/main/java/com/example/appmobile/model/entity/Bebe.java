@@ -8,10 +8,10 @@ public class Bebe implements Serializable {
     private Integer idBebe;
     private String prenom;
     private String dateNaissance; // Store date as String
-    private int lait;
-    private int dormir;
-    private int repas;
-    private int couche;
+    private String lait;
+    private String dormir;
+    private String repas;
+    private String couche;
 
     private Parent parent;
 
@@ -27,7 +27,7 @@ public class Bebe implements Serializable {
     }
 
     // Constructor with other fields
-    public Bebe(int lait, int dormir, int repas, int couche) {
+    public Bebe(String lait, String dormir, String repas, String couche) {
         this.lait = lait;
         this.dormir = dormir;
         this.repas = repas;
@@ -35,7 +35,7 @@ public class Bebe implements Serializable {
     }
 
     // Constructor with all fields including date as String
-    public Bebe(String prenom, String dateNaissanceString, int lait, int dormir, int repas, int couche, Parent parent) {
+    public Bebe(String prenom, String dateNaissanceString, String lait, String dormir, String repas, String couche, Parent parent) {
         this.prenom = prenom;
         this.dateNaissance = dateNaissanceString;
         this.lait = lait;
@@ -46,7 +46,7 @@ public class Bebe implements Serializable {
     }
 
     // Constructor with all fields including date as String
-    public Bebe(Integer idBebe, String prenom, String dateNaissanceString, int lait, int dormir, int repas, int couche) {
+    public Bebe(Integer idBebe, String prenom, String dateNaissanceString, String lait, String dormir, String repas, String couche) {
         this.idBebe = idBebe;
         this.prenom = prenom;
         this.dateNaissance = dateNaissanceString;
@@ -74,21 +74,6 @@ public class Bebe implements Serializable {
         this.parent = parent;
     }
 
-    public void resetLait() {
-        this.lait = 0;
-    }
-
-    public void resetDormir() {
-        this.dormir = 0;
-    }
-
-    public void resetRepas() {
-        this.repas = 0;
-    }
-
-    public void resetCouche() {
-        this.couche = 0;
-    }
 
     public Integer getIdBebe() {
         return idBebe;
@@ -106,35 +91,35 @@ public class Bebe implements Serializable {
         this.dateNaissance = dateNaissance;
     }
 
-    public int getLait() {
+    public String getLait() {
         return lait;
     }
 
-    public void setLait(int lait) {
+    public void setLait(String lait) {
         this.lait = lait;
     }
 
-    public int getDormir() {
+    public String getDormir() {
         return dormir;
     }
 
-    public void setDormir(int dormir) {
+    public void setDormir(String dormir) {
         this.dormir = dormir;
     }
 
-    public int getRepas() {
+    public String getRepas() {
         return repas;
     }
 
-    public void setRepas(int repas) {
+    public void setRepas(String repas) {
         this.repas = repas;
     }
 
-    public int getCouche() {
+    public String getCouche() {
         return couche;
     }
 
-    public void setCouche(int couche) {
+    public void setCouche(String couche) {
         this.couche = couche;
     }
 

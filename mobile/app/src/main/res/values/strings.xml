@@ -31,7 +31,7 @@
     <string name="title_notifications">Notifications</string>
     <string name="temperature">Temperature</string>
     <string name="humidity">Humidity</string>
-    <string name="_0_00">0.00</string>
+    <string name="_0_00">00:00:00</string>
     <string name="climatiseur">Climatiseur</string>
     <string name="ouvrir">Ouvrir</string>
     <string name="lumiere">Lumiere</string>
@@ -148,6 +148,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="parent">Parent</string>
+    <string name="voir">Voir</string>
+    <string name="consultation_b_b">Consultation Bébé</string>
 
 
 </resources>

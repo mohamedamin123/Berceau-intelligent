@@ -100,4 +100,13 @@ public class BebeFragment extends Fragment {
         binding.viewPager.setAdapter(adapter);
         binding.tabLayout.setupWithViewPager(binding.viewPager);
     }
+
+   public int getCurrentTabIndex() {
+        return binding.viewPager.getCurrentItem();
+    }
+
+    public void setCurrentTabIndex(int index) {
+        binding.viewPager.setCurrentItem(index);
+    }
+
 }
