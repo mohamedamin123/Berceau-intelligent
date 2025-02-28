@@ -27,13 +27,17 @@ class Bebe {
             throw new Error("Le berceauId doit être une chaîne de caractères non vide.");
         }
 
-        // Pas besoin de passer un ID manuellement, Firestore le générera
         this.prenom = prenom;
         this.dateNaissance = dateNaissance;
         this.sexe = sexe;
-        this.parentId = parentId;
-        this.berceauId = berceauId;
+        this.repas=null;
+        this.couche=null;
+        this.lait=null;
+        this.dormir=null;
+        this.parentId = parentId || null;
+        this.berceauId = berceauId || null;
+        this.created_at = new Date();
     }
 }
 
-module.exports = Bebe;
+module.exports = Bebe; // Exportation de la classe

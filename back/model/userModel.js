@@ -2,7 +2,7 @@ const { firestoreDb } = require('./../config/firebaseConfig');
 const validator = require("validator");
 
 class User {
-    constructor(nom, prenom, email, password, role = "user", bebes, berceauId) {
+    constructor(nom, prenom, email, password, role, bebes, berceauId) {
         // Validation du nom
         if (!nom || typeof nom !== "string" || nom.trim().length === 0) {
             throw new Error("Le nom doit être une chaîne de caractères non vide.");
@@ -36,10 +36,6 @@ class User {
             throw new Error("bebes doit être un tableau.");
         }
 
-        // Validation de berceauId (doit être une chaîne ou null si fourni)
-        if (berceauId && typeof berceauId !== "string") {
-            throw new Error("berceauId doit être une chaîne de caractères ou null.");
-        }
 
         // Assigner les valeurs après validation
         this.nom = nom;
@@ -53,6 +49,7 @@ class User {
         // Dates de création et de mise à jour
         this.last_password_update = new Date();
         this.created_at = new Date();
+        this.uid=null;
     }
 
     // Static method to check if an email already exists
