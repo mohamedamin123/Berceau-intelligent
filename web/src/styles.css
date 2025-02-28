@@ -1,0 +1,11 @@
+/* You can add global styles to this file, and also import other style files */
+/* You can add global styles to this file, and also import other style files */
+body {
+  background-repeat: no-repeat;
+  background-image: url(../public/images/back.svg);
+  background-position: bottom;
+  background-size: contain; /* Adjust the size of the image */
+  background-attachment: fixed;
+}
+
+

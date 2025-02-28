@@ -1,0 +1,61 @@
+<div class="login-container">
+  <section>
+    <h2 class="text-center mb-4 title">Se connecter</h2>
+
+    <!-- Logo -->
+    <div class="text-center mb-4 d-flex justify-content-center align-items-center">
+      <img src="images/bebe.png" alt="Site Icon" width="150" height="150" />
+    </div>
+
+    <!-- Formulaire de connexion -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email input -->
+      <div class="form-group mb-3">
+        <input type="email" formControlName="email" class="form-control" placeholder="Entrez votre email" required />
+        <!-- Afficher les erreurs de validation pour l'email -->
+        <div
+          *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.touched || loginForm.get('email')?.dirty)"
+          class="text-danger">
+          <div *ngIf="loginForm.get('email')?.errors?.['required']">L'email est requis.</div>
+          <div *ngIf="loginForm.get('email')?.errors?.['email']">Veuillez entrer une adresse e-mail valide.</div>
+        </div>
+      </div>
+      <!-- Input Password-->
+      <div class="form-group mb-3">
+        <!-- Conteneur pour le champ de formulaire et l'icône -->
+        <div class="input-container position-relative">
+          <input
+            [type]="showPassword ? 'text' : 'password'"
+            formControlName="password"
+            class="form-control"
+            placeholder="Entrez votre mot de passe"
+            required
+          />
+          <i
+            class="fa-solid fa-eye eye-icon"
+            (click)="togglePasswordVisibility()"
+            [ngClass]="{'fa-eye': !showPassword, 'fa-eye-slash': showPassword}"
+          ></i>
+        </div>
+
+        <!-- Afficher les erreurs de validation pour le mot de passe -->
+        <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.touched || loginForm.get('password')?.dirty)" class="text-danger">
+          <div *ngIf="loginForm.get('password')?.errors?.['required']">Le mot de passe est requis.</div>
+          <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Le mot de passe doit contenir au moins 8 caractères.</div>
+        </div>
+      </div>
+
+
+
+      <!-- Message d'erreur général -->
+      <div *ngIf="errorMessage" class="text-danger mb-3">
+        {{ errorMessage }}
+      </div>
+
+
+      <!-- Bouton de connexion -->
+      <button type="submit" class="btn btn-primary btn-block mb-4" [disabled]="loginForm.invalid">Se connecter</button>
+
+    </form>
+  </section>
+</div>

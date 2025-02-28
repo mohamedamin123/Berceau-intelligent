@@ -1,0 +1,77 @@
+* {
+  font-family: 'Times New Roman', Times, serif;
+}
+
+/* Exclure les icônes FontAwesome */
+.fa, .fa-solid, .fa-eye, .fa-eye-slash {
+  font-family: 'Font Awesome 6 Free' !important; /* Utilisez la police correcte pour FontAwesome */
+}
+
+.login-container {
+  max-width: 95%;
+  margin: 50px auto;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  font-style: italic;
+  color: #333;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #000 !important; /* Noir forcé */
+}
+
+.eye-icon:hover {
+  color: #333 !important; /* Légèrement plus foncé au survol */
+}
+
+
+
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+input:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff; /* Violet plus attrayant */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #007bff;
+}
+
+button[disabled] {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+
