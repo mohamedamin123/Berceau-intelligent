@@ -5,71 +5,71 @@ const Berceau = require("./../model/berceauModel"); // Importation de la classe 
 
 
 // Reference to the "Berceaus" collection in Firestore
-const BerceausCollection = firestoreDb.collection("Berceaus");
+const BerceausCollection = firestoreDb.collection("Berceaux");
 
-// Create a new Berceau
 exports.createBerceau = async (req, res) => {
     try {
-        const { prenom, dateNaissance, sexe, parentId, berceauId } = req.body;
+        const { name, parentId, bebeId } = req.body;
 
         // Validation des données en créant une instance de Berceau
-        const Berceau = new Berceau(prenom, dateNaissance, sexe, parentId, berceauId);
+        const berceau = new Berceau(name, parentId, bebeId);
 
         // Ajouter un timestamp pour la création
-        Berceau.createdAt = admin.firestore.FieldValue.serverTimestamp();
+        const dataToSave = berceau.toFirestore();
 
         // Enregistrer le Berceau dans Firestore
-        const BerceauRef = await BerceausCollection.add(Berceau);
+        const berceauRef = await BerceausCollection.add(dataToSave);
 
         // Réponse en cas de succès
         res.status(201).json({
             message: "Berceau créé !",
-            data: { id: BerceauRef.id, ...Berceau },
+            data: { id: berceauRef.id, ...dataToSave },
         });
     } catch (error) {
-        // Réponse en cas d'erreur
         res.status(400).json({
             message: "Impossible de créer Berceau",
             error: error.message,
         });
     }
 };
-// Update a Berceau (using PATCH for partial updates)
+
+// Mettre à jour un Berceau
 exports.updateBerceau = async (req, res) => {
     try {
-        const BerceauId = req.params.id; // Récupérer l'ID du Berceau à mettre à jour
-        const BerceauRef = BerceausCollection.doc(BerceauId); // Référence au document Firestore
-        const BerceauDoc = await BerceauRef.get(); // Récupérer le document
+        const berceauId = req.params.id; // Récupérer l'ID du berceau à mettre à jour
+        const berceauRef = firestoreDb.collection('Berceaux').doc(berceauId); // Référence au document du berceau
+        const berceauDoc = await berceauRef.get(); // Récupérer le document du berceau
 
-        // Vérifier si le Berceau existe
-        if (!BerceauDoc.exists) {
+        // Vérifier si le berceau existe
+        if (!berceauDoc.exists) {
             return res.status(404).json({ message: "Berceau non trouvé" });
         }
 
         // Récupérer les nouvelles données du corps de la requête
-        const { prenom, dateNaissance, sexe, lait, dormir,repas,couche } = req.body;
+        const { name, bebeId } = req.body;
 
         // Créer un objet avec uniquement les champs fournis
         const updateData = {};
-        if (prenom !== undefined) updateData.prenom = prenom;
-        if (dateNaissance !== undefined) updateData.dateNaissance = dateNaissance;
-        if (sexe !== undefined) updateData.sexe = sexe;
-        if (lait !== undefined) updateData.lait = lait;
-        if (dormir !== undefined) updateData.dormir = dormir;
-        if (repas !== undefined) updateData.repas = repas;
-        if (couche !== undefined) updateData.couche = couche;
+        if (name !== undefined) updateData.name = name;
+        if (bebeId !== undefined) updateData.bebeId = bebeId;
 
+        // Vérifier que updateData contient au moins un champ
+        if (Object.keys(updateData).length === 0) {
+            return res.status(400).json({
+                message: "Aucune donnée à mettre à jour",
+            });
+        }
 
         // Mettre à jour uniquement les champs spécifiés dans Firestore
-        await BerceauRef.update(updateData);
+        await berceauRef.update(updateData);
 
         // Récupérer les données mises à jour
-        const updatedBerceauDoc = (await BerceauRef.get()).data();
+        const updatedBerceauDoc = (await berceauRef.get()).data();
 
         // Réponse en cas de succès
         res.status(200).json({
             message: "Berceau mis à jour avec succès !",
-            data: { id: BerceauId, ...updatedBerceauDoc },
+            data: { id: berceauId, ...updatedBerceauDoc },
         });
     } catch (error) {
         // Réponse en cas d'erreur
@@ -79,6 +79,9 @@ exports.updateBerceau = async (req, res) => {
         });
     }
 };
+
+
+
 // Get a Berceau by ID
 exports.getBerceau = async (req, res) => {
     try {

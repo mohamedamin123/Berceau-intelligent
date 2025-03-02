@@ -37,7 +37,7 @@ export class LoginComponent {
         next: (response) => {
           if (response.role == "admin") {
             this.authService.saveToken(response.token);
-            this.router.navigate(["/dashboard"]);
+            this.router.navigate(["/user"]);
           } else {
             this.errorMessage = "Erreur de connexion.";
 

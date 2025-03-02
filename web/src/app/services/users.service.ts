@@ -11,4 +11,16 @@ export class UsersService {
 
   constructor(private http: HttpClient) { }
 
+  getStats() {
+    return { totalUsers: 1200, onlineUsers: 250, newUsers: 30 };
+  }
+
+  getRecentUsers() {
+    return [
+      { name: 'Alice', email: 'alice@example.com', online: true },
+      { name: 'Bob', email: 'bob@example.com', online: false },
+      { name: 'Charlie', email: 'charlie@example.com', online: true },
+    ];
+  }
+
 }

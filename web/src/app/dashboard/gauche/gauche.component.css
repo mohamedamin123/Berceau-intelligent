@@ -1,0 +1,26 @@
+.bg-dark {
+  background-color: #428ad1 !important;
+}
+
+.vh-100 {
+  height: 100vh;
+}
+
+.nav-link {
+  font-size: 1.1rem;
+  padding: 10px;
+  transition: background-color 0.3s ease;
+
+}
+
+.nav-link:hover {
+  background-color: #495057;
+  border-radius: 5px;
+  color: rgba(126, 240, 32, 0.911) !important;
+}
+.nav-link:active {
+  color: rgba(126, 240, 32, 0.911) !important;
+  background-color: #495057; /* Optional: Add background color for active state */
+  border-radius: 5px;
+}
+

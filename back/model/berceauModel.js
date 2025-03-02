@@ -9,19 +9,25 @@ class Berceau {
         if (!parentId || typeof parentId !== "string") {
             throw new Error("Le parentId doit être une chaîne de caractères non vide.");
         }
-
-        // Validation du berceauId
-        if (!bebeId || typeof bebeId !== "string") {
-            throw new Error("Le bebeId doit être une chaîne de caractères non vide.");
-        }
-
-        this.name=name;
-        this.etat=true;
+        this.name = name;
+        this.etat = true;
         this.parentId = parentId || null;
         this.bebeId = bebeId || null;
-        
+
         this.created_at = new Date();
     }
+
+    toFirestore() {
+        return {
+            name: this.name,
+            etat: this.etat,
+            parentId: this.parentId,
+            bebeId: this.bebeId,
+            created_at: this.created_at
+        };
+    }
+    
 }
+// Méthode pour convertir l'objet en un format compatible avec Firestore
 
 module.exports = Berceau; // Exportation de la classe

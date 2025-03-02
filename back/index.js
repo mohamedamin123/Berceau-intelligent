@@ -10,7 +10,14 @@ const notificationRoutes=require("./routes/notificationRoute");
 
 const dhtRoutes=require("./routes/capteurs/DHTRoute");
 const mouvementRoutes=require("./routes/capteurs/mouvementRoute");
+const sonRoutes=require("./routes/capteurs/sonRoute");
+
+
 const ledRoutes=require("./routes/actionnaires/ledRoute");
+const servoRoutes=require("./routes/actionnaires/servoRoute");
+const ventilateurRoutes=require("./routes/actionnaires/ventilateurRoute");
+
+
 
 
 
@@ -30,7 +37,14 @@ app.use("/notifications",notificationRoutes);
 //Les routes realtime
 app.use("/dhts",dhtRoutes);
 app.use("/mouvements",mouvementRoutes);
+app.use("/sons",sonRoutes);
+
+
 app.use("/leds",ledRoutes);
+app.use("/servos",servoRoutes);
+app.use("/ventilateurs",ventilateurRoutes);
+
+
 
 
 

@@ -1,5 +1,4 @@
 const { firestoreDb } = require("../config/firebaseConfig");
-const admin = require("firebase-admin"); // Assurez-vous d'importer admin
 // Reference to the "Bebes" collection in Firestore
 const Bebe = require("./../model/bebeModel"); // Importation de la classe Bebe
 
@@ -16,10 +15,10 @@ exports.createBebe = async (req, res) => {
         const bebe = new Bebe(prenom, dateNaissance, sexe, parentId, berceauId);
 
         // Ajouter un timestamp pour la création
-        bebe.createdAt = admin.firestore.FieldValue.serverTimestamp();
+        const dataToSave = bebe.toFirestore();
 
         // Enregistrer le bébé dans Firestore
-        const bebeRef = await BebesCollection.add(bebe);
+        const bebeRef = await BebesCollection.add(dataToSave);
 
         // Réponse en cas de succès
         res.status(201).json({
@@ -47,7 +46,7 @@ exports.updateBebe = async (req, res) => {
         }
 
         // Récupérer les nouvelles données du corps de la requête
-        const { prenom, dateNaissance, sexe, lait, dormir,repas,couche } = req.body;
+        const { prenom, dateNaissance, sexe, lait, dormir,repas,couche,berceauId } = req.body;
 
         // Créer un objet avec uniquement les champs fournis
         const updateData = {};
@@ -58,6 +57,8 @@ exports.updateBebe = async (req, res) => {
         if (dormir !== undefined) updateData.dormir = dormir;
         if (repas !== undefined) updateData.repas = repas;
         if (couche !== undefined) updateData.couche = couche;
+        if (berceauId !== undefined) updateData.berceauId = berceauId;
+
 
 
         // Mettre à jour uniquement les champs spécifiés dans Firestore

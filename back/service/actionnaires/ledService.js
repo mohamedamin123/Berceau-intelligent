@@ -45,8 +45,21 @@ exports.changeIntensity = async (berceauId, intensite) => {
 // Obtenir l'état et l'intensité de la LED
 exports.getData = async (berceauId) => {
     try {
-        const snapshot = await realtimeDb.ref(`berceaux/${berceauId}/led`).once("value");
-        return snapshot.val();
+        const ref = realtimeDb.ref(`berceaux/${berceauId}/led`);
+        const snapshot = await ref.once("value");
+        let data = snapshot.val();
+
+        // Si les données n'existent pas, initialiser les valeurs par défaut
+        if (!data) {
+            const defaultData = {
+                etat: false, // Ventilateur éteint par défaut
+                intensite: 0, // Mode automatique par défaut
+            };
+            await ref.set(defaultData); // Enregistrer les valeurs par défaut dans Firebase
+            data = defaultData; // Utiliser les valeurs par défaut pour la réponse
+        }
+
+        return data;
     }catch(error) {
         console.error("Erreur lors de la mise à jour de l'intensité de la LED :", error);
         throw error;

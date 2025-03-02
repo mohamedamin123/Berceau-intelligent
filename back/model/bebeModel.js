@@ -22,21 +22,32 @@ class Bebe {
             throw new Error("Le parentId doit être une chaîne de caractères non vide.");
         }
 
-        // Validation du berceauId
-        if (!berceauId || typeof berceauId !== "string") {
-            throw new Error("Le berceauId doit être une chaîne de caractères non vide.");
-        }
-
         this.prenom = prenom;
         this.dateNaissance = dateNaissance;
         this.sexe = sexe;
-        this.repas=null;
-        this.couche=null;
-        this.lait=null;
-        this.dormir=null;
+        this.repas = "";
+        this.couche = "";
+        this.lait = "";
+        this.dormir = "";
         this.parentId = parentId || null;
         this.berceauId = berceauId || null;
         this.created_at = new Date();
+    }
+
+    // Méthode pour convertir l'objet en un format compatible avec Firestore
+    toFirestore() {
+        return {
+            prenom: this.prenom,
+            dateNaissance: this.dateNaissance,
+            sexe: this.sexe,
+            repas: this.repas,
+            couche: this.couche,
+            lait: this.lait,
+            dormir: this.dormir,
+            parentId: this.parentId,
+            berceauId: this.berceauId,
+            created_at: this.created_at
+        };
     }
 }
 

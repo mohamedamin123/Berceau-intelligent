@@ -1,0 +1,19 @@
+  <div class="row">
+    <!-- Menu à gauche -->
+    <div class="bg-dark text-white d-flex flex-column vh-100 p-3">
+      <h3 class="text-center mb-4">Menu</h3>
+      <ul class="nav flex-column flex-grow-1">
+        <li class="nav-item">
+          <a class="nav-link text-white" routerLink="/user">Utilisateurs</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white" routerLink="/berceau">Berceau</a>
+        </li>
+      </ul>
+
+      <!-- Bouton de déconnexion -->
+      <div class="mt-auto text-center">
+        <h3 class="nav-link text-white btn " (click)="logout()">Déconnexion</h3>
+      </div>
+    </div>
+  </div>
