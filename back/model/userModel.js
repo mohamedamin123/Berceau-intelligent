@@ -58,6 +58,11 @@ class User {
         const snapshot = await usersCollection.where("email", "==", email).get();
         return snapshot.empty; // Returns true if no documents match the email
     }
+    static validToken = function (JWTDate) {
+        // console.log(JWTDate);
+        // console.log(parseInt(last.getTime() / 1000));
+        return JWTDate > parseInt(this.last_password_update.getTime() / 1000);
+    };
 }
 
 module.exports = User;

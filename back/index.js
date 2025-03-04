@@ -7,6 +7,8 @@ const userRoutes=require("./routes/userRoute");
 const bebeRoutes=require("./routes/bebeRoute");
 const berceauRoutes=require("./routes/berceauRoute");
 const notificationRoutes=require("./routes/notificationRoute");
+const authRoutes=require("./routes/authRoute");
+
 
 const dhtRoutes=require("./routes/capteurs/DHTRoute");
 const mouvementRoutes=require("./routes/capteurs/mouvementRoute");
@@ -33,6 +35,8 @@ app.use("/users",userRoutes);
 app.use("/bebes",bebeRoutes);
 app.use("/berceaux",berceauRoutes);
 app.use("/notifications",notificationRoutes);
+app.use("/auths",authRoutes);
+
 
 //Les routes realtime
 app.use("/dhts",dhtRoutes);

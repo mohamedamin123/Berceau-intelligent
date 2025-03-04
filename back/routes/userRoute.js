@@ -1,16 +1,16 @@
 const express = require("express");
-const { createUser,signUp,updateUser,deleteUser,getUser,getAllUser,signIn } = require("../controller/userController");
-const Routes=express.Router();
+const { createUser, signUp, updateUser, deleteUser, getUser, getAllUser, signIn } = require("../controller/userController");
+const { protectionMW } = require("../middleware/protection");
+const { checkRoleMW } = require("../middleware/permission");
 
-Routes.route("/").post(createUser);
-Routes.route("/signup").post(signUp);
+const Routes = express.Router();
 
-Routes.route("/:id").patch(updateUser);
-Routes.route("/:id").delete(deleteUser);
-Routes.route("/:id").get(getUser);
-Routes.route("/").get(getAllUser);
-Routes.route("/signIn").post(signIn);
+Routes.route("/").post(protectionMW,checkRoleMW("admin"),createUser);
+Routes.route("/:id").patch(protectionMW,checkRoleMW( "user","admin"), updateUser);
+Routes.route("/:id").delete(protectionMW,checkRoleMW( "admin"), deleteUser);
+Routes.route("/:id").get(protectionMW,checkRoleMW( "user","admin"), getUser);
+Routes.route("/").get(protectionMW,checkRoleMW("admin"), getAllUser);
 
 
 // Export the router
-module.exports=Routes;
+module.exports = Routes;
