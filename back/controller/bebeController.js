@@ -197,4 +197,4 @@ exports.findBebeByIdBerceau = async (req, res) => {
             error: error.message,
         });
     }
-};
+}; 

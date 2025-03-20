@@ -156,3 +156,34 @@ exports.deleteUser = async (req, res) => {
         });
     }
 };
+// Get a user by email
+exports.getUserByEmail = async (req, res) => {
+    try {
+        const email = req.params.email;
+
+        // Valider l'email
+        if (!validator.isEmail(email)) {
+            return res.status(400).json({ message: "L'email n'est pas valide." });
+        }
+
+        // Chercher l'utilisateur par email dans la collection "users"
+        const userSnapshot = await usersCollection.where('email', '==', email).get();
+
+        if (userSnapshot.empty) {
+            return res.status(404).json({ message: "Utilisateur non trouvé avec cet email." });
+        }
+
+        // Utilisateur trouvé
+        const user = userSnapshot.docs[0].data();
+        res.status(200).json({
+            message: "Utilisateur trouvé avec succès !",
+            data: { id: userSnapshot.docs[0].id, ...user },
+        });
+    } catch (error) {
+        res.status(400).json({
+            message: "Erreur lors de la recherche de l'utilisateur",
+            error: error.message,
+        });
+    }
+};
+

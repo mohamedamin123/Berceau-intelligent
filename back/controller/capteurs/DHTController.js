@@ -26,7 +26,7 @@ exports.getDHTData = async (req, res) => {
 exports.getTmp = async (req, res) => {
     try {
         const { berceauId } = req.params;
-        const temp = await dhtService.getTmp(berceauId);
+        const tmp = await dhtService.getTmp(berceauId);
         res.status(200).json({ tmp });
     } catch (error) {
         res.status(400).json({ error: error.message });
