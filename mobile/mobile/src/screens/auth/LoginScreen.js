@@ -28,8 +28,6 @@ const LoginScreen = () => {
         setLoading(true);
         try {
             const response = await signIn(email, password);
-            console.log("Réponse de l'API :", response);
-
             if (response.token) {
                 setErrorMessage('');
                 login({ token: response.token, email: email,user:response.user }); // Stocke l'utilisateur avec Zustand

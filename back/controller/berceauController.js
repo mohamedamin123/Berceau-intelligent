@@ -1,5 +1,4 @@
 const { firestoreDb } = require("../config/firebaseConfig");
-const admin = require("firebase-admin"); // Assurez-vous d'importer admin
 // Reference to the "Berceaus" collection in Firestore
 const Berceau = require("./../model/berceauModel"); // Importation de la classe Berceau
 
@@ -32,7 +31,6 @@ exports.createBerceau = async (req, res) => {
         });
     }
 };
-
 // Mettre à jour un Berceau
 exports.updateBerceau = async (req, res) => {
     try {
@@ -79,9 +77,6 @@ exports.updateBerceau = async (req, res) => {
         });
     }
 };
-
-
-
 // Get a Berceau by ID
 exports.getBerceau = async (req, res) => {
     try {
@@ -145,7 +140,6 @@ exports.deleteBerceau = async (req, res) => {
         });
     }
 };
-
 // Find Berceau by bebe ID 
 exports.findBerceauByIdBebe = async (req, res) => {
     try {
@@ -173,11 +167,10 @@ exports.findBerceauByIdBebe = async (req, res) => {
         });
     }
 };
-
 // Find Berceau by parent ID 
 exports.findBerceauByIdParent = async (req, res) => {
     try {
-        const parentId = req.params.parentId;
+        const parentId = req.params.id;
 
         // Récupérer le Berceau dont le berceauId correspond
         const BerceausSnapshot = await BerceausCollection.where("parentId", "==", parentId).get();
