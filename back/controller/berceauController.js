@@ -172,24 +172,26 @@ exports.findBerceauByIdParent = async (req, res) => {
     try {
         const parentId = req.params.id;
 
-        // Récupérer le Berceau dont le berceauId correspond
+        // Récupérer tous les Berceaux dont le parentId correspond
         const BerceausSnapshot = await BerceausCollection.where("parentId", "==", parentId).get();
 
         if (BerceausSnapshot.empty) {
             return res.status(404).json({ message: "Aucun Berceau trouvé pour ce parent." });
         }
 
-        // Puisqu'il ne peut y avoir qu'un seul Berceau par berceau, on prend le premier document
-        const BerceauDoc = BerceausSnapshot.docs[0];
-        const Berceau = { id: BerceauDoc.id, ...BerceauDoc.data() };
+        // Construire un tableau des berceaux avec leurs données
+        const Berceaux = BerceausSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
 
         res.status(200).json({
-            message: "Berceau trouvé !",
-            data: Berceau,
+            message: "Berceaux trouvés !",
+            data: Berceaux,
         });
     } catch (error) {
         res.status(400).json({
-            message: "Impossible de trouver le Berceau pour ce parent",
+            message: "Impossible de trouver les Berceaux pour ce parent",
             error: error.message,
         });
     }

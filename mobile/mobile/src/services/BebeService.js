@@ -32,7 +32,7 @@ export const createBebe = async (bebeData) => {
         const response = await api.post("/", bebeData);
         return response.data;
     } catch (error) {
-        throw error;
+        throw error.message;
     }
 };
 

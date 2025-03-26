@@ -32,7 +32,7 @@ export const createBerceau = async (BerceauData) => {
         const response = await api.post("/", BerceauData);
         return response.data;
     } catch (error) {
-        throw error;
+        throw error.message;
     }
 };
 

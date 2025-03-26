@@ -9,6 +9,7 @@ const BebesCollection = firestoreDb.collection("bebes");
 // Create a new Bebe
 exports.createBebe = async (req, res) => {
     try {
+        console.log("Données reçues :", req.body); // 👀 Vérification
         const { prenom, dateNaissance, sexe, parentId, berceauId } = req.body;
 
         // Validation des données en créant une instance de Bebe
