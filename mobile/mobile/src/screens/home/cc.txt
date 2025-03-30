@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Animated } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Animated, Alert, Linking, Platform } from 'react-native';
 import useAuthStore from '../../store/useAuthStore';
-import { getBerceausByParentId,deleteBerceau } from '../../services/BerceauService';
-import { getBebeById,deleteBebe } from '../../services/BebeService';
+import { getBerceausByParentId, deleteBerceau } from '../../services/BerceauService';
+import { getBebeById, deleteBebe } from '../../services/BebeService';
 import berceauImage from '../../../assets/berceau.png';
 import bebeImage from '../../../assets/bebe.png';
 import { useNavigation } from '@react-navigation/native';
 import { Modal, Portal, Button, TextInput, Provider } from 'react-native-paper';
+import BluetoothStateManager from 'react-native-bluetooth-state-manager';
+import Geolocation from '@react-native-community/geolocation';
 
 const BerceauItem = ({ item, onPress }) => {
     const [bebeName, setBebeName] = useState("Bébé inconnu");
@@ -38,6 +40,38 @@ const BerceauItem = ({ item, onPress }) => {
             </View>
         </TouchableOpacity>
     );
+};
+
+const checkBluetoothBeforeAction = async (action) => {
+    try {
+        const bluetoothState = await BluetoothStateManager.getState();
+        if (bluetoothState !== "PoweredOn") {
+            Alert.alert(
+                "Bluetooth désactivé",
+                "Veuillez activer le Bluetooth pour continuer.",
+                [
+                    { text: "Annuler", style: "cancel" },
+                    { text: "Activer", onPress: openBluetoothSettings }
+                ]
+            );
+            return;
+        }
+
+        // Si Bluetooth est activé, on exécute l’action
+        action();
+    } catch (error) {
+        console.error("Erreur lors de la vérification du Bluetooth :", error);
+    }
+};
+
+const openBluetoothSettings = () => {
+    if (Platform.OS === "android") {
+        Linking.openSettings();
+    } else {
+        Linking.openURL("App-Prefs:Bluetooth").catch(() => {
+            Alert.alert("Non supporté", "Impossible d’ouvrir les paramètres Bluetooth sur cet appareil.");
+        });
+    }
 };
 
 const HomeScreen = () => {
@@ -91,36 +125,36 @@ const HomeScreen = () => {
 
     const handleDelete = async () => {
         if (!selectedBerceau) return;
-    
+
         try {
             // Suppression du bébé si un bebeId est associé
             if (selectedBerceau.bebeId) {
                 await deleteBebe(selectedBerceau.bebeId);
                 console.log("Bébé supprimé avec succès !");
             }
-    
+
             // Suppression du berceau
             await deleteBerceau(selectedBerceau.id);
             console.log("Berceau supprimé avec succès !");
-    
+
             // Mise à jour de la liste des berceaux
             setBerceaux(prevBerceaux => prevBerceaux.filter(berceau => berceau.id !== selectedBerceau.id));
-    
+
             // Réinitialiser la navigation pour forcer un rechargement de l'écran
             navigation.reset({
                 index: 0,
                 routes: [{ name: 'Home' }],
             });
-    
+
             // Fermeture du modal
             setModalVisible(false);
         } catch (error) {
             console.error("Erreur lors de la suppression :", error);
         }
     };
-    
-    
-    
+
+
+
 
     const handleConsult = () => {
         console.log("Consulter le Berceau", selectedBerceau);
@@ -149,7 +183,7 @@ const HomeScreen = () => {
                         style={styles.addButton}
                         onPressIn={handlePressIn}
                         onPressOut={handlePressOut}
-                        onPress={versAjouter}
+                        onPress={() => checkBluetoothBeforeAction(versAjouter)}
                     >
                         <Text style={styles.addButtonText}>Ajouter un Berceau</Text>
                     </TouchableOpacity>
