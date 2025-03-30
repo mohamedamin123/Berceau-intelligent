@@ -32,8 +32,7 @@ export const getUser = async (userId) => {
 
 // 📌 Exemple d'utilisation pour mettre à jour un utilisateur
 export const updateUser = async (userId, userData) => {
-    console.log(userId);
-    console.log(userData);
+
 
     return api.patch(`/${userId}`, userData);
 };

@@ -15,6 +15,7 @@ exports.changeMode = async (berceauId) => {
 
         await realtimeDb.ref(`berceaux/${berceauId}/ventilateur`).set({ etat: true, mode });
         console.log(`Ventilateur marche en mode ${mode} pour berceauId: ${berceauId}`);
+        return mode;
     } catch (error) {
         console.error("Erreur lors de l'allumage de la Ventilateur :", error);
         throw error;

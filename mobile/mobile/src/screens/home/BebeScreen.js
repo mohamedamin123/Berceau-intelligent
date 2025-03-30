@@ -1,46 +1,36 @@
 import React, { useState } from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 
-const BebeScreen = ({ title = "Titre", items = [] }) => {
-    const [opacity, setOpacity] = useState(1); // Gérer l'opacité de la vue
+const BebeScreen = ({ title, items }) => {
+    const [opacity, setOpacity] = useState(1);
 
-    // Fonction qui est appelée quand on appuie sur un élément
-    const handlePress = () => {
-        setOpacity(0.3); // Réduit l'opacité de la vue
-        setTimeout(() => {
-            setOpacity(1); // Restaure l'opacité après 500ms
-        }, 500);
+    const handlePress = (onPress) => {
+        setOpacity(0.3);
+        setTimeout(() => setOpacity(1), 500);
+        onPress();
     };
 
     return (
-        <View style={[styles.container, { opacity }]}> {/* Appliquer l'opacité sur la vue */}
-            <View style={styles.row}>
-                {items.slice(0, 2).map((item, index) => (
-                    <View key={index} style={styles.card}>
-                        <Text style={styles.cardTitle}>{item.label}</Text>
-                        <Image source={item.image} style={styles.image} />
-                        <TouchableOpacity onPress={() => { item.onPress(); handlePress(); }}>
+        <View style={[styles.container, { opacity }]}>
+            <Text style={styles.screenTitle}>{title}</Text>
+            {[0, 1].map(row => (
+                <View key={row} style={styles.row}>
+                    {items.slice(row * 2, row * 2 + 2).map(item => (
+                        <TouchableOpacity 
+                            key={item.label} 
+                            style={styles.card} 
+                            onPress={() => handlePress(item.onPress)}
+                        >
+                            <Text style={styles.cardTitle}>{item.label}</Text>
+                            <Image source={item.image} style={styles.image} />
                             <Text style={styles.input}>{item.value}</Text>
                         </TouchableOpacity>
-                    </View>
-                ))}
-            </View>
-
-            <View style={styles.row}>
-                {items.slice(2, 4).map((item, index) => (
-                    <View key={index} style={styles.card}>
-                        <Text style={styles.cardTitle}>{item.label}</Text>
-                        <Image source={item.image} style={styles.image} />
-                        <TouchableOpacity onPress={() => { item.onPress(); handlePress(); }}>
-                            <Text style={styles.input}>{item.value}</Text>
-                        </TouchableOpacity>
-                    </View>
-                ))}
-            </View>
+                    ))}
+                </View>
+            ))}
         </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,

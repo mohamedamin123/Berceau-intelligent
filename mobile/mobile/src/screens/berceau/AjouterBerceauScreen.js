@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import useAuthStore from '../../store/useAuthStore';
 import { createBerceau } from '../../services/BerceauService';
 import { createBebe, updateBebe } from '../../services/BebeService';
+import { NetworkInfo } from "react-native-network-info";
 import {
     View,
     Text,
@@ -22,16 +23,30 @@ const AjouterBerceauScreen = ({ navigation }) => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false); // Ajout de l'état loading
     const user = useAuthStore((state) => state.user);
+    NetworkInfo.getSSID().then(ssid => {
+        console.log("SSID du WiFi :", ssid);
+    });
+
+    useEffect(() => {
+        NetworkInfo.getSSID().then(currentSsid => {
+            if (currentSsid) {
+                setSsid(currentSsid);
+            } else {
+                console.warn("Impossible de récupérer le SSID du Wi-Fi.");
+            }
+        }).catch(error => console.error("Erreur récupération SSID:", error));
+    }, []);
 
     const validateFields = () => {
         let newErrors = {};
+
 
         if (!nomBerceau.trim()) newErrors.nomBerceau = "Nom du berceau requis.";
         if (!nomBebe.trim()) newErrors.nomBebe = "Nom du bébé requis.";
 
         const dateRegex = /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/;
         if (!dateRegex.test(dateNaissance)) newErrors.dateNaissance = "Format: JJ-MM-AAAA";
-        
+
         if (!ssid.trim()) newErrors.ssid = "Nom du réseau Wi-Fi requis.";
         if (motDePasse.length < 6) newErrors.motDePasse = "Mot de passe min. 6 caractères.";
 
@@ -39,13 +54,13 @@ const AjouterBerceauScreen = ({ navigation }) => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = async () => { 
+    const handleSubmit = async () => {
         if (!validateFields()) return;
 
         setLoading(true); // Début du chargement
         const [jour, mois, annee] = dateNaissance.split("-");
         const dateFormatee = `${annee}-${mois}-${jour}`;
-        
+
         try {
             // 1️⃣ Création du bébé
             const bebeData = {
@@ -54,33 +69,30 @@ const AjouterBerceauScreen = ({ navigation }) => {
                 sexe: sexeBebe,
                 parentId: user?.id,
             };
-    
+
             const bebeResponse = await createBebe(bebeData);
-            const bebeId = bebeResponse.data.id; 
-    
-            console.log("Bébé créé avec succès :", bebeResponse.data);
-    
+            const bebeId = bebeResponse.data.id;
+
+
             // 2️⃣ Création du berceau
             const berceauData = {
                 name: nomBerceau,
                 parentId: user?.id,
                 bebeId: bebeId,
             };
-    
+
             const berceauResponse = await createBerceau(berceauData);
             const berceauId = berceauResponse.data.id;
-    
-            console.log("Berceau créé avec succès :", berceauResponse.data);
-    
+
+
             // 3️⃣ Mise à jour du bébé avec le `berceauId`
             const bebeUpdateData = {
-                berceauId: berceauId, 
+                berceauId: berceauId,
             };
-    
+
             await updateBebe(bebeId, bebeUpdateData);
-    
-            console.log("Bébé mis à jour avec son berceauId :", bebeUpdateData);
-    
+
+
             alert("Berceau et bébé ajoutés avec succès !");
             navigation.navigate("Home");
         } catch (error) {
@@ -90,7 +102,7 @@ const AjouterBerceauScreen = ({ navigation }) => {
             setLoading(false); // Fin du chargement
         }
     };
-    
+
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Ajouter un Berceau</Text>

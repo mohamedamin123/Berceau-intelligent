@@ -80,7 +80,6 @@ export const deleteBerceau = async (BerceauId) => {
 export const getBerceausByParentId = async (id) => {
     try {
         const response = await api.get(`/parent/${id}`);
-        console.log(response)
         return response.data;
     } catch (error) {
         throw error;

@@ -30,8 +30,9 @@ const LoginScreen = () => {
             const response = await signIn(email, password);
             if (response.token) {
                 setErrorMessage('');
-                login({ token: response.token, email: email,user:response.user }); // Stocke l'utilisateur avec Zustand
+                login({ token: response.token, email: email, user: response.user });
                 setFailedAttempts(0);
+                // Remplacer la navigation et aller à l'écran principal
             } else {
                 setErrorMessage('Erreur de connexion');
                 incrementFailedAttempts();

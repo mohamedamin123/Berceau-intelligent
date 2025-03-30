@@ -1,6 +1,9 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/home/HomeScreen';
+import BebeScreen from '../screens/home/BebeScreen';
+import Icon from 'react-native-vector-icons/Feather';
+
 import SettingsScreen from '../screens/home/SettingsScreen';
 import DynamicTabView from './DynamicTabView';
 import TabBarIcon from '../components/TabBarIcon';
@@ -32,11 +35,11 @@ const BottomTabNavigator = () => {
             />
             
             <Tab.Screen
-                name="Bebe"
+                name="Bebes"
                 component={DynamicTabView}
                 options={{
                     tabBarIcon: ({ color, size }) => (
-                        <Baby size={size} color={color} />  
+                        <Icon name="users" size={size} color={color} />
                     ),
                 }}
             />

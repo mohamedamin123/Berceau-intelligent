@@ -80,7 +80,6 @@ export const deleteBebe = async (bebeId) => {
 export const getBebesByParentId = async (parentId) => {
     try {
         const response = await api.get(`/parent/${parentId}`);
-        console.log(response)
         return response.data;
     } catch (error) {
         throw error;

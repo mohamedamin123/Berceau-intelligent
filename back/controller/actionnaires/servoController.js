@@ -3,8 +3,8 @@ const servoService = require("./../../service/actionnaires/servoService");
 exports.changeMode= async (req, res) => {
     try {
         const { berceauId } = req.params;
-        await servoService.changeMode(berceauId);
-        res.status(200).json({ message: `Servo activée pour berceau ${berceauId}` });
+        const newMode = await servoService.changeMode(berceauId);
+        res.status(200).json({ message: `Servo activée pour berceau ${berceauId}`,mode:newMode });
     } catch (error) {
         res.status(500).json({ error: "Erreur lors de l'activation de la servo" });
     }

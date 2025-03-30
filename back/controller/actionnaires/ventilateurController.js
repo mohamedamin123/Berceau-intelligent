@@ -3,8 +3,8 @@ const VentilateurService = require("../../service/actionnaires/ventilateurServic
 exports.changeMode= async (req, res) => {
     try {
         const { berceauId } = req.params;
-        await VentilateurService.changeMode(berceauId);
-        res.status(200).json({ message: `Ventilateur activée pour berceau ${berceauId}` });
+        const newMode = await VentilateurService.changeMode(berceauId);
+        res.status(200).json({ message: `Ventilateur activée pour berceau ${berceauId}`,mode:newMode});
     } catch (error) {
         res.status(500).json({ error: "Erreur lors de l'activation de la Ventilateur" });
     }

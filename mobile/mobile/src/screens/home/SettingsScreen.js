@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Switch } from 'react-native';
 import useAuthStore from '../../store/useAuthStore';
-import { LogOut, User, Bell, Moon,Baby } from 'lucide-react-native';
+import Icon from 'react-native-vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
 
 const SettingsScreen = () => {
@@ -23,21 +23,21 @@ const SettingsScreen = () => {
             {/* Carte Profil */}
             <View style={styles.card}>
                 <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Profile')}>
-                    <User size={22} color="#555" />
+                    <Icon name="user" size={22} color="#555" />
                     <Text style={styles.optionText}>Mon Profil</Text>
                 </TouchableOpacity>
             </View>
             <View style={[styles.card, { marginBottom: 30 }]}>
-                <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Bebe')}>
-                    <Baby size={22} color="#555" />
-                    <Text style={styles.optionText}>Mes Bebés</Text>
+                <TouchableOpacity style={styles.option} onPress={() => navigation.navigate('Bebes')}>
+                    <Icon name="users" size={22} color="#555" />
+                    <Text style={styles.optionText}>Mes Bébés</Text>
                 </TouchableOpacity>
             </View>
 
             {/* Carte Préférences */}
             <View style={styles.card}>
                 <View style={styles.option}>
-                    <Moon size={22} color="#555" />
+                    <Icon name="moon" size={22} color="#555" />
                     <Text style={styles.optionText}>Mode Sombre</Text>
                     <Switch 
                         value={isDarkMode} 
@@ -47,7 +47,7 @@ const SettingsScreen = () => {
                 </View>
 
                 <View style={styles.option}>
-                    <Bell size={22} color="#555" />
+                    <Icon name="bell" size={22} color="#555" />
                     <Text style={styles.optionText}>Notifications</Text>
                     <Switch 
                         value={notificationsEnabled} 
@@ -59,7 +59,7 @@ const SettingsScreen = () => {
 
             {/* Bouton Déconnexion */}
             <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-                <LogOut size={22} color="#fff" />
+                <Icon name="log-out" size={22} color="#fff" />
                 <Text style={styles.logoutButtonText}>Déconnexion</Text>
             </TouchableOpacity>
         </ScrollView>
