@@ -3,6 +3,8 @@ import useAuthStore from '../../store/useAuthStore';
 import { createBerceau } from '../../services/BerceauService';
 import { createBebe, updateBebe } from '../../services/BebeService';
 import { NetworkInfo } from "react-native-network-info";
+import RNBluetoothSerial from 'react-native-bluetooth-serial-next';
+
 import {
     View,
     Text,
@@ -12,6 +14,34 @@ import {
     ScrollView,
     ActivityIndicator
 } from "react-native";
+
+import { PermissionsAndroid, Platform } from "react-native";
+
+async function requestBluetoothPermission() {
+    if (Platform.OS === "android" && Platform.Version >= 31) {
+        try {
+            const granted = await PermissionsAndroid.requestMultiple([
+                PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+                PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+            ]);
+
+            if (
+                granted["android.permission.BLUETOOTH_SCAN"] !== PermissionsAndroid.RESULTS.GRANTED ||
+                granted["android.permission.BLUETOOTH_CONNECT"] !== PermissionsAndroid.RESULTS.GRANTED
+            ) {
+                alert("Permission Bluetooth refusée !");
+                return false;
+            }
+            return true;
+        } catch (err) {
+            console.warn("Erreur permissions Bluetooth :", err);
+            return false;
+        }
+    }
+    return true;
+}
+
+
 
 const AjouterBerceauScreen = ({ navigation }) => {
     const [nomBerceau, setNomBerceau] = useState("");
@@ -23,6 +53,7 @@ const AjouterBerceauScreen = ({ navigation }) => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false); // Ajout de l'état loading
     const user = useAuthStore((state) => state.user);
+    
     NetworkInfo.getSSID().then(ssid => {
         console.log("SSID du WiFi :", ssid);
     });
@@ -56,53 +87,109 @@ const AjouterBerceauScreen = ({ navigation }) => {
 
     const handleSubmit = async () => {
         if (!validateFields()) return;
-
-        setLoading(true); // Début du chargement
+    
+        setLoading(true);
         const [jour, mois, annee] = dateNaissance.split("-");
         const dateFormatee = `${annee}-${mois}-${jour}`;
-
+    
         try {
-            // 1️⃣ Création du bébé
             const bebeData = {
                 prenom: nomBebe,
                 dateNaissance: dateFormatee,
                 sexe: sexeBebe,
                 parentId: user?.id,
             };
-
-            const bebeResponse = await createBebe(bebeData);
-            const bebeId = bebeResponse.data.id;
-
-
-            // 2️⃣ Création du berceau
+    
+            const bebeResponse = await createBebe(bebeData).catch(err => {
+                throw new Error("Erreur création bébé : " + err.message);
+            });
+    
+            const bebeId = bebeResponse?.data?.id;
+            if (!bebeId) throw new Error("L'ID du bébé est invalide.");
+    
             const berceauData = {
                 name: nomBerceau,
                 parentId: user?.id,
                 bebeId: bebeId,
             };
-
-            const berceauResponse = await createBerceau(berceauData);
-            const berceauId = berceauResponse.data.id;
-
-
-            // 3️⃣ Mise à jour du bébé avec le `berceauId`
-            const bebeUpdateData = {
-                berceauId: berceauId,
-            };
-
-            await updateBebe(bebeId, bebeUpdateData);
-
-
+    
+            const berceauResponse = await createBerceau(berceauData).catch(err => {
+                throw new Error("Erreur création berceau : " + err.message);
+            });
+    
+            const berceauId = berceauResponse?.data?.id;
+            if (!berceauId) throw new Error("L'ID du berceau est invalide.");
+    
+            const bebeUpdateData = { berceauId: berceauId };
+            await sendBluetoothMessage(ssid+" "+motDePasse);
+    
+            await updateBebe(bebeId, bebeUpdateData).catch(err => {
+                throw new Error("Erreur mise à jour bébé : " + err.message);
+            });
+    
             alert("Berceau et bébé ajoutés avec succès !");
-            navigation.navigate("Home");
         } catch (error) {
-            console.error("Erreur lors de l'ajout :", error);
-            alert("Erreur lors de l'ajout. Veuillez réessayer.");
+            console.error(error);
+            alert(error.message);
         } finally {
-            setLoading(false); // Fin du chargement
+            setLoading(false);
         }
     };
-
+    
+    const sendBluetoothMessage = async (message) => {
+        try {
+            // 1. Vérifier les permissions
+            const hasPermission = await requestBluetoothPermission();
+            if (!hasPermission) {
+                alert("Permissions Bluetooth requises");
+                return;
+            }
+    
+            // 2. Activer Bluetooth si désactivé
+            const isEnabled = await RNBluetoothSerial.isEnabled();
+            if (!isEnabled) {
+                await RNBluetoothSerial.enable();
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Attendre l'activation
+            }
+    
+            // 3. Scanner les appareils
+            console.log("Recherche d'appareils Bluetooth...");
+            const devices = await RNBluetoothSerial.list();
+            console.log("Appareils trouvés:", devices);
+    
+            // 4. Trouver le Raspberry Pi (ajuster le nom selon votre configuration)
+            const piDevice = devices.find(device => 
+                device.name.includes('raspberrypi') || 
+                device.name.includes('RPi') ||
+                device.id.includes('00:00:00') // Partie de l'adresse MAC
+            );
+    
+            if (!piDevice) {
+                alert("Raspberry Pi non trouvé");
+                return;
+            }
+    
+            console.log("Tentative de connexion au Pi:", piDevice.name);
+            
+            // 5. Se connecter
+            await RNBluetoothSerial.connect(piDevice.id);
+            console.log("Connecté avec succès");
+    
+            // 6. Envoyer des données (au format UART)
+            await RNBluetoothSerial.write(message);
+            console.log("Message envoyé:", message);
+    
+            // 7. Fermer la connexion (optionnel)
+            setTimeout(async () => {
+                await RNBluetoothSerial.disconnect();
+                console.log("Déconnexion");
+            }, 2000);
+    
+        } catch (error) {
+            console.error("Erreur de connexion:", error);
+            alert(`Erreur: ${error.message}`);
+        }
+    }
     return (
         <ScrollView contentContainerStyle={styles.container}>
             <Text style={styles.title}>Ajouter un Berceau</Text>
