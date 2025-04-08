@@ -1,0 +1,47 @@
+import React, { useEffect, useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import AppNavigator from './navigation/AppNavigator';
+import PushNotification from 'react-native-push-notification'; // Assurez-vous d'importer la bibliothèque de notifications
+import './../src/config/PushNotificationConfig'; // Votre configuration de notifications
+import { getSon } from './services/SonService'; // Assurez-vous d'importer la fonction getSon
+
+export default function App() {
+  const [sonData, setSonData] = useState(null);
+
+  // Fonction pour vérifier les données du son
+  const checkSon = async () => {
+    try {
+      const berceauId = 'G6Zxzh6tNIVZ4b1UUy9R'; // Remplacer par l'ID de votre berceau
+      const data = await getSon(berceauId);
+      setSonData(data);
+      console.log(data);
+
+      // Si un certain critère est satisfait, afficher une notification
+      if (data === true) { // Remplacez 'certain_condition' par la condition de votre choix
+        PushNotification.localNotification({
+          channelId: 'default-channel-id',
+          title: 'Notification Berceau Intelligent',
+          message: 'Un événement spécial a été détecté !',
+        });
+        alert('Un événement spécial a été détecté !');
+      }
+    } catch (error) {
+      console.error("Erreur lors de la récupération du son:", error);
+    }
+  };
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      checkSon(); // Appeler la fonction de vérification chaque seconde
+    }, 1000);
+
+    // Nettoyage à la destruction du composant
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <NavigationContainer>
+      <AppNavigator />
+    </NavigationContainer>
+  );
+}

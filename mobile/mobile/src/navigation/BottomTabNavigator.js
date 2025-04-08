@@ -5,7 +5,7 @@ import BebeScreen from '../screens/home/BebeScreen';
 import Icon from 'react-native-vector-icons/Feather';
 
 import SettingsScreen from '../screens/home/SettingsScreen';
-import DynamicTabView from './DynamicTabView';
+import DynamicTabView from './../components/DynamicTabView';
 import TabBarIcon from '../components/TabBarIcon';
 import ProfileScreen from '../screens/home/ProfileScreen';  // Corrigé : SettingsScreen => ProfileScreen
 import {  Baby } from 'lucide-react-native'; // Icône Baby ajoutée

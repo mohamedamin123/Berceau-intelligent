@@ -20,7 +20,7 @@ const ConsulterBerceauScreen = () => {
             setHumidity(data.hmd ? `${data.hmd}%` : "0.00%"); // Met à jour l'humidité avec le symbole %
 
         } catch (error) {
-            console.error("Erreur lors de la récupération des données DHT", error);
+            console.log("Erreur lors de la récupération des données DHT", error);
         }
     };
 
@@ -102,8 +102,11 @@ const ConsulterBerceauScreen = () => {
                 <View style={styles.card}>
                     <Text style={styles.subtitle}>Camera</Text>
                     <Image source={require('./../../../assets/camera.png')} style={styles.image} />
-                    <TouchableOpacity style={styles.button} onPress={() => { }}>
-                        <Text style={styles.buttonText}>Consulter</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => {
+                        // Naviguer vers "ConsulterLumiere" avec l'ID
+                        navigation.navigate('ConsulterCamera', { id: id });
+                    }}>                       
+                    <Text style={styles.buttonText}>Consulter</Text>
                     </TouchableOpacity>
                 </View>
             </View>

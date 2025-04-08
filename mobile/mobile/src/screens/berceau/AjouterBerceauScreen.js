@@ -1,20 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import useAuthStore from '../../store/useAuthStore';
-import { createBerceau } from '../../services/BerceauService';
-import { createBebe, updateBebe } from '../../services/BebeService';
+import { createBerceau, deleteBerceau } from '../../services/BerceauService';
+import { createBebe, updateBebe, deleteBebe } from '../../services/BebeService';
 import { NetworkInfo } from "react-native-network-info";
 import RNBluetoothSerial from 'react-native-bluetooth-serial-next';
-
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    ScrollView,
-    ActivityIndicator
-} from "react-native";
-
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { PermissionsAndroid, Platform } from "react-native";
 
 async function requestBluetoothPermission() {
@@ -53,7 +43,9 @@ const AjouterBerceauScreen = ({ navigation }) => {
     const [errors, setErrors] = useState({});
     const [loading, setLoading] = useState(false); // Ajout de l'état loading
     const user = useAuthStore((state) => state.user);
-    
+    const bebeIdRef = useRef(null);
+    const berceauIdRef = useRef(null);
+
     NetworkInfo.getSSID().then(ssid => {
         console.log("SSID du WiFi :", ssid);
     });
@@ -87,11 +79,11 @@ const AjouterBerceauScreen = ({ navigation }) => {
 
     const handleSubmit = async () => {
         if (!validateFields()) return;
-    
+
         setLoading(true);
         const [jour, mois, annee] = dateNaissance.split("-");
         const dateFormatee = `${annee}-${mois}-${jour}`;
-    
+
         try {
             const bebeData = {
                 prenom: nomBebe,
@@ -99,35 +91,38 @@ const AjouterBerceauScreen = ({ navigation }) => {
                 sexe: sexeBebe,
                 parentId: user?.id,
             };
-    
+
             const bebeResponse = await createBebe(bebeData).catch(err => {
                 throw new Error("Erreur création bébé : " + err.message);
             });
-    
+
             const bebeId = bebeResponse?.data?.id;
             if (!bebeId) throw new Error("L'ID du bébé est invalide.");
-    
+
             const berceauData = {
                 name: nomBerceau,
                 parentId: user?.id,
                 bebeId: bebeId,
             };
-    
+
             const berceauResponse = await createBerceau(berceauData).catch(err => {
                 throw new Error("Erreur création berceau : " + err.message);
             });
-    
+
             const berceauId = berceauResponse?.data?.id;
             if (!berceauId) throw new Error("L'ID du berceau est invalide.");
-    
+
             const bebeUpdateData = { berceauId: berceauId };
-            await sendBluetoothMessage(ssid+" "+motDePasse);
-    
             await updateBebe(bebeId, bebeUpdateData).catch(err => {
                 throw new Error("Erreur mise à jour bébé : " + err.message);
             });
-    
-            alert("Berceau et bébé ajoutés avec succès !");
+            bebeIdRef.current = bebeResponse?.data?.id;
+            berceauIdRef.current = berceauResponse?.data?.id;
+
+            // await sendBluetoothMessage(ssid+" "+motDePasse+" "+berceauId);
+            navigation.navigate("Home");
+
+
         } catch (error) {
             console.error(error);
             alert(error.message);
@@ -135,7 +130,7 @@ const AjouterBerceauScreen = ({ navigation }) => {
             setLoading(false);
         }
     };
-    
+
     const sendBluetoothMessage = async (message) => {
         try {
             // 1. Vérifier les permissions
@@ -144,50 +139,58 @@ const AjouterBerceauScreen = ({ navigation }) => {
                 alert("Permissions Bluetooth requises");
                 return;
             }
-    
+
             // 2. Activer Bluetooth si désactivé
             const isEnabled = await RNBluetoothSerial.isEnabled();
             if (!isEnabled) {
                 await RNBluetoothSerial.enable();
                 await new Promise(resolve => setTimeout(resolve, 1000)); // Attendre l'activation
             }
-    
+
             // 3. Scanner les appareils
             console.log("Recherche d'appareils Bluetooth...");
             const devices = await RNBluetoothSerial.list();
             console.log("Appareils trouvés:", devices);
-    
+
             // 4. Trouver le Raspberry Pi (ajuster le nom selon votre configuration)
-            const piDevice = devices.find(device => 
-                device.name.includes('raspberrypi') || 
+            const piDevice = devices.find(device =>
+                device.name.includes('raspberrypi') ||
                 device.name.includes('RPi') ||
                 device.id.includes('00:00:00') // Partie de l'adresse MAC
             );
-    
+
             if (!piDevice) {
                 alert("Raspberry Pi non trouvé");
                 return;
             }
-    
+
             console.log("Tentative de connexion au Pi:", piDevice.name);
-            
+
             // 5. Se connecter
             await RNBluetoothSerial.connect(piDevice.id);
             console.log("Connecté avec succès");
-    
+
             // 6. Envoyer des données (au format UART)
             await RNBluetoothSerial.write(message);
             console.log("Message envoyé:", message);
-    
+
             // 7. Fermer la connexion (optionnel)
             setTimeout(async () => {
                 await RNBluetoothSerial.disconnect();
                 console.log("Déconnexion");
             }, 2000);
-    
+            alert("Berceau et bébé ajoutés avec succès !");
+            navigation.navigate("Home");
+
         } catch (error) {
             console.error("Erreur de connexion:", error);
-            alert(`Erreur: ${error.message}`);
+            if (berceauIdRef.current) {
+                await deleteBerceau(berceauIdRef.current).catch(err => console.warn("Erreur suppression berceau :", err));
+            }
+
+            if (bebeIdRef.current) {
+                await deleteBebe(bebeIdRef.current).catch(err => console.warn("Erreur suppression bébé :", err));
+            } alert(`Erreur: ${error.message}`);
         }
     }
     return (

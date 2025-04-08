@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Animated, Alert, Linking, Platform } from 'react-native';
+import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Animated, Alert, Linking, Platform,PermissionsAndroid } from 'react-native';
 import useAuthStore from '../../store/useAuthStore';
 import { getBerceausByParentId, deleteBerceau } from '../../services/BerceauService';
 import { getBebeById, deleteBebe } from '../../services/BebeService';
@@ -9,6 +9,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Modal, Portal, Button, TextInput, Provider } from 'react-native-paper';
 import BluetoothStateManager from 'react-native-bluetooth-state-manager';
 import { NetworkInfo } from "react-native-network-info";
+import PushNotification from 'react-native-push-notification';
+
 
 const BerceauItem = ({ item, onPress }) => {
     const [bebeName, setBebeName] = useState("Bébé inconnu");
@@ -43,6 +45,36 @@ const BerceauItem = ({ item, onPress }) => {
 };
 
 
+const checkNotificationBeforeAction = (action) => {
+    PushNotification.checkPermissions((permissions) => {
+        if (!permissions.alert) {
+            Alert.alert(
+                "Notifications désactivées",
+                "Veuillez activer les notifications pour recevoir des alertes importantes.",
+                [
+                    { text: "Annuler", style: "cancel" },
+                    { text: "Paramètres", onPress: () => Linking.openSettings() }
+                ]
+            );
+        } else {
+            // Si autorisées, on exécute l'action
+            action();
+        }
+    });
+};
+
+const handleNotification = () => {
+    console.log("vv");
+    PushNotification.localNotification({
+        channelId: 'default-channel-id',
+        title: 'Berceau Intelligent 👶',
+        message: 'Une notification locale a été déclenchée !',
+    });
+    console.log("cc");
+
+}
+
+
 const checkBluetoothBeforeAction = async (action) => {
     try {
         const bluetoothState = await BluetoothStateManager.getState();
@@ -62,7 +94,7 @@ const checkBluetoothBeforeAction = async (action) => {
         const ssid = await NetworkInfo.getSSID();
         console.log("SSID du WiFi :", ssid);
 
-        if (!ssid ) {
+        if (!ssid) {
             Alert.alert(
                 "WiFi non détecté",
                 "Veuillez activer la localisation et vous connecter à un réseau WiFi.",
@@ -204,7 +236,8 @@ const HomeScreen = () => {
                         style={styles.addButton}
                         onPressIn={handlePressIn}
                         onPressOut={handlePressOut}
-                        onPress={() => checkBluetoothBeforeAction(versAjouter)}
+                        //onPress={() => checkBluetoothBeforeAction(versAjouter)}
+                        onPress={() => checkNotificationBeforeAction(handleNotification)}
                     >
                         <Text style={styles.addButtonText}>Ajouter un Berceau</Text>
                     </TouchableOpacity>
