@@ -47,24 +47,21 @@ const MainNavigator = () => {
 
     const checkSonAndMouvement = async () => {
         try {
-            // Utiliser Promise.all pour effectuer les vérifications de manière parallèle
-            await Promise.all(
-                berceaux.map(async (berceau) => {
-                    const { id, name } = berceau;
-                    const son = await getSon(id);
-                    const mouvement = await getMouvement(id);
+            for (const berceau of berceaux) {
+                const { id, name } = berceau;
+                const son = await getSon(id);
+                const mouvement = await getMouvement(id);
 
-                    console.log("id:  ", id, "name:", name);
+                console.log("id:  ", id, "name:", name);
 
-                    if (son === true && !isSleeping) {
-                        sendNotification(`Le bébé du  ${name}  pleure !`, 'son');
-                    }
+                if (son === true && !isSleeping) {
+                    sendNotification(`Le bébé du  ${name}  pleure !`, 'son');
+                }
 
-                    if (mouvement === true && !isMouvementSleeping) {
-                        sendNotification(`Mouvement détecté dans le  ${name}  !`, 'mouvement');
-                    }
-                })
-            );
+                if (mouvement === true && !isMouvementSleeping) {
+                    sendNotification(`Mouvement détecté dans le  ${name}  !`, 'mouvement');
+                }
+            }
         } catch (error) {
             console.error("Erreur lors de la récupération du son ou du mouvement:", error);
         }
@@ -92,4 +89,4 @@ const MainNavigator = () => {
     );
 };
 
-export default MainNavigator;
+export default MainNavigator; 
