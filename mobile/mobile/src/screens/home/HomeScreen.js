@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Animated, Alert, Linking, Platform,PermissionsAndroid } from 'react-native';
 import useAuthStore from '../../store/useAuthStore';
 import { getBerceausByParentId, deleteBerceau } from '../../services/BerceauService';
+import useBerceauStore from '../../store/useBerceauStore';
 import { getBebeById, deleteBebe } from '../../services/BebeService';
 import berceauImage from '../../../assets/berceau.png';
 import bebeImage from '../../../assets/bebe.png';
@@ -30,6 +31,7 @@ const BerceauItem = ({ item, onPress }) => {
         fetchBebeName();
     }, [item.bebeId]);
 
+    
     return (
         <TouchableOpacity style={styles.berceauCard} onPress={() => onPress(item)}>
             <View style={styles.berceauHeader}>
@@ -142,14 +144,24 @@ const HomeScreen = () => {
                     const response = await getBerceausByParentId(user.id);
                     const fetchedBerceaux = Array.isArray(response?.data) ? response.data : response?.data ? [response.data] : [];
                     setBerceaux(fetchedBerceaux);
+                    
+                    // Mettre à jour le store avec les IDs et les noms des berceaux
+                    const berceauxWithIdAndName = fetchedBerceaux.map(b => ({
+                        id: b.id,
+                        name: b.name, // Assurez-vous que le nom existe dans la réponse
+                    }));
+    
+                    useBerceauStore.getState().setBerceaux(berceauxWithIdAndName);
+    
                 } catch (error) {
                     console.error("Erreur lors de la récupération des berceaux:", error);
                 }
             }
         };
-
+    
         fetchBerceaux();
     }, [user]);
+    
 
     const handlePressIn = () => {
         Animated.spring(scaleAnim, {
@@ -236,8 +248,8 @@ const HomeScreen = () => {
                         style={styles.addButton}
                         onPressIn={handlePressIn}
                         onPressOut={handlePressOut}
-                        //onPress={() => checkBluetoothBeforeAction(versAjouter)}
-                        onPress={() => checkNotificationBeforeAction(handleNotification)}
+                        onPress={() => checkBluetoothBeforeAction(versAjouter)}
+                        //onPress={() => checkNotificationBeforeAction(handleNotification)}
                     >
                         <Text style={styles.addButtonText}>Ajouter un Berceau</Text>
                     </TouchableOpacity>

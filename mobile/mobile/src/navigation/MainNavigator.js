@@ -10,6 +10,7 @@ import ConsulterCameraScreen from '../screens/berceau/ConsulterCameraScreen';
 import PushNotification from 'react-native-push-notification';  // Assurez-vous d'importer la bibliothèque de notifications
 import { getSon } from '../services/SonService'; // Assurez-vous d'importer la fonction getSon
 import { getMouvement } from '../services/MouvementService'; // Assurez-vous d'importer la fonction getMouvement
+import useBerceauStore from '../store/useBerceauStore';
 
 const Stack = createNativeStackNavigator();
 
@@ -42,31 +43,28 @@ const MainNavigator = () => {
         }
     };
 
-    // Fonction pour vérifier les données du son et du mouvement
+    const berceaux = useBerceauStore((state) => state.berceaux);
+
     const checkSonAndMouvement = async () => {
         try {
-            const berceauId = 'G6Zxzh6tNIVZ4b1UUy9R'; // Remplacer par l'ID de votre berceau
+            // Utiliser Promise.all pour effectuer les vérifications de manière parallèle
+            await Promise.all(
+                berceaux.map(async (berceau) => {
+                    const { id, name } = berceau;
+                    const son = await getSon(id);
+                    const mouvement = await getMouvement(id);
 
-            // Vérifier les données du son
-            const son = await getSon(berceauId);
-            setSonData(son);
+                    console.log("id:  ", id, "name:", name);
 
-            // Vérifier les données du mouvement
-            const mouvement = await getMouvement(berceauId);
-            setMouvementData(mouvement);
+                    if (son === true && !isSleeping) {
+                        sendNotification(`Le bébé du  ${name}  pleure !`, 'son');
+                    }
 
-            console.log("Son:", son);
-            console.log("Mouvement:", mouvement);
-
-            // Vérification pour envoyer une notification de son si le bébé pleure
-            if (son === true && !isSleeping) {
-                sendNotification('Le bébé pleure !', 'son');
-            }
-
-            // Vérification pour envoyer une notification de mouvement
-            if (mouvement === true && !isMouvementSleeping) {
-                sendNotification('Mouvement détecté dans le berceau !', 'mouvement');
-            }
+                    if (mouvement === true && !isMouvementSleeping) {
+                        sendNotification(`Mouvement détecté dans le  ${name}  !`, 'mouvement');
+                    }
+                })
+            );
         } catch (error) {
             console.error("Erreur lors de la récupération du son ou du mouvement:", error);
         }
