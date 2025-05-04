@@ -135,7 +135,7 @@ const AjouterBerceauScreen = ({ navigation }) => {
                         text: "OK",
                         onPress: async () => {
                             try {
-                               // await sendBluetoothMessage(ssid + " " + motDePasse + " " + berceauId);
+                                await sendBluetoothMessage(ssid + " " + motDePasse + " " + berceauId);
             
                                 // Si Bluetooth réussi, aller à la page d'accueil
                                 navigation.navigate("Home");
