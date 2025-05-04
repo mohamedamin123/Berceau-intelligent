@@ -1,0 +1,13 @@
+back/berceau.json
+back/node_modules
+back/firebase.json
+mobile/mobile/node_modules
+mobile/mobile/package-lock.json
+mobile/mobile/android
+mobile/mobile/ios
+mobile/android
+IA/cnn_model.h5
+IA/dataset
+web
+
+IA/cnn_model.h5
