@@ -8,12 +8,12 @@ class ActionneurVentilateur(Actionnaire):
         self.api = VentilateurAPI()
 
     def allumer(self, berceau_id):
-        self.relay.on()  # Active le Ventilateur (ferme le circuit)
+        self.relay.off()  # Active le Ventilateur (ferme le circuit)
         response = self.api.turn_on(berceau_id)
         print(f"Ventilateur activé : {response}")
 
     def eteindre(self, berceau_id):
-        self.relay.off()  # Désactive le Ventilateur (ouvre le circuit)
+        self.relay.on()  # Désactive le Ventilateur (ouvre le circuit)
         response = self.api.turn_off(berceau_id)
         print(f"Ventilateur désactivé : {response}")
 

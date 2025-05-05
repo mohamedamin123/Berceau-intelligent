@@ -200,27 +200,6 @@ const AjouterBerceauScreen = ({ navigation }) => {
             await RNBluetoothSerial.write(message);
             console.log("Message envoyé:", message);
     
-            // Lire réponse pendant 5 secondes
-            let response = "";
-            const timeout = Date.now() + 5000;
-            while (Date.now() < timeout) {
-                const chunk = await RNBluetoothSerial.readFromDevice();
-                if (chunk) {
-                    response += chunk;
-                    if (response.includes("\n") || response.length > 0) {
-                        break;
-                    }
-                }
-                await new Promise(resolve => setTimeout(resolve, 500));
-            }
-    
-            if (response) {
-                console.log("Réponse reçue:", response.trim());
-                alert(`Réponse du Raspberry Pi: ${response.trim()}`);
-            } else {
-                throw new Error("Pas de réponse du Raspberry Pi.");
-            }
-    
             setTimeout(async () => {
                 await RNBluetoothSerial.disconnect();
                 console.log("Déconnecté");

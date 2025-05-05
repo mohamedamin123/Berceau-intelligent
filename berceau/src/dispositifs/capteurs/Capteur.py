@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 
+from dispositifs.Berceau import Berceau
 
-class Capteur(ABC):
+
+class Capteur(Berceau,ABC):
 
     @abstractmethod
     def lire_donnees(self):

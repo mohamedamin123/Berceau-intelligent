@@ -23,19 +23,15 @@ class ActionneurLED(Actionnaire):
         intensite=statut["intensite"]
         return intensite,etat
     
-    def regler_intensite(self, berceau_id, intensite):
+    def regler_intensite(self, intensite):
         try:
-            print(intensite)
-            print(type(intensite))
+
             intensite = float(intensite)  # Convertir intensit� en flottant
+            self.led.value = intensite
+
         except ValueError:
-            print("L'intensit� doit �tre un nombre.")
+            print("L'intensite doit etre un nombre.")
             return
         
-        if 0 <= intensite <= 1:
-            self.led.value = intensite
-            response = self.api.set_intensity(berceau_id, intensite)
-            print(f"Intensit� r�gl�e � {intensite} : {response}")
-        else:
-            print("L'intensit� doit �tre comprise entre 0 et 1.")
+
 

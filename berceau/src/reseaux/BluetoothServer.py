@@ -57,13 +57,12 @@ class BluetoothServer:
                 if not message:
                     print("No message received. Client may have disconnected.")
                     break
-
+                response = "Données recues avec succés."
+                self.client_socket.send(response.encode('utf-8'))
                 decoded = message.decode('utf-8')
                 print(f"Message received: {decoded}")
 
-                # Exemple : répondre au message
-                response = "ACK: " + decoded
-                self.client_socket.send(response.encode('utf-8'))
+
 
                 return decoded.split()  # ← Retourne une liste de mots par exemple ["wifi", "password", "berceau1"]
 
@@ -74,7 +73,6 @@ class BluetoothServer:
                 print(f"Error receiving message: {e}")
                 break
 
-            time.sleep(0.5)
 
     def close_connection(self):
         try:

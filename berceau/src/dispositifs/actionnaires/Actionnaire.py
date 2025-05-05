@@ -1,16 +1,16 @@
 from abc import ABC, abstractmethod
+from dispositifs.Berceau import Berceau
 
-
-class Actionnaire(ABC):
+class Actionnaire(Berceau, ABC):
 
     @abstractmethod
-    def allumer(self,berceau_id):
+    def allumer(self, berceau_id):
         pass
 
     @abstractmethod
     def eteindre(self, berceau_id):
         pass
-    
+
     @abstractmethod
     def obtenir_statut(self, berceau_id):
         pass
