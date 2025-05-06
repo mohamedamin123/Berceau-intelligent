@@ -71,6 +71,7 @@ const ConsulterServoScreen = () => {
             const response = await changeMode(id, newMode);
             setMode(response.mode);
             setLastActionTime(new Date());
+            setEtat('Ouvert');
             Alert.alert('Succès', `Mode changé en : ${response.mode}`);
         } catch (error) {
             Alert.alert('Erreur', error.message);

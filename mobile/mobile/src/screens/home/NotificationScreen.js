@@ -3,7 +3,7 @@ import { View, Text, FlatList, StyleSheet, TouchableOpacity, Animated, StatusBar
 import { Provider } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import useAuthStore from '../../store/useAuthStore';
-import { getNotificationsByParentId } from '../../services/NotificationService';
+import { getNotificationsByParentId,deleteNotificationsByParentId } from '../../services/NotificationService';
 import { ThemeContext } from '../../components/ThemeContext';
 
 const formatDate = (dateObj) => {
@@ -77,8 +77,14 @@ const NotificationScreen = () => {
         }).start();
     };
 
-    const handleClearNotifications = () => {
+    const handleClearNotifications =async () => {
         setNotifications([]);
+        try {
+            await deleteNotificationsByParentId(user.id);
+            console.log("Notifications supprimées avec succès !");
+    } catch (error) {
+            console.warn("Erreur suppression notifications (ignorée) :", error.message);
+            }
     };
 
     const styles = getStyles(isDarkMode);
