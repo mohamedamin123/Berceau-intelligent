@@ -42,35 +42,30 @@ const MainNavigator = () => {
         });
     };
     
-    // Fonction principale de vérification
     const checkSonAndMouvement = async () => {
         try {
             for (const berceau of berceaux) {
                 const { id: berceauId, name } = berceau;
+    
                 const son = await getSon(berceauId);
                 const mouvement = await getMouvement(berceauId);
-
-
-                if (son && !isSleeping) {
-                    const message = `Le bébé du ${name} pleure !`;
-                    const type="Pleur"
-
-
+    
+                if (son?.etat && !isSleeping) {
+                    const message = `Le bébé du ${name} pleure a (${son.type.toLowerCase()}) !`;
+                    const type = son.type;
+    
                     sendNotification(message, type, berceauId);
-
-
+    
                     setIsSleeping(true);
                     setTimeout(() => setIsSleeping(false), 60000);
                 }
-
+    
                 if (mouvement && !isMouvementSleeping) {
                     const message = `Mouvement détecté dans le ${name} !`;
-                    const type="Mouvement"
-
+                    const type = "Mouvement";
+    
                     sendNotification(message, type, berceauId);
-
-
-
+    
                     setIsMouvementSleeping(true);
                     setTimeout(() => setIsMouvementSleeping(false), 60000);
                 }
@@ -79,6 +74,7 @@ const MainNavigator = () => {
             console.error("Erreur lors de la récupération du son ou du mouvement:", error);
         }
     };
+    
 
     useEffect(() => {
         const interval = setInterval(() => {

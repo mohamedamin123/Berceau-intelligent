@@ -49,6 +49,8 @@ const NotificationScreen = () => {
     const { isDarkMode } = useContext(ThemeContext);
 
     useEffect(() => {
+        let intervalId;
+    
         const fetchNotifications = async () => {
             try {
                 if (user?.id) {
@@ -56,12 +58,20 @@ const NotificationScreen = () => {
                     setNotifications(fetchedNotifications);
                 }
             } catch (error) {
-                //console.error('Erreur lors de la récupération des notifications:', error);
+                console.warn('Erreur lors de la récupération des notifications :', error.message);
             }
         };
-
-        fetchNotifications();
+    
+        if (user?.id) {
+            fetchNotifications(); // appel immédiat
+            intervalId = setInterval(fetchNotifications, 3000); // toutes les 3 secondes
+        }
+    
+        return () => {
+            if (intervalId) clearInterval(intervalId);
+        };
     }, [user]);
+    
 
     const handlePressIn = () => {
         Animated.spring(scaleAnim, {
