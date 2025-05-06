@@ -51,7 +51,7 @@ const MainNavigator = () => {
                 const mouvement = await getMouvement(berceauId);
     
                 if (son?.etat && !isSleeping) {
-                    const message = `Le bébé du ${name} pleure a (${son.type.toLowerCase()}) !`;
+                    const message = `Le bébé du ${name} pleure  (${son.type.toLowerCase()}) !`;
                     const type = son.type;
     
                     sendNotification(message, type, berceauId);
