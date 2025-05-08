@@ -73,7 +73,7 @@ const checkBluetoothBeforeAction = async (action) => {
         const ssid = await NetworkInfo.getSSID();
         console.log("SSID du WiFi :", ssid);
 
-        if (!ssid) {
+        if (!ssid || ssid.match("<unknown ssid>")) {
             Alert.alert(
                 "WiFi non détecté",
                 "Veuillez activer la localisation et vous connecter à un réseau WiFi.",

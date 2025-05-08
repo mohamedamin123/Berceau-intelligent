@@ -35,3 +35,21 @@ class WifiServeur:
             return ip_address
         except socket.error:
             return None
+        
+    def disconnect(self):
+        try:
+            # D�terminer le nom de l'interface r�seau connect�e (souvent "wlan0" ou similaire)
+            result = subprocess.run(["nmcli", "-t", "-f", "DEVICE,STATE", "dev"], capture_output=True, text=True)
+            for line in result.stdout.strip().split("\n"):
+                device_info = line.split(":")
+                if len(device_info) == 2 and device_info[1] == "connected":
+                    device_name = device_info[0]
+                    # D�connecter l'appareil Wi-Fi
+                    subprocess.run(["nmcli", "dev", "disconnect", device_name], check=True)
+                    print(f"? Wi-Fi d�connect� sur l'interface {device_name}.")
+                    return True
+            print("?? Aucun p�riph�rique connect� trouv�.")
+            return False
+        except subprocess.CalledProcessError as e:
+            print(f"? �chec de la d�connexion Wi-Fi : {e}")
+            return False

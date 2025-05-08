@@ -10,6 +10,7 @@ from dispositifs.capteurs.CapteurMVT import CapteurMouvement
 from dispositifs.capteurs.CapteurSon import CapteurSon
 from reseaux.BluetoothServer import BluetoothServer
 from reseaux.WifiServeur import WifiServeur
+from gpiozero import Button
 
 class Main:
     def __init__(self, berceau_id=None):
@@ -19,6 +20,8 @@ class Main:
         self.mvt = CapteurMouvement()
         self.wifi = WifiServeur()
         self.blt = BluetoothServer()
+        self.running = True
+
 
     def load_berceau_id(self):
         # Charger le berceau_id depuis un fichier (si existant)
@@ -32,24 +35,33 @@ class Main:
         # Sauvegarder le berceau_id dans un fichier
         with open("berceau_id.txt", "w") as f:
             f.write(self.berceau_id)
-
+            
     def run_motion(self):
         try:
-            subprocess.run(['sudo', 'motion'], check=True)
-        except subprocess.CalledProcessError as e:
-            print(f"Erreur lors de l'ex�cution de 'sudo motion': {e}")
+            self.motion_process = subprocess.Popen(['sudo', 'motion'])
+            while self.running:
+                time.sleep(1)
+            if self.motion_process.poll() is None:
+                self.motion_process.terminate()
+                self.motion_process.wait()
+        except Exception as e:
+            print(f"Erreur dans run_motion: {e}")
+
 
     def run_son(self):
-        while True:
+        while self.running:
             self.son.envoyer_donnees(self.berceau_id)
+            time.sleep(1)
 
     def run_mvt(self):
-        self.mvt.envoyer_donnees(self.berceau_id)
+        while self.running:
+            self.mvt.envoyer_donnees(self.berceau_id)
+            time.sleep(1)
 
 
     def run_led(self):
         led = ActionneurLED()
-        while True:
+        while self.running:
             intensite, etat = led.obtenir_statut(self.berceau_id)
 
 
@@ -61,7 +73,7 @@ class Main:
 
     def run_servo(self):
         servo = ActionneurServo()
-        while True:
+        while self.running:
             mode, etat = servo.obtenir_statut(self.berceau_id)
             print("mode :", mode)
             print("etat avant action:", etat)
@@ -82,7 +94,7 @@ class Main:
 
     def run_ventilateur(self):
         ventilateur = ActionneurVentilateur()
-        while True:
+        while self.running:
             mode,etat = ventilateur.obtenir_statut(self.berceau_id)
             if etat:
                 if mode == "automatique" and self.mvt.lire_donnees():
@@ -95,7 +107,7 @@ class Main:
 
     def run_dht(self):
         dht = CapteurDHT()
-        while True:
+        while self.running:
             dht.envoyer_donnees(self.berceau_id)
             time.sleep(5)
 
@@ -108,53 +120,92 @@ class Main:
             value = self.wifi.connect(words[0], words[1])
             return value
 
+
     def start(self):
-        #led_thread = threading.Thread(target=self.run_led)
-        #servo_thread = threading.Thread(target=self.run_servo)
-        #ventilateur_thread = threading.Thread(target=self.run_ventilateur)
-        #dht_thread = threading.Thread(target=self.run_dht)
-        son_thread = threading.Thread(target=self.run_son)
-        mvt_thread = threading.Thread(target=self.run_mvt)
-        #motion_thread = threading.Thread(target=self.run_motion)
+        if self.running:
+            self.threads = []
 
-        #led_thread.start()
-        #servo_thread.start()
-        #ventilateur_thread.start()
-        #dht_thread.start()
-        son_thread.start()
-        mvt_thread.start()
-        #motion_thread.start()
+            # Threads des capteurs
+            dht_thread = threading.Thread(target=self.run_dht)
+            son_thread = threading.Thread(target=self.run_son)
+            mvt_thread = threading.Thread(target=self.run_mvt)
 
-        #led_thread.join()
-        #servo_thread.join()
-        #ventilateur_thread.join()
-        #dht_thread.join()
-        son_thread.join()
-        mvt_thread.join()
-        #motion_thread.join()
+            # Threads des actionneurs
+            led_thread = threading.Thread(target=self.run_led)
+            servo_thread = threading.Thread(target=self.run_servo)
+            ventilateur_thread = threading.Thread(target=self.run_ventilateur)
+
+            # Thread motion
+            motion_thread = threading.Thread(target=self.run_motion)
+
+            self.threads.extend([
+                son_thread,
+                #mvt_thread,
+                #dht_thread,
+                #led_thread,
+                #servo_thread,
+                #ventilateur_thread,
+                #motion_thread
+            ])
+
+            for t in self.threads:
+                t.start()
+
+
+    def on_button_pressed(self):
+        print("Bouton press�. Arr�t demand�...")
+
+        # 1. Demander l'arr�t
+        self.running = False
+
+        # 2. Arr�ter tous les threads
+        for thread in getattr(self, 'threads', []):
+            if thread.is_alive():
+                thread.join(timeout=5)
+
+        print("Tous les threads arr�t�s.")
+
+        # 3. R�initialiser Bluetooth
+        self.blt.reset()
+
+        # 4. Supprimer le fichier berceau_id.txt
+        try:
+            if os.path.exists("berceau_id.txt"):
+                os.remove("berceau_id.txt")
+                print("Fichier berceau_id.txt supprim�.")
+        except Exception as e:
+            print(f"Erreur lors de la suppression : {e}")
+
+        # 5. R�initialiser l'�tat
+        self.berceau_id = None
+                # Ajouter le code pour r�activer le fonctionnement des capteurs et actionneurs apr�s l'arr�t
+        self.running = True  # Repasser `running` � True pour reprendre le programme apr�s l'arr�t
+        print("Red�marrage du programme...")
+        self.start()  # D�marrer de nouveau les threads et capteurs
+
 
 if __name__ == "__main__":
     main = Main()
+    button = Button(14)
+    button.when_pressed = main.on_button_pressed
 
     try:
         while True:
-            # Vérifie si le Wi-Fi est déjà connecté
-            if (main.wifi.is_connected() and main.berceau_id!=None):
-                print("Wi-Fi déjà connecté. Lancement des capteurs et actionneurs...")
-                main.start()
-                break  # Sortir de la boucle une fois que tout est lancé
-            else:
-                print("Wi-Fi non connecté. Tentative de connexion via Bluetooth...")
-                success = main.lancer_bluetooth()
-                print(success)
-                if success:
-                    print("Connexion Wi-Fi réussie via Bluetooth. Lancement des services...")
+            if main.running:
+                if main.wifi.is_connected() and main.berceau_id:
+                    print("Wi-Fi d�j� connect�. Lancement des capteurs et actionneurs...")
                     main.start()
-                    break  # Sortir de la boucle après un démarrage réussi
                 else:
-                    print("Échec de la connexion Wi-Fi après plusieurs tentatives via Bluetooth.")
-            
-            time.sleep(5)  # Attendre avant de réessayer
-
+                    print("Wi-Fi non connect� ou ID manquant. Tentative de connexion via Bluetooth...")
+                    success = main.lancer_bluetooth()
+                    print(success and main.berceau_id )
+                    if success:
+                        print("Connexion Wi-Fi r�ussie via Bluetooth. Lancement des services...")
+                        main.running = True
+                        main.start()
+                    else:
+                        print("�chec de la connexion Wi-Fi via Bluetooth.")
+            time.sleep(5)
     except KeyboardInterrupt:
         print("Programme interrompu. Fermeture en douceur.")
+

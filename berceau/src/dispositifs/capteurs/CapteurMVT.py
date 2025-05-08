@@ -20,7 +20,7 @@ class CapteurMouvement(Capteur):
             return None
 
     def envoyer_donnees(self, berceau_id):
-        while True:
+        
             mouvement = self.lire_donnees()
             print("mouvement :", mouvement)
 

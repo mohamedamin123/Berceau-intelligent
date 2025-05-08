@@ -84,3 +84,12 @@ class BluetoothServer:
                 print("Bluetooth server stopped.")
         except Exception as e:
             print(f"Error while closing connection: {e}")
+            
+    def reset(self):
+        try:
+            self.close_connection()
+        except:
+            pass
+        self.server_socket = bluetooth.BluetoothSocket(bluetooth.RFCOMM)
+        self.client_socket = None
+        self.client_address = None
