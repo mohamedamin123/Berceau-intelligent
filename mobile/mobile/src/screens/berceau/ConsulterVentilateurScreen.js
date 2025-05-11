@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, Alert, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
-import { on, off, changeMode, getData } from '../../services/VentilateurService';
+import { View, Text, Alert, TouchableOpacity, ScrollView, StyleSheet,Modal,TextInput } from 'react-native';
+import { on, off, changeMode, getData,setTemperature } from '../../services/VentilateurService';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -11,6 +11,9 @@ const ConsulterVentilateurScreen = () => {
     const navigation = useNavigation();
     const { id } = route.params;
     const [lastActionTime, setLastActionTime] = useState(null);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [newTemperature, setNewTemperature] = useState('');
+    const [temperature, setTemperatureState] = useState('');
 
     useEffect(() => {
         const fetchVentilateurData = async () => {
@@ -21,6 +24,11 @@ const ConsulterVentilateurScreen = () => {
                 if (data.time) {
                     setLastActionTime(new Date(data.time)); // <<< Ajouté ici
                 }
+                if (data.temperature) {
+                    setTemperatureState(data.temperature)
+                    console.log("tmp ; ",data.temperature)
+                }
+
             } catch (error) {
                 Alert.alert('Erreur', error.message);
             }
@@ -28,6 +36,24 @@ const ConsulterVentilateurScreen = () => {
         fetchVentilateurData();
     }, [id]);
 
+
+
+// Inside handleConfirmTemperature
+const handleConfirmTemperature = async () => {
+    try {
+        const tempValue = parseFloat(newTemperature);
+        if (isNaN(tempValue)) {
+            Alert.alert('Erreur', 'Veuillez entrer une valeur numérique valide.');
+            return;
+        }
+        await setTemperature(id, tempValue);  // Make sure this is updating on the server or service
+        setTemperatureState(tempValue);  // Update the local state to reflect the new temperature
+        setModalVisible(false);
+        Alert.alert('Succès', 'Température mise à jour.');
+    } catch (error) {
+        Alert.alert('Erreur', error.message);
+    }
+};
 
 
 
@@ -91,6 +117,19 @@ const ConsulterVentilateurScreen = () => {
 
                 <Text style={styles.label}>Mode :</Text>
                 <Text style={styles.value}>{isAuto ? 'Automatique' : 'Manuel'}</Text>
+                <Text style={styles.label}>température souhaitée :</Text>
+
+                <TouchableOpacity onPress={() => {
+                    setNewTemperature(temperature?.toString() || '');
+                    setModalVisible(true);
+                }}>
+                <Text style={[styles.value]}>
+                    {temperature !== null ? `${temperature} °C` : 'Non définie'}
+                </Text>
+
+                </TouchableOpacity>
+
+
                 
                 <Text style={styles.label}>Dernière action :</Text>
                 <Text style={styles.value}>{getTimeAgo()}</Text>
@@ -116,8 +155,41 @@ const ConsulterVentilateurScreen = () => {
                     </Text>
                 </TouchableOpacity>
             </View>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalOverlay}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Modifier la température souhaitée</Text>
+                        <TextInput
+                            style={styles.input}
+                            value={newTemperature}
+                            onChangeText={setNewTemperature}
+                            placeholder="Ex : 24.5"
+                            keyboardType="numeric"
+                        />
+                        <View style={styles.modalActions}>
+                            <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.cancelButton}>
+                                <Text style={styles.buttonText}>Annuler</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={handleConfirmTemperature} style={styles.confirmButton}>
+                                <Text style={styles.buttonText}>Confirmer</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </ScrollView>
+        
+        
+
+
     );
+    
 };
 
 export default ConsulterVentilateurScreen;
@@ -197,4 +269,85 @@ const styles = StyleSheet.create({
     icon: {
         marginRight: 5,
     },
+ modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+        width: 300,
+        padding: 20,
+        backgroundColor: "white",
+        borderRadius: 10,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 10,
+        color: "#FF69B4",
+    },
+    modalMessage: {
+        fontSize: 16,
+        marginBottom: 20,
+    },
+    modalActions: {
+        flexDirection: "row",
+        justifyContent: "space-around",
+        width: "100%",
+    },
+    cancelButton: {
+        backgroundColor: "#ccc",
+        padding: 10,
+        borderRadius: 5,
+    },
+    confirmButton: {
+        backgroundColor: "#FF69B4",
+        padding: 10,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: "white",
+        fontWeight: "bold",
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: "#FF69B4",
+        borderRadius: 5,
+        padding: 10,
+        width: "100%",
+        marginBottom: 20,
+        fontSize: 16,
+    },
+    emptyContainer: {
+        marginTop:20,
+        flex: 1,
+        alignItems: "center",
+        padding: 20,
+        backgroundColor:  "#F8F8F8",
+    },
+    emptyTitle: {
+        fontSize: 22,
+        fontWeight: "bold",
+        color: "#FF69B4",
+        marginBottom: 10,
+    },
+    emptySubtitle: {
+        fontSize: 16,
+        color:  "#666666",
+        marginBottom: 20,
+        textAlign: "center",
+    },
+    emptyImage: {
+        width: 200,
+        height: 200,
+        opacity: 0.8,
+    },
+
 });

@@ -64,4 +64,14 @@ export const changeMode = async (berceauId, newMode) => {
     }
 };
 
+export const setTemperature = async (berceauId, tmp) => {
+    try {
+        const response = await api.patch(`/tmp/${berceauId}`, { temperature: tmp });
+        return response.data; // { mode: "auto" } ou { mode: "manuel" }
+    } catch (error) {
+        throw new Error(error.response?.data?.error || "Erreur lors du changement de temperature");
+    }
+};
+
+
 export default api;

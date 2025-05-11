@@ -41,3 +41,21 @@ exports.getData = async (req, res) => {
         res.status(400).json({ error: error.message });
     }
 };
+
+
+// Changer la température du ventilateur
+exports.setTemperature = async (req, res) => {
+    try {
+        const { berceauId } = req.params;
+        const { temperature } = req.body;
+
+        if (typeof temperature !== 'number') {
+            return res.status(400).json({ error: "La température doit être un nombre." });
+        }
+
+        await VentilateurService.setTemperature(berceauId, temperature);
+        res.status(200).json({ message: `Température mise à jour à ${temperature}°C pour berceau ${berceauId}` });
+    } catch (error) {
+        res.status(500).json({ error: "Erreur lors de la mise à jour de la température" });
+    }
+};

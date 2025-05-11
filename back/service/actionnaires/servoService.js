@@ -69,7 +69,7 @@ exports.getData = async (berceauId) => {
 
         if (!data) {
             const defaultData = {
-                etat: true,
+                etat: false,
                 mode: "automatique",
                 time: new Date().toISOString(), // <<< on initialise time ici aussi
             };

@@ -69,9 +69,10 @@ exports.getData = async (berceauId) => {
 
         if (!data) {
             const defaultData = {
-                etat: true,
+                etat: false,
                 mode: "automatique",
-                time: new Date().toISOString(), // <<< Ajout du time ici aussi
+                time: new Date().toISOString(),
+                temperature: 22 // <<< Champ ajouté ici
             };
             await ref.set(defaultData);
             data = defaultData;
@@ -80,6 +81,21 @@ exports.getData = async (berceauId) => {
         return data;
     } catch (error) {
         console.error("Erreur lors de la récupération des données du ventilateur :", error);
+        throw error;
+    }
+};
+exports.setTemperature = async (berceauId, temperature) => {
+    try {
+        const now = new Date().toISOString();
+
+        await realtimeDb.ref(`berceaux/${berceauId}/ventilateur`).update({
+            temperature: temperature,
+            time: now
+        });
+
+        console.log(`Température mise à jour à ${temperature}°C pour berceauId: ${berceauId}`);
+    } catch (error) {
+        console.error("Erreur lors de la mise à jour de la température :", error);
         throw error;
     }
 };
